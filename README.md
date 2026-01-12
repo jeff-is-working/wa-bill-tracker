@@ -22,7 +22,7 @@ MIT License - Free to use and modify
 
 ## Links
 
-- [Live Demo](https://USERNAME.github.io/wa-bill-tracker)
+- [Live Demo](https://jeff-is-working.github.io/wa-bill-tracker)
 - [WA Legislature Official Site](https://app.leg.wa.gov/)
 - [GitHub Pages Documentation](https://docs.github.com/pages)
 
