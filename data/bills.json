@@ -1,5 +1,5 @@
 {
-  "lastSync": "2026-01-13T03:43:31.036514",
+  "lastSync": "2026-01-13T04:40:05.785782",
   "sessionYear": 2026,
   "sessionStart": "2026-01-12",
   "sessionEnd": "2026-03-12",
@@ -16,7 +16,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036361",
+      "lastUpdated": "2026-01-13T04:40:05.785618",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1001&Year=2026",
       "hearings": []
     },
@@ -31,7 +31,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036371",
+      "lastUpdated": "2026-01-13T04:40:05.785628",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1002&Year=2026",
       "hearings": []
     },
@@ -46,11 +46,25 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036380",
+      "lastUpdated": "2026-01-13T04:40:05.785638",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1003&Year=2026",
       "hearings": []
     },
-    
+    {
+      "id": "HB1004",
+      "number": "HB 1004",
+      "title": "Bridge jumping prevention",
+      "sponsor": "Rep. Tina Orwall",
+      "description": "A bill relating to bridge jumping prevention",
+      "status": "prefiled",
+      "committee": "State Government & Tribal Relations",
+      "priority": "medium",
+      "topic": "General Government",
+      "introducedDate": "2026-01-12",
+      "lastUpdated": "2026-01-13T04:40:05.785647",
+      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1004&Year=2026",
+      "hearings": []
+    },
     {
       "id": "HB1005",
       "number": "HB 1005",
@@ -62,7 +76,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036399",
+      "lastUpdated": "2026-01-13T04:40:05.785657",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1005&Year=2026",
       "hearings": []
     },
@@ -257,7 +271,7 @@
       "priority": "medium",
       "topic": "Environment",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036226",
+      "lastUpdated": "2026-01-13T04:40:05.785474",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1018&Year=2026",
       "hearings": []
     },
@@ -302,7 +316,7 @@
       "priority": "medium",
       "topic": "Housing",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036326",
+      "lastUpdated": "2026-01-13T04:40:05.785583",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1110&Year=2026",
       "hearings": []
     },
@@ -317,7 +331,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036238",
+      "lastUpdated": "2026-01-13T04:40:05.785485",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1183&Year=2026",
       "hearings": []
     },
@@ -332,7 +346,7 @@
       "priority": "high",
       "topic": "Tax & Revenue",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036352",
+      "lastUpdated": "2026-01-13T04:40:05.785609",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1216&Year=2026",
       "hearings": []
     },
@@ -347,7 +361,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036298",
+      "lastUpdated": "2026-01-13T04:40:05.785551",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1345&Year=2026",
       "hearings": []
     },
@@ -362,7 +376,7 @@
       "priority": "medium",
       "topic": "Tax & Revenue",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036243",
+      "lastUpdated": "2026-01-13T04:40:05.785491",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1921&Year=2026",
       "hearings": []
     },
@@ -377,7 +391,7 @@
       "priority": "medium",
       "topic": "Environment",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036218",
+      "lastUpdated": "2026-01-13T04:40:05.785465",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2090&Year=2026",
       "hearings": []
     },
@@ -392,7 +406,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036266",
+      "lastUpdated": "2026-01-13T04:40:05.785514",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2099&Year=2026",
       "hearings": []
     },
@@ -407,7 +421,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036336",
+      "lastUpdated": "2026-01-13T04:40:05.785594",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2112&Year=2026",
       "hearings": []
     },
@@ -422,7 +436,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036347",
+      "lastUpdated": "2026-01-13T04:40:05.785604",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2114&Year=2026",
       "hearings": []
     },
@@ -437,7 +451,7 @@
       "priority": "medium",
       "topic": "Education",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036282",
+      "lastUpdated": "2026-01-13T04:40:05.785531",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2121&Year=2026",
       "hearings": []
     },
@@ -452,7 +466,7 @@
       "priority": "medium",
       "topic": "Education",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036256",
+      "lastUpdated": "2026-01-13T04:40:05.785504",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2147&Year=2026",
       "hearings": []
     },
@@ -467,7 +481,7 @@
       "priority": "medium",
       "topic": "Education",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036179",
+      "lastUpdated": "2026-01-13T04:40:05.785417",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2159&Year=2026",
       "hearings": []
     },
@@ -482,7 +496,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036204",
+      "lastUpdated": "2026-01-13T04:40:05.785444",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=2225&Year=2026",
       "hearings": []
     },
@@ -512,7 +526,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036408",
+      "lastUpdated": "2026-01-13T04:40:05.785666",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5001&Year=2026",
       "hearings": []
     },
@@ -527,7 +541,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036417",
+      "lastUpdated": "2026-01-13T04:40:05.785676",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5002&Year=2026",
       "hearings": []
     },
@@ -542,7 +556,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036426",
+      "lastUpdated": "2026-01-13T04:40:05.785685",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5003&Year=2026",
       "hearings": []
     },
@@ -557,7 +571,7 @@
       "priority": "medium",
       "topic": "Business",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036436",
+      "lastUpdated": "2026-01-13T04:40:05.785694",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5004&Year=2026",
       "hearings": []
     },
@@ -572,7 +586,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036446",
+      "lastUpdated": "2026-01-13T04:40:05.785704",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5005&Year=2026",
       "hearings": []
     },
@@ -812,7 +826,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036309",
+      "lastUpdated": "2026-01-13T04:40:05.785567",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5613&Year=2026",
       "hearings": []
     },
@@ -827,7 +841,7 @@
       "priority": "medium",
       "topic": "Tax & Revenue",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036251",
+      "lastUpdated": "2026-01-13T04:40:05.785498",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5726&Year=2026",
       "hearings": []
     },
@@ -842,7 +856,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036320",
+      "lastUpdated": "2026-01-13T04:40:05.785577",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5729&Year=2026",
       "hearings": []
     },
@@ -857,7 +871,7 @@
       "priority": "medium",
       "topic": "Tax & Revenue",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036288",
+      "lastUpdated": "2026-01-13T04:40:05.785538",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5849&Year=2026",
       "hearings": []
     },
@@ -872,7 +886,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036277",
+      "lastUpdated": "2026-01-13T04:40:05.785526",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5853&Year=2026",
       "hearings": []
     },
@@ -887,7 +901,7 @@
       "priority": "medium",
       "topic": "Education",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036168",
+      "lastUpdated": "2026-01-13T04:40:05.785407",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5872&Year=2026",
       "hearings": []
     },
@@ -902,7 +916,7 @@
       "priority": "medium",
       "topic": "General Government",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036194",
+      "lastUpdated": "2026-01-13T04:40:05.785433",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=5984&Year=2026",
       "hearings": []
     },
@@ -917,7 +931,7 @@
       "priority": "medium",
       "topic": "Housing",
       "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036210",
+      "lastUpdated": "2026-01-13T04:40:05.785451",
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=6026&Year=2026",
       "hearings": []
     },
