@@ -1,0 +1,158 @@
+{
+  "generated": "2026-01-13T03:43:31.063527",
+  "totalBills": 63,
+  "byStatus": {
+    "prefiled": 63
+  },
+  "byCommittee": {
+    "State Government & Tribal Relations": 21,
+    "Human Services": 2,
+    "Finance": 1,
+    "Education": 6,
+    "Environment & Energy": 4,
+    "Consumer Protection & Business": 2,
+    "Housing": 4,
+    "Health Care & Wellness": 3,
+    "Labor & Workplace Standards": 1,
+    "Transportation": 4,
+    "Health & Long-Term Care": 3,
+    "Early Learning & K-12 Education": 1,
+    "Law & Justice": 2,
+    "Environment, Energy & Technology": 3,
+    "Business, Financial Services & Trade": 1,
+    "Higher Education & Workforce Development": 1,
+    "Agriculture, Water & Natural Resources": 1,
+    "Labor & Commerce": 1,
+    "Ways & Means": 2
+  },
+  "byPriority": {
+    "medium": 38,
+    "high": 25
+  },
+  "byTopic": {
+    "General Government": 19,
+    "Human Services": 1,
+    "Tax & Revenue": 6,
+    "Public Safety": 4,
+    "Energy": 2,
+    "Technology": 2,
+    "Housing": 4,
+    "Healthcare": 5,
+    "Labor": 2,
+    "Transportation": 2,
+    "Environment": 5,
+    "Government Operations": 1,
+    "Education": 7,
+    "Military & Veterans": 1,
+    "Business": 1,
+    "Agriculture": 1
+  },
+  "bySponsor": {
+    "Rep. Ed Orcutt": 1,
+    "Rep. My-Linh Thai": 2,
+    "Rep. Mari Leavitt": 3,
+    "Rep. Tina Orwall": 1,
+    "Rep. Jacquelin Maycumber": 1,
+    "Rep. April Berg": 1,
+    "Rep. Roger Goodman": 1,
+    "Rep. Alex Ramel": 1,
+    "Rep. Mike Volz": 1,
+    "Rep. Nicole Macri": 1,
+    "Rep. Marcus Riccelli": 1,
+    "Rep. Mike Sells": 1,
+    "Rep. Debra Lekanoff": 1,
+    "Rep. Tom Dent": 1,
+    "Rep. Drew Stokesbary": 1,
+    "Rep. Frank Chopp": 1,
+    "Rep. Jake Fey": 2,
+    "Rep. Monica Stonier": 1,
+    "Rep. Dan Bronoske": 1,
+    "Rep. Jessica Bateman": 2,
+    "Rep. Davina Duerr": 1,
+    "Rep. Mike Steele": 1,
+    "Rep. Strom Peterson": 1,
+    "Rep. Stephanie Barnard": 1,
+    "Rep. Andrew Engell": 1,
+    "Rep. Walsh": 1,
+    "Rep. Mia Gregerson": 1,
+    "Rep. Steve Bergquist": 1,
+    "Rep. Lisa Callan": 1,
+    "Sen. Mark Mullet": 1,
+    "Sen. John Lovick": 2,
+    "Sen. June Robinson": 2,
+    "Sen. Mike Padden": 1,
+    "Sen. Brad Hawkins": 1,
+    "Sen. Manka Dhingra": 1,
+    "Sen. Claire Wilson": 2,
+    "Sen. Jesse Salomon": 1,
+    "Sen. Liz Lovelett": 1,
+    "Sen. Joe Nguyen": 2,
+    "Sen. Claudia Kauffman": 1,
+    "Sen. Marko Liias": 1,
+    "Sen. Emily Randall": 1,
+    "Sen. Judy Warnick": 1,
+    "Sen. Karen Keiser": 1,
+    "Sen. Reuven Carlyle": 1,
+    "Sen. Jeannie Darneille": 1,
+    "Sen. Kevin Van De Wege": 1,
+    "Sen. Ron Muzzall": 1,
+    "Sen. Ramos": 1,
+    "Sen. Adrian Cortes": 1,
+    "Sen. Jeff Wilson": 1,
+    "Sen. Lisa Wellman": 1,
+    "Sen. Emily Alvarado": 1,
+    "Sen. Jamie Pedersen": 1
+  },
+  "byType": {
+    "HB": 33,
+    "HJR": 1,
+    "SB": 28,
+    "SJR": 1
+  },
+  "recentlyUpdated": 32,
+  "updatedToday": 32,
+  "upcomingHearings": 0,
+  "billsWithHearings": 0,
+  "topSponsors": [
+    [
+      "Rep. Mari Leavitt",
+      3
+    ],
+    [
+      "Rep. My-Linh Thai",
+      2
+    ],
+    [
+      "Rep. Jake Fey",
+      2
+    ],
+    [
+      "Rep. Jessica Bateman",
+      2
+    ],
+    [
+      "Sen. John Lovick",
+      2
+    ],
+    [
+      "Sen. June Robinson",
+      2
+    ],
+    [
+      "Sen. Claire Wilson",
+      2
+    ],
+    [
+      "Sen. Joe Nguyen",
+      2
+    ],
+    [
+      "Rep. Ed Orcutt",
+      1
+    ],
+    [
+      "Rep. Tina Orwall",
+      1
+    ]
+  ]
+}
