@@ -50,21 +50,7 @@
       "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1003&Year=2026",
       "hearings": []
     },
-    {
-      "id": "HB1004",
-      "number": "HB 1004",
-      "title": "Bridge jumping prevention",
-      "sponsor": "Rep. Tina Orwall",
-      "description": "A bill relating to bridge jumping prevention",
-      "status": "prefiled",
-      "committee": "State Government & Tribal Relations",
-      "priority": "medium",
-      "topic": "General Government",
-      "introducedDate": "2026-01-12",
-      "lastUpdated": "2026-01-13T03:43:31.036389",
-      "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1004&Year=2026",
-      "hearings": []
-    },
+    
     {
       "id": "HB1005",
       "number": "HB 1005",
