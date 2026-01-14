@@ -1,16 +1,27 @@
 {
-  "lastSync": "2026-01-14T19:04:13.002977",
+  "lastSync": "2026-01-14T22:16:19.693541",
   "sessionYear": 2026,
+  "biennium": "2025-26",
   "sessionStart": "2026-01-12",
   "sessionEnd": "2026-03-12",
   "totalBills": 0,
   "bills": [],
   "metadata": {
-    "source": "Washington State Legislature Web Services API",
-    "apiVersion": "1.0",
-    "updateFrequency": "hourly",
-    "dataVersion": "7.0.0",
-    "biennium": "2025-26",
-    "billTypes": []
+    "source": "Washington State Legislature Web Services",
+    "apiUrl": "https://wslwebservices.leg.wa.gov",
+    "updateFrequency": "daily",
+    "dataVersion": "3.0.0",
+    "billTypes": [
+      "HB",
+      "SB",
+      "HJR",
+      "SJR",
+      "HJM",
+      "SJM",
+      "HCR",
+      "SCR",
+      "I",
+      "R"
+    ]
   }
 }

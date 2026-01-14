@@ -1,10 +1,15 @@
 {
-  "generated": "2026-01-14T19:04:13.003563",
+  "generated": "2026-01-14T22:16:19.693859",
   "totalBills": 0,
   "byStatus": {},
   "byCommittee": {},
   "byPriority": {},
   "byTopic": {},
+  "bySponsor": {},
   "byType": {},
-  "bySponsor": {}
+  "recentlyUpdated": 0,
+  "updatedToday": 0,
+  "upcomingHearings": 0,
+  "billsWithHearings": 0,
+  "topSponsors": []
 }
