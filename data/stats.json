@@ -1,9 +1,66 @@
 {
-  "generated": "2026-01-14T16:20:07.815684",
-  "totalBills": 0,
-  "byStatus": {},
-  "byCommittee": {},
-  "byPriority": {},
-  "byTopic": {},
-  "biennium": "2025-26"
+  "generated": "2026-01-14T17:54:19.058673",
+  "totalBills": 2745,
+  "byStatus": {
+    "Introduced": 2745
+  },
+  "byCommittee": {
+    "Rules": 607,
+    "House Rules": 1233,
+    "Senate Rules": 905
+  },
+  "byPriority": {
+    "medium": 2745
+  },
+  "byTopic": {
+    "General Government": 2745
+  },
+  "bySponsor": {},
+  "byType": {
+    "E": 1,
+    "EHB": 3,
+    "ESB": 7,
+    "ESHB": 12,
+    "ESSB": 16,
+    "HB": 1220,
+    "HCR": 5,
+    "HJM": 10,
+    "HJR": 13,
+    "HR": 2,
+    "SB": 898,
+    "SCR": 5,
+    "SGA": 158,
+    "SHB": 187,
+    "SHCR": 1,
+    "SHJM": 2,
+    "SJM": 11,
+    "SJR": 7,
+    "SR": 2,
+    "SSB": 146,
+    "SSJM": 2,
+    "SSJR": 1
+  },
+  "recentlyUpdated": 2745,
+  "updatedToday": 2745,
+  "upcomingHearings": 0,
+  "billsWithHearings": 0,
+  "prefiledBills": 0,
+  "introducedBills": 2745,
+  "passedHouse": 0,
+  "passedSenate": 0,
+  "signedIntoLaw": 0,
+  "mostActiveCommittees": [
+    [
+      "House Rules",
+      1233
+    ],
+    [
+      "Senate Rules",
+      905
+    ],
+    [
+      "Rules",
+      607
+    ]
+  ]
 }
