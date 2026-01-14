@@ -1,15 +1,114 @@
 {
-  "generated": "2026-01-14T04:01:12.805427",
-  "totalBills": 0,
-  "byStatus": {},
-  "byCommittee": {},
-  "byPriority": {},
-  "byTopic": {},
-  "bySponsor": {},
-  "byType": {},
-  "recentlyUpdated": 0,
-  "updatedToday": 0,
-  "upcomingHearings": 0,
-  "billsWithHearings": 0,
-  "topSponsors": []
+  "generated": "2026-01-14T04:09:20.334562",
+  "totalBills": 32,
+  "byStatus": {
+    "prefiled": 16,
+    "failed": 1,
+    "passed": 3,
+    "enacted": 1,
+    "committee": 8,
+    "introduced": 2,
+    "vetoed": 1
+  },
+  "byCommittee": {
+    "State Government & Tribal Relations": 20,
+    "Environment & Energy": 2,
+    "Housing": 2,
+    "Transportation": 2,
+    "Education": 4,
+    "Consumer Protection & Business": 1,
+    "Ways & Means": 1
+  },
+  "byPriority": {
+    "medium": 31,
+    "high": 1
+  },
+  "byTopic": {
+    "General Government": 19,
+    "Environment": 2,
+    "Housing": 2,
+    "Tax & Revenue": 4,
+    "Education": 4,
+    "Business": 1
+  },
+  "bySponsor": {
+    "Rep. Ed Orcutt": 1,
+    "Rep. My-Linh Thai": 1,
+    "Rep. Mari Leavitt": 3,
+    "Rep. Tina Orwall": 1,
+    "Rep. Jacquelin Maycumber": 1,
+    "Rep. Jake Fey": 2,
+    "Rep. Jessica Bateman": 1,
+    "Rep. Davina Duerr": 1,
+    "Rep. Mike Steele": 1,
+    "Rep. Strom Peterson": 1,
+    "Rep. Stephanie Barnard": 1,
+    "Rep. Andrew Engell": 1,
+    "Rep. Walsh": 1,
+    "Rep. Mia Gregerson": 1,
+    "Rep. Steve Bergquist": 1,
+    "Rep. Lisa Callan": 1,
+    "Sen. Mark Mullet": 1,
+    "Sen. John Lovick": 2,
+    "Sen. June Robinson": 1,
+    "Sen. Mike Padden": 1,
+    "Sen. Brad Hawkins": 1,
+    "Sen. Joe Nguyen": 1,
+    "Sen. Ramos": 1,
+    "Sen. Adrian Cortes": 1,
+    "Sen. Jeff Wilson": 1,
+    "Sen. Claire Wilson": 1,
+    "Sen. Lisa Wellman": 1,
+    "Sen. Emily Alvarado": 1
+  },
+  "byType": {
+    "HB": 19,
+    "SB": 13
+  },
+  "recentlyUpdated": 32,
+  "updatedToday": 32,
+  "upcomingHearings": 2,
+  "billsWithHearings": 2,
+  "topSponsors": [
+    [
+      "Rep. Mari Leavitt",
+      3
+    ],
+    [
+      "Rep. Jake Fey",
+      2
+    ],
+    [
+      "Sen. John Lovick",
+      2
+    ],
+    [
+      "Rep. Ed Orcutt",
+      1
+    ],
+    [
+      "Rep. My-Linh Thai",
+      1
+    ],
+    [
+      "Rep. Tina Orwall",
+      1
+    ],
+    [
+      "Rep. Jacquelin Maycumber",
+      1
+    ],
+    [
+      "Rep. Jessica Bateman",
+      1
+    ],
+    [
+      "Rep. Davina Duerr",
+      1
+    ],
+    [
+      "Rep. Mike Steele",
+      1
+    ]
+  ]
 }
