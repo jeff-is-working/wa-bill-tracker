@@ -1,13 +1,10 @@
 {
-  "lastSync": "2026-01-14T03:52:13.191325",
+  "lastSync": "2026-01-14T03:57:06.269044",
   "sessionYear": 2026,
   "sessionStart": "2026-01-12",
   "sessionEnd": "2026-03-12",
-  "totalBills": 589,
-  "bills": [
-    
-   
-  ],
+  "totalBills": 0,
+  "bills": [],
   "metadata": {
     "source": "Washington State Legislature",
     "updateFrequency": "daily",
