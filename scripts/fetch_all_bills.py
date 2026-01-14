@@ -104,27 +104,7 @@ def fetch_bill_details(bill_number: str) -> Optional[Dict]:
     # Simulate bill data (in production, this would be fetched from the actual API)
     # Only return data for bills that would actually exist
     sample_bills = {
-        "HB 1001": {"title": "Concerning state expenditures on audits", "status": "prefiled"},
-        "HB 1002": {"title": "Expanding the child tax credit", "status": "prefiled"},
-        "HB 1003": {"title": "Establishing a lifeline fund", "status": "prefiled"},
-        "HB 1004": {"title": "Enhancing public safety", "status": "prefiled"},
-        "HB 1005": {"title": "School safety improvements", "status": "prefiled"},
-        "HB 1006": {"title": "Affordable housing development", "status": "prefiled"},
-        "HB 1007": {"title": "Transportation funding", "status": "prefiled"},
-        "HB 1008": {"title": "Mental health services", "status": "prefiled"},
-        "HB 1009": {"title": "Environmental protection", "status": "prefiled"},
-        "HB 1010": {"title": "Small business tax relief", "status": "prefiled"},
-        # Add more as discovered
-        "SB 5001": {"title": "Providing funding for school safety", "status": "prefiled"},
-        "SB 5002": {"title": "Concerning rent stabilization", "status": "prefiled"},
-        "SB 5003": {"title": "Expanding behavioral health", "status": "prefiled"},
-        "SB 5004": {"title": "Clean energy transitions", "status": "prefiled"},
-        "SB 5005": {"title": "Workforce development", "status": "prefiled"},
-        "SB 5006": {"title": "Property tax reform", "status": "prefiled"},
-        "SB 5007": {"title": "Public records access", "status": "prefiled"},
-        "SB 5008": {"title": "Criminal justice reform", "status": "prefiled"},
-        "SB 5009": {"title": "Healthcare access expansion", "status": "prefiled"},
-        "SB 5010": {"title": "Education funding formula", "status": "prefiled"},
+   
     }
     
     # Check if this is a known bill
