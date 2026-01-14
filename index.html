@@ -142,6 +142,77 @@
             50% { opacity: 0.3; }
         }
 
+        /* Bill Type Navigation */
+        .bill-type-nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 1rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--primary);
+        }
+
+        .bill-type-nav::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .bill-type-nav::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+
+        .bill-type-nav::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .nav-tab {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-tab:hover {
+            background: var(--secondary);
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* Page Title */
+        .page-title {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem 0;
+        }
+
+        .page-title h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
         /* Container */
         .container {
             max-width: 1400px;
@@ -826,6 +897,10 @@
                 text-align: center;
             }
 
+            .bill-type-nav {
+                padding: 0 1rem 1rem;
+            }
+
             .bills-grid {
                 grid-template-columns: 1fr;
             }
@@ -869,7 +944,25 @@
                 </div>
             </div>
         </div>
+        <!-- Bill Type Navigation -->
+        <nav class="bill-type-nav">
+            <a href="#all" class="nav-tab active" data-type="all">All Bills</a>
+            <a href="#sb" class="nav-tab" data-type="SB">Senate Bills</a>
+            <a href="#hb" class="nav-tab" data-type="HB">House Bills</a>
+            <a href="#sjr" class="nav-tab" data-type="SJR">Senate Joint Resolutions</a>
+            <a href="#hjr" class="nav-tab" data-type="HJR">House Joint Resolutions</a>
+            <a href="#sjm" class="nav-tab" data-type="SJM">Senate Joint Memorials</a>
+            <a href="#hjm" class="nav-tab" data-type="HJM">House Joint Memorials</a>
+            <a href="#scr" class="nav-tab" data-type="SCR">Senate Concurrent Resolutions</a>
+            <a href="#hcr" class="nav-tab" data-type="HCR">House Concurrent Resolutions</a>
+        </nav>
     </header>
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <h2 id="pageTitle">All Bills</h2>
+        <p id="pageDescription">Showing all Washington State legislative bills for the 2026 session</p>
+    </div>
 
     <!-- Main Container -->
     <div class="container">
@@ -934,17 +1027,6 @@
                         <span class="filter-tag" data-filter="priority" data-value="high">High</span>
                         <span class="filter-tag" data-filter="priority" data-value="medium">Medium</span>
                         <span class="filter-tag" data-filter="priority" data-value="low">Low</span>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label">Type</label>
-                    <div class="filter-options" id="typeFilters">
-                        <span class="filter-tag" data-filter="type" data-value="HB">House Bills</span>
-                        <span class="filter-tag" data-filter="type" data-value="SB">Senate Bills</span>
-                        <span class="filter-tag" data-filter="type" data-value="HJR">House Joint Resolutions</span>
-                        <span class="filter-tag" data-filter="type" data-value="SJR">Senate Joint Resolutions</span>
-                        <span class="filter-tag" data-filter="type" data-value="I">Initiatives</span>
-                        <span class="filter-tag" data-filter="type" data-value="R">Referendums</span>
                     </div>
                 </div>
                 <div class="filter-group">
