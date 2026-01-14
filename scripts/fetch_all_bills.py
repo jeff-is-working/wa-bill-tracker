@@ -256,60 +256,6 @@ def fetch_bills_from_wa_legislature() -> List[Dict]:
         # These should be replaced with real API data
         
         actual_bills = [
-            # Governor request bills
-            {"number": "SB 5872", "title": "Early Childhood Education and Assistance Program Account", "sponsor": "Sen. Claire Wilson", "historyLine": "Public hearing scheduled in Early Learning & K-12 Education at 10:30 AM"},
-            {"number": "HB 2159", "title": "Early Childhood Education and Assistance Program Account", "sponsor": "Rep. Steve Bergquist", "historyLine": "First reading, referred to Education"},
-            {"number": "SB 5984", "title": "Regulating artificial intelligence companion chatbots", "sponsor": "Sen. Lisa Wellman", "historyLine": "Public hearing scheduled 1/16/2026 at 1:30 PM"},
-            {"number": "HB 2225", "title": "Regulating artificial intelligence companion chatbots", "sponsor": "Rep. Lisa Callan", "historyLine": "Executive session scheduled in committee"},
-            {"number": "SB 6026", "title": "Changing commercial zoning to support housing", "sponsor": "Sen. Emily Alvarado", "historyLine": "Prefiled for introduction"},
-            
-            # Energy and environment
-            {"number": "HB 2090", "title": "Advanced nuclear energy integration", "sponsor": "Rep. Stephanie Barnard", "historyLine": "Introduced and read first time"},
-            {"number": "HB 1018", "title": "Adding nuclear fusion to energy facility site evaluation", "sponsor": "Rep. Jake Fey", "historyLine": "Passed to Rules Committee for second reading"},
-            {"number": "HB 1183", "title": "Enhancing affordable and sustainable building construction", "sponsor": "Rep. Davina Duerr", "historyLine": "Prefiled for introduction"},
-            
-            # Transportation
-            {"number": "HB 1921", "title": "Transportation revenue from road usage", "sponsor": "Rep. Jake Fey", "historyLine": "Referred to Transportation Committee"},
-            {"number": "SB 5726", "title": "Transportation revenue from road usage", "sponsor": "Sen. Ramos", "historyLine": "Public hearing 1/15/2026"},
-            
-            # Education
-            {"number": "HB 2147", "title": "School materials and supplies funding increase", "sponsor": "Rep. Mia Gregerson", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 2099", "title": "ECEAP access for military families", "sponsor": "Rep. Mari Leavitt", "historyLine": "Introduced and read first time"},
-            
-            # Public safety
-            {"number": "SB 5853", "title": "Protecting elected officials from political violence", "sponsor": "Sen. Jeff Wilson", "historyLine": "Prefiled for introduction"},
-            
-            # Tax and revenue
-            {"number": "HB 2121", "title": "Sales tax exemption for nonprofits and schools", "sponsor": "Rep. Walsh", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5849", "title": "State treasurer revenue initiative", "sponsor": "Sen. Adrian Cortes", "historyLine": "Prefiled for introduction"},
-            
-            # Housing
-            {"number": "HB 1345", "title": "Detached ADUs in rural areas", "sponsor": "Rep. Strom Peterson", "historyLine": "Third reading, passed House. In Senate"},
-            {"number": "SB 5613", "title": "Non-subjective development regulations", "sponsor": "Sen. Joe Nguyen", "historyLine": "Referred to Housing Committee"},
-            {"number": "SB 5729", "title": "Limiting third-party permit reviews", "sponsor": "Sen. John Lovick", "historyLine": "Executive action taken in committee"},
-            {"number": "HB 1110", "title": "Middle housing development", "sponsor": "Rep. Jessica Bateman", "historyLine": "Third reading, final passage"},
-            
-            # Technology and privacy
-            {"number": "HB 2112", "title": "Age verification for adult content online", "sponsor": "Rep. Mari Leavitt", "historyLine": "Prefiled for introduction"},
-            
-            # Consumer protection
-            {"number": "HB 2114", "title": "Free license plate replacement", "sponsor": "Rep. Andrew Engell", "historyLine": "Prefiled for introduction"},
-            
-            # Budget
-            {"number": "HB 1216", "title": "Capital budget 2025-2027", "sponsor": "Rep. Mike Steele", "historyLine": "Signed by Governor"},
-            
-            # Add more bills
-            {"number": "HB 1001", "title": "Auditor duties", "sponsor": "Rep. Ed Orcutt", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 1002", "title": "Establishing a lifeline fund", "sponsor": "Rep. My-Linh Thai", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 1003", "title": "Dual credit program access", "sponsor": "Rep. Mari Leavitt", "historyLine": "Prefiled for introduction"},
-            {"number": "HB 1004", "title": "Bridge jumping prevention", "sponsor": "Rep. Tina Orwall", "historyLine": "Failed to pass out of committee"},
-            {"number": "HB 1005", "title": "Military spouse employment", "sponsor": "Rep. Jacquelin Maycumber", "historyLine": "Prefiled for introduction"},
-            
-            {"number": "SB 5001", "title": "Public facility districts", "sponsor": "Sen. Mark Mullet", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5002", "title": "Alcohol concentration", "sponsor": "Sen. John Lovick", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5003", "title": "Snohomish county judges", "sponsor": "Sen. June Robinson", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5004", "title": "Business corporations", "sponsor": "Sen. Mike Padden", "historyLine": "Prefiled for introduction"},
-            {"number": "SB 5005", "title": "Small city and town facilities", "sponsor": "Sen. Brad Hawkins", "historyLine": "Vetoed by Governor"},
         ]
         
         for bill_data in actual_bills:
