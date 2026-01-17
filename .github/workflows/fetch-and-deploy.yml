@@ -1,0 +1,280 @@
+# GitHub Actions workflow for WA Bill Tracker
+# Fetches bills from WA Legislature API, runs tests, and deploys to GitHub Pages
+
+name: Fetch Bills and Deploy
+
+on:
+  # Run daily at 6 AM and 6 PM Pacific Time (UTC-8)
+  schedule:
+    - cron: '0 14 * * *'  # 6 AM PT
+    - cron: '0 2 * * *'   # 6 PM PT
+  
+  # Allow manual trigger
+  workflow_dispatch:
+  
+  # Run on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - 'fetch_all_bills.py'
+      - 'app.js'
+      - 'index.html'
+      - '.github/workflows/**'
+
+# Sets permissions of the GITHUB_TOKEN
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Job 1: Run unit tests
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run unit tests
+        run: |
+          python -m pytest test_fetch_all_bills.py -v --tb=short || python -m unittest test_fetch_all_bills -v
+
+      - name: Test script syntax
+        run: |
+          python -m py_compile fetch_all_bills.py
+
+  # Job 2: Fetch bills from WA Legislature API
+  fetch-bills:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      bills_updated: ${{ steps.check_changes.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Create data directory
+        run: mkdir -p data
+
+      - name: Fetch bills from WA Legislature API
+        run: |
+          echo "Starting bill fetch at $(date)"
+          python fetch_all_bills.py
+          echo "Fetch completed at $(date)"
+        timeout-minutes: 10
+
+      - name: Validate JSON output
+        run: |
+          if [ -f data/bills.json ]; then
+            python -c "import json; json.load(open('data/bills.json'))"
+            echo "JSON validation passed"
+            echo "Bills count: $(python -c "import json; print(len(json.load(open('data/bills.json')).get('bills', [])))")"
+          else
+            echo "ERROR: data/bills.json not found"
+            exit 1
+          fi
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet data/bills.json 2>/dev/null; then
+            echo "No changes to bills data"
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Bills data has changed"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit updated data
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/
+          git commit -m "Update bills data - $(date +'%Y-%m-%d %H:%M UTC')" || echo "No changes to commit"
+          git push
+
+      - name: Upload data artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bills-data
+          path: data/
+          retention-days: 7
+
+  # Job 3: Test web application
+  test-webapp:
+    needs: fetch-bills
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download bills data
+        uses: actions/download-artifact@v4
+        with:
+          name: bills-data
+          path: data/
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate HTML
+        run: |
+          # Basic HTML validation
+          if grep -q '<!DOCTYPE html>' index.html; then
+            echo "HTML doctype found"
+          else
+            echo "ERROR: Missing DOCTYPE"
+            exit 1
+          fi
+          
+          # Check for required elements
+          if grep -q 'id="billsGrid"' index.html; then
+            echo "Bills grid element found"
+          else
+            echo "ERROR: Missing billsGrid element"
+            exit 1
+          fi
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check app.js
+          echo "JavaScript syntax validation passed"
+
+      - name: Check data integration
+        run: |
+          # Verify the app can load the data format
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('data/bills.json', 'utf8'));
+            
+            if (!data.bills || !Array.isArray(data.bills)) {
+              throw new Error('Invalid bills format');
+            }
+            
+            console.log('Total bills:', data.bills.length);
+            console.log('Last sync:', data.lastSync);
+            
+            // Verify required fields exist on bills
+            const requiredFields = ['id', 'number', 'title', 'status', 'sponsor'];
+            for (const bill of data.bills.slice(0, 5)) {
+              for (const field of requiredFields) {
+                if (!bill[field] && bill[field] !== '') {
+                  throw new Error('Missing field ' + field + ' on bill ' + bill.id);
+                }
+              }
+            }
+            
+            console.log('Data integration test passed');
+          "
+
+  # Job 4: Deploy to GitHub Pages
+  deploy:
+    needs: [test-webapp]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download bills data
+        uses: actions/download-artifact@v4
+        with:
+          name: bills-data
+          path: data/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Job 5: Send notification on failure
+  notify-failure:
+    needs: [test, fetch-bills, test-webapp, deploy]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create failure issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Workflow failure: ${context.workflow} - ${new Date().toISOString().split('T')[0]}`;
+            const body = `
+            ## Workflow Failure Report
+            
+            - **Workflow:** ${context.workflow}
+            - **Run ID:** ${context.runId}
+            - **Run Number:** ${context.runNumber}
+            - **Triggered by:** ${context.eventName}
+            - **Time:** ${new Date().toISOString()}
+            
+            Please check the [workflow run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for details.
+            `;
+            
+            // Check if issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'workflow-failure'
+            });
+            
+            const existingIssue = issues.data.find(i => i.title.includes(context.workflow));
+            
+            if (existingIssue) {
+              // Add comment to existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: body
+              });
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['workflow-failure', 'automated']
+              });
+            }
