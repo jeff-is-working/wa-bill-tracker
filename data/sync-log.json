@@ -1,6 +1,18 @@
 {
   "logs": [
     {
+      "timestamp": "2026-01-17T02:33:42.673477",
+      "status": "no_data",
+      "billsCount": 0,
+      "methodsUsed": [
+        "GetPreFiledLegislationInfo",
+        "GetLegislationByYear",
+        "GetLegislativeStatusChanges"
+      ],
+      "apiUrl": "https://wslwebservices.leg.wa.gov",
+      "nextSync": "2026-01-17T08:33:42.673483"
+    },
+    {
       "timestamp": "2026-01-15T02:04:08.498916",
       "status": "success",
       "billsCount": 0,
