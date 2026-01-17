@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Washington State Legislature Bill Fetcher
-Fixed version based on successful previous implementations
-Uses proper SOAP parsing and correct API methods
+Uses ACTUAL documented API methods from the WA Legislature Web Services
+Based on https://wslwebservices.leg.wa.gov/LegislationService.asmx?WSDL
+Fixed version using correct method names and XML parsing
 """
 
 import json
@@ -30,10 +31,10 @@ def ensure_data_dir():
     DATA_DIR.mkdir(exist_ok=True)
 
 def make_soap_request(soap_body: str, soap_action: str, debug: bool = False) -> Optional[ET.Element]:
-    """Make SOAP request to WA Legislature API with proper headers"""
+    """Make SOAP request to WA Legislature API"""
     headers = {
         'Content-Type': 'text/xml; charset=utf-8',
-        'SOAPAction': soap_action  # No quotes needed here
+        'SOAPAction': f'"{soap_action}"'  # SOAPAction must be quoted
     }
     
     soap_envelope = f"""<?xml version="1.0" encoding="utf-8"?>
@@ -67,7 +68,6 @@ def make_soap_request(soap_body: str, soap_action: str, debug: bool = False) -> 
             # Check for SOAP faults
             if 'soap:Fault' in response.text:
                 print("SOAP Fault detected:")
-                # Parse the fault
                 try:
                     fault_root = ET.fromstring(response.text)
                     fault_string = fault_root.find('.//faultstring')
@@ -82,8 +82,6 @@ def make_soap_request(soap_body: str, soap_action: str, debug: bool = False) -> 
                 return root
             except ET.ParseError as e:
                 print(f"XML Parse Error: {e}")
-                print("Response content:")
-                print(response.text[:1000])
                 return None
         else:
             print(f"HTTP Error {response.status_code}")
@@ -94,28 +92,48 @@ def make_soap_request(soap_body: str, soap_action: str, debug: bool = False) -> 
         print(f"Request error: {e}")
         return None
 
-def fetch_legislation_by_biennium() -> List[Dict]:
-    """Fetch legislation using GetLegislationByBiennium method"""
-    print(f"Fetching legislation for biennium {BIENNIUM}")
+def fetch_prefiled_legislation() -> List[Dict]:
+    """Fetch prefiled legislation using GetPrefiledLegislation method"""
+    print(f"Fetching prefiled legislation for biennium {BIENNIUM}")
     
     soap_body = f"""
-    <GetLegislationByBiennium xmlns="http://WSLWebServices.leg.wa.gov/">
+    <GetPrefiledLegislation xmlns="http://WSLWebServices.leg.wa.gov/">
       <biennium>{BIENNIUM}</biennium>
-    </GetLegislationByBiennium>"""
+    </GetPrefiledLegislation>"""
     
     root = make_soap_request(
         soap_body,
-        "http://WSLWebServices.leg.wa.gov/GetLegislationByBiennium",
+        "http://WSLWebServices.leg.wa.gov/GetPrefiledLegislation",
         debug=True
     )
     
     if root is None:
         return []
     
-    return parse_legislation_response(root)
+    return parse_legislation_response(root, "GetPrefiledLegislationResult")
+
+def fetch_legislation_introduced_since(date: str) -> List[Dict]:
+    """Fetch legislation introduced since a date using GetLegislationIntroducedSince"""
+    print(f"Fetching legislation introduced since {date}")
+    
+    soap_body = f"""
+    <GetLegislationIntroducedSince xmlns="http://WSLWebServices.leg.wa.gov/">
+      <sinceDate>{date}</sinceDate>
+    </GetLegislationIntroducedSince>"""
+    
+    root = make_soap_request(
+        soap_body,
+        "http://WSLWebServices.leg.wa.gov/GetLegislationIntroducedSince",
+        debug=True
+    )
+    
+    if root is None:
+        return []
+    
+    return parse_legislation_response(root, "GetLegislationIntroducedSinceResult")
 
 def fetch_legislation_by_year() -> List[Dict]:
-    """Fetch legislation using GetLegislationByYear method"""
+    """Fetch legislation by year using GetLegislationByYear"""
     print(f"Fetching legislation for year {YEAR}")
     
     soap_body = f"""
@@ -132,10 +150,10 @@ def fetch_legislation_by_year() -> List[Dict]:
     if root is None:
         return []
     
-    return parse_legislation_response(root)
+    return parse_legislation_response(root, "GetLegislationByYearResult")
 
-def fetch_legislation_by_request_number(request_number: str = "26-0001") -> List[Dict]:
-    """Fetch a specific piece of legislation by request number for testing"""
+def fetch_legislation_by_request_number(request_number: str) -> List[Dict]:
+    """Fetch specific legislation by request number using GetLegislationByRequestNumber"""
     print(f"Fetching legislation by request number {request_number}")
     
     soap_body = f"""
@@ -153,18 +171,16 @@ def fetch_legislation_by_request_number(request_number: str = "26-0001") -> List
     if root is None:
         return []
     
-    return parse_legislation_response(root)
+    return parse_legislation_response(root, "GetLegislationByRequestNumberResult")
 
-def parse_legislation_response(root: ET.Element) -> List[Dict]:
+def parse_legislation_response(root: ET.Element, result_element: str) -> List[Dict]:
     """Parse XML response and extract legislation info"""
     bills = []
     
     # Remove namespaces by converting to string and back
     xml_str = ET.tostring(root, encoding='unicode')
-    # Remove namespace declarations
+    # Remove namespace declarations to simplify parsing
     xml_str = re.sub(r'xmlns[^=]*="[^"]*"', '', xml_str)
-    xml_str = re.sub(r'xsi:[^=]*="[^"]*"', '', xml_str)
-    xml_str = re.sub(r'xsd:[^=]*="[^"]*"', '', xml_str)
     
     try:
         clean_root = ET.fromstring(xml_str)
@@ -172,46 +188,35 @@ def parse_legislation_response(root: ET.Element) -> List[Dict]:
         print("Could not parse cleaned XML")
         return []
     
-    # Look for various possible containers
-    containers = [
-        './/GetLegislationByBienniumResult',
-        './/GetLegislationByYearResult',  
-        './/GetLegislationByRequestNumberResult',
-        './/ArrayOfLegislationInfo',
-        './/LegislationInfo'
-    ]
+    # Look for the specific result element and then LegislationInfo elements
+    result_containers = clean_root.findall(f'.//{result_element}')
     
     legislation_elements = []
-    for container_path in containers:
-        found = clean_root.findall(container_path)
-        if found:
-            print(f"Found container: {container_path} with {len(found)} elements")
-            for container in found:
-                # If this is already a LegislationInfo element
-                if container.tag == 'LegislationInfo':
-                    legislation_elements.append(container)
-                else:
-                    # Look for LegislationInfo children
-                    leg_infos = container.findall('.//LegislationInfo')
-                    legislation_elements.extend(leg_infos)
-            break  # Use the first container type we find
+    for container in result_containers:
+        # Look for LegislationInfo elements within the container
+        leg_infos = container.findall('.//LegislationInfo')
+        legislation_elements.extend(leg_infos)
     
-    # If we didn't find any containers, search the entire document
+    # If no containers found, search entire document
     if not legislation_elements:
         legislation_elements = clean_root.findall('.//LegislationInfo')
     
-    print(f"Found {len(legislation_elements)} LegislationInfo elements total")
+    print(f"Found {len(legislation_elements)} LegislationInfo elements")
+    
+    # Debug: Show structure of first element
+    if legislation_elements and len(legislation_elements) > 0:
+        print("\nSample element structure:")
+        sample = legislation_elements[0]
+        for child in sample:
+            if child.text and child.text.strip():
+                print(f"  {child.tag}: {child.text.strip()}")
     
     for i, leg_elem in enumerate(legislation_elements):
-        if i < 5:  # Debug first 5 elements
-            print(f"\nElement {i+1}:")
-            for child in leg_elem:
-                if child.text and child.text.strip():
-                    print(f"  {child.tag}: {child.text.strip()}")
-        
         bill = parse_legislation_element(leg_elem)
         if bill:
             bills.append(bill)
+            if i < 3:  # Show first 3 for debugging
+                print(f"  Parsed: {bill['number']} - {bill['title'][:60]}...")
     
     return bills
 
@@ -219,13 +224,13 @@ def parse_legislation_element(elem: ET.Element) -> Optional[Dict]:
     """Parse a single LegislationInfo element"""
     try:
         def get_text(tag: str, default: str = "") -> str:
-            """Get text from element, handling various cases"""
+            """Get text from element safely"""
             child = elem.find(tag)
             if child is not None and child.text:
                 return child.text.strip()
             return default
         
-        # Extract key fields
+        # Extract key identifiers
         biennium = get_text('Biennium', BIENNIUM)
         bill_id = get_text('BillId')
         bill_number = get_text('BillNumber')
@@ -233,54 +238,56 @@ def parse_legislation_element(elem: ET.Element) -> Optional[Dict]:
         if not bill_id and not bill_number:
             return None
         
-        # Get descriptions
+        # Get title and description
         short_desc = get_text('ShortDescription')
-        long_desc = get_text('LongDescription') 
+        long_desc = get_text('LongDescription')
         legal_title = get_text('LegalTitle')
         
-        title = short_desc or legal_title or long_desc or "No title available"
-        if not title or title == "No title available":
+        title = short_desc or legal_title or long_desc
+        if not title or len(title.strip()) == 0:
             return None
         
-        # Get other fields
+        # Get bill number formatting info
         substitute_version = get_text('SubstituteVersion', '')
         engrossed_version = get_text('EngrossedVersion', '')
         original_agency = get_text('OriginalAgency', '')
         display_number = get_text('DisplayNumber', '')
         active = get_text('Active', 'true')
         
-        # Build display number
+        # Build proper bill number
         if display_number:
             full_number = display_number
         else:
             full_number = build_bill_number(bill_number, original_agency, substitute_version, engrossed_version)
         
-        # Get sponsor info
+        # Get sponsor information
         prime_sponsor = get_text('PrimeSponsor', '')
         requested_by = get_text('RequestedBy', '')
         sponsor = prime_sponsor or requested_by or "Unknown"
         
-        # Get status
+        # Get status information
         current_status = get_text('CurrentStatus', '')
         history_line = get_text('HistoryLine', '')
-        status = parse_status(current_status, history_line, active)
+        status = determine_bill_status(current_status, history_line, active)
         
         # Get dates
         introduced_date = get_text('IntroducedDate', '')
         prefiled_date = get_text('PrefiledDate', '')
-        date_to_use = introduced_date or prefiled_date or "2025-12-01"
         
-        # Format date
-        if 'T' in date_to_use:
-            try:
-                dt = datetime.fromisoformat(date_to_use.replace('Z', '+00:00'))
+        # Use best available date
+        bill_date = introduced_date or prefiled_date or "2025-12-01"
+        
+        # Format date properly
+        try:
+            if 'T' in bill_date:
+                dt = datetime.fromisoformat(bill_date.replace('Z', '+00:00'))
                 formatted_date = dt.date().isoformat()
-            except:
-                formatted_date = "2025-12-01"
-        else:
-            formatted_date = date_to_use[:10] if len(date_to_use) >= 10 else "2025-12-01"
+            else:
+                formatted_date = bill_date[:10] if len(bill_date) >= 10 else "2025-12-01"
+        except:
+            formatted_date = "2025-12-01"
         
-        # Create bill dict
+        # Build bill object
         bill = {
             "id": bill_id or f"bill_{bill_number}",
             "number": full_number,
@@ -307,15 +314,15 @@ def parse_legislation_element(elem: ET.Element) -> Optional[Dict]:
         return None
 
 def build_bill_number(bill_number: str, original_agency: str, substitute_version: str, engrossed_version: str) -> str:
-    """Build the full bill number with prefix and version info"""
+    """Build full bill number with proper prefix"""
     
-    # Determine prefix
+    # Determine bill type prefix
     if 'House' in original_agency:
         prefix = 'HB'
     elif 'Senate' in original_agency:
         prefix = 'SB'
     else:
-        # Guess from number
+        # Guess from number range
         try:
             num = int(bill_number)
             if num >= 5000:
@@ -332,7 +339,7 @@ def build_bill_number(bill_number: str, original_agency: str, substitute_version
         except:
             prefix = 'HB'
     
-    # Add version info
+    # Add version prefixes
     version_prefix = ''
     if substitute_version:
         if '2S' in substitute_version:
@@ -343,29 +350,33 @@ def build_bill_number(bill_number: str, original_agency: str, substitute_version
     if engrossed_version and 'E' in engrossed_version:
         version_prefix += 'E'
     
-    # Combine
+    # Combine parts
     if version_prefix:
         return f"{version_prefix}{prefix} {bill_number}"
     else:
         return f"{prefix} {bill_number}"
 
-def parse_status(current_status: str, history_line: str, active: str) -> str:
-    """Parse bill status from available fields"""
+def determine_bill_status(current_status: str, history_line: str, active: str) -> str:
+    """Determine standardized bill status"""
     status_text = f"{current_status} {history_line}".lower()
     
     if active.lower() == 'false':
         return 'failed'
-    elif 'signed' in status_text or 'law' in status_text:
+    elif any(word in status_text for word in ['signed', 'law', 'enacted']):
         return 'enacted'
-    elif 'veto' in status_text:
+    elif any(word in status_text for word in ['vetoed', 'veto']):
         return 'vetoed'
-    elif 'passed' in status_text:
+    elif any(word in status_text for word in ['passed legislature', 'passed both']):
         return 'passed'
-    elif 'committee' in status_text:
+    elif any(word in status_text for word in ['delivered to governor']):
+        return 'delivered'
+    elif any(word in status_text for word in ['passed house', 'passed senate']):
+        return 'passed_chamber'
+    elif any(word in status_text for word in ['committee', 'referred']):
         return 'committee'
-    elif 'introduced' in status_text or 'first reading' in status_text:
+    elif any(word in status_text for word in ['first reading', 'introduced']):
         return 'introduced'
-    elif 'prefiled' in status_text:
+    elif any(word in status_text for word in ['prefiled', 'pre-filed']):
         return 'prefiled'
     else:
         return 'active'
@@ -374,36 +385,48 @@ def determine_committee(bill_number: str, title: str) -> str:
     """Determine committee based on bill content"""
     title_lower = title.lower()
     
-    if any(word in title_lower for word in ['education', 'school', 'student']):
-        return "Education"
-    elif any(word in title_lower for word in ['transportation', 'road', 'highway']):
-        return "Transportation"
-    elif any(word in title_lower for word in ['housing', 'rent', 'tenant']):
-        return "Housing"
-    elif any(word in title_lower for word in ['health', 'medical', 'hospital']):
-        return "Health & Long-Term Care"
-    elif any(word in title_lower for word in ['environment', 'energy', 'climate']):
-        return "Environment & Energy"
-    elif any(word in title_lower for word in ['tax', 'revenue', 'budget']):
-        return "Finance" if bill_number.startswith('HB') else "Ways & Means"
-    else:
-        return "State Government & Tribal Relations"
+    committees = {
+        "Education": ["education", "school", "student", "teacher", "learning"],
+        "Transportation": ["transportation", "road", "highway", "transit", "vehicle"],
+        "Housing": ["housing", "rent", "tenant", "landlord", "homeless"],
+        "Health & Long-Term Care": ["health", "medical", "hospital", "mental", "behavioral"],
+        "Environment & Energy": ["environment", "climate", "energy", "pollution", "conservation"],
+        "Finance": ["tax", "revenue", "fiscal", "budget", "appropriation"],
+        "Ways & Means": ["budget", "fiscal", "appropriation", "revenue"],
+        "Consumer Protection & Business": ["consumer", "business", "commerce", "trade"],
+        "Law & Justice": ["crime", "criminal", "justice", "police", "court"],
+        "Labor & Commerce": ["labor", "employment", "worker", "wage", "workplace"],
+        "Agriculture": ["agriculture", "farm", "food", "rural"],
+        "State Government & Tribal Relations": ["state", "government", "tribal", "election"]
+    }
+    
+    for committee, keywords in committees.items():
+        if any(keyword in title_lower for keyword in keywords):
+            # Handle Finance vs Ways & Means based on chamber
+            if committee in ["Finance", "Ways & Means"]:
+                if bill_number.startswith("HB"):
+                    return "Finance"
+                else:
+                    return "Ways & Means"
+            return committee
+    
+    return "State Government & Tribal Relations"
 
 def determine_topic(title: str) -> str:
     """Determine topic from title"""
     title_lower = title.lower()
     
     topics = {
-        "Education": ["education", "school", "student"],
-        "Tax & Revenue": ["tax", "revenue", "budget"],
-        "Housing": ["housing", "rent", "tenant"],
-        "Healthcare": ["health", "medical", "hospital"],
-        "Environment": ["environment", "energy", "climate"],
-        "Transportation": ["transport", "road", "highway"],
-        "Public Safety": ["crime", "safety", "police"],
-        "Business": ["business", "commerce", "trade"],
-        "Technology": ["technology", "internet", "data"],
-        "Labor": ["labor", "employment", "worker"]
+        "Education": ["education", "school", "student", "teacher"],
+        "Tax & Revenue": ["tax", "revenue", "budget", "fiscal"],
+        "Housing": ["housing", "rent", "tenant", "homeless"],
+        "Healthcare": ["health", "medical", "hospital", "mental"],
+        "Environment": ["environment", "climate", "energy", "conservation"],
+        "Transportation": ["transport", "road", "highway", "transit"],
+        "Public Safety": ["crime", "safety", "police", "justice"],
+        "Business": ["business", "commerce", "trade", "economy"],
+        "Technology": ["technology", "internet", "data", "privacy"],
+        "Labor": ["labor", "employment", "worker", "wage"]
     }
     
     for topic, keywords in topics.items():
@@ -416,7 +439,7 @@ def determine_priority(title: str) -> str:
     """Determine priority from title"""
     title_lower = title.lower()
     
-    if any(word in title_lower for word in ['emergency', 'urgent', 'budget']):
+    if any(word in title_lower for word in ['emergency', 'urgent', 'budget', 'supplemental']):
         return "high"
     elif any(word in title_lower for word in ['technical', 'clarifying', 'housekeeping']):
         return "low"
@@ -434,7 +457,7 @@ def save_bills_data(bills: List[Dict]) -> Dict:
     
     bills = list(unique_bills.values())
     
-    # Sort bills
+    # Sort bills by type and number
     def sort_key(bill):
         number = bill.get('number', '')
         match = re.match(r'([A-Z]+)\s*(\d+)', number)
@@ -456,7 +479,8 @@ def save_bills_data(bills: List[Dict]) -> Dict:
             "source": "Washington State Legislature Web Services",
             "apiUrl": BASE_API_URL,
             "updateFrequency": "daily",
-            "dataVersion": "3.2.0"
+            "dataVersion": "4.0.0",
+            "methods": ["GetPrefiledLegislation", "GetLegislationIntroducedSince", "GetLegislationByYear"]
         }
     }
     
@@ -470,42 +494,62 @@ def save_bills_data(bills: List[Dict]) -> Dict:
 def main():
     """Main execution function"""
     print(f"Starting WA Legislature Bill Fetcher - {datetime.now()}")
-    print("Using corrected API methods and XML parsing")
+    print("Using ACTUAL documented API methods")
     print("=" * 60)
     
     ensure_data_dir()
     
     all_bills = {}
     
-    # Try multiple methods to get bills
-    methods = [
-        ("GetLegislationByBiennium", fetch_legislation_by_biennium),
-        ("GetLegislationByYear", fetch_legislation_by_year),
-    ]
+    # Method 1: Get prefiled legislation
+    print("\n1. Fetching prefiled legislation...")
+    try:
+        prefiled_bills = fetch_prefiled_legislation()
+        for bill in prefiled_bills:
+            if bill['id'] not in all_bills:
+                all_bills[bill['id']] = bill
+        print(f"   Found {len(prefiled_bills)} prefiled bills")
+    except Exception as e:
+        print(f"   Error with GetPrefiledLegislation: {e}")
     
-    for method_name, method_func in methods:
-        print(f"\nTrying {method_name}...")
-        try:
-            bills = method_func()
-            new_bills = 0
-            for bill in bills:
-                if bill['id'] not in all_bills:
-                    all_bills[bill['id']] = bill
-                    new_bills += 1
-            print(f"  Found {len(bills)} bills ({new_bills} new)")
-        except Exception as e:
-            print(f"  Error with {method_name}: {e}")
+    # Method 2: Get legislation introduced since Dec 1
+    print("\n2. Fetching legislation introduced since December 1, 2025...")
+    try:
+        since_date = "2025-12-01T00:00:00"
+        introduced_bills = fetch_legislation_introduced_since(since_date)
+        new_introduced = 0
+        for bill in introduced_bills:
+            if bill['id'] not in all_bills:
+                all_bills[bill['id']] = bill
+                new_introduced += 1
+        print(f"   Found {len(introduced_bills)} introduced bills ({new_introduced} new)")
+    except Exception as e:
+        print(f"   Error with GetLegislationIntroducedSince: {e}")
     
-    # If no bills found, try a specific request number as a test
+    # Method 3: Get legislation by year (this worked before)
+    print("\n3. Fetching legislation by year...")
+    try:
+        year_bills = fetch_legislation_by_year()
+        new_year = 0
+        for bill in year_bills:
+            if bill['id'] not in all_bills:
+                all_bills[bill['id']] = bill
+                new_year += 1
+        print(f"   Found {len(year_bills)} year bills ({new_year} new)")
+    except Exception as e:
+        print(f"   Error with GetLegislationByYear: {e}")
+    
+    # If still no bills, try a specific request number test
     if len(all_bills) == 0:
-        print("\nTrying GetLegislationByRequestNumber as test...")
+        print("\n4. Testing with specific request number...")
         try:
-            test_bills = fetch_legislation_by_request_number()
+            # Try a more likely request number format
+            test_bills = fetch_legislation_by_request_number("25-0001")
             for bill in test_bills:
                 all_bills[bill['id']] = bill
-            print(f"  Found {len(test_bills)} bills from test request")
+            print(f"   Found {len(test_bills)} bills from test request")
         except Exception as e:
-            print(f"  Error with test request: {e}")
+            print(f"   Error with test request: {e}")
     
     final_bills = list(all_bills.values())
     
@@ -513,13 +557,14 @@ def main():
     print(f"Total unique bills collected: {len(final_bills)}")
     
     if final_bills:
-        print("\nSample bills:")
-        for bill in final_bills[:3]:
+        print("\nSample bills found:")
+        for bill in final_bills[:5]:
             print(f"  {bill['number']}: {bill['title']}")
         
         save_bills_data(final_bills)
     else:
-        print("No bills found. Check debug files for details.")
+        print("No bills found. The API may not have data for this biennium yet.")
+        print("Check debug_response.xml files for API responses.")
     
     print("=" * 60)
     print(f"Complete at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
