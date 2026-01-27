@@ -1,32 +1,32 @@
 {
-  "generated": "2026-01-26T14:44:56.933603",
-  "totalBills": 3510,
+  "generated": "2026-01-27T03:59:19.752925",
+  "totalBills": 3513,
   "byStatus": {
-    "prefiled": 2300,
-    "committee": 159,
-    "introduced": 1002,
+    "prefiled": 2283,
+    "committee": 181,
+    "introduced": 1000,
     "enacted": 49
   },
   "byCommittee": {
-    "Unassigned": 3510
+    "Unassigned": 3513
   },
   "byPriority": {
-    "medium": 3348,
-    "high": 124,
+    "medium": 3352,
+    "high": 123,
     "low": 38
   },
   "byTopic": {
-    "General Government": 2097,
-    "Public Safety": 131,
+    "General Government": 2105,
+    "Public Safety": 127,
     "Housing": 110,
     "Tax & Revenue": 260,
     "Transportation": 117,
-    "Healthcare": 188,
-    "Education": 244,
-    "Social Services": 98,
+    "Healthcare": 187,
+    "Education": 243,
+    "Social Services": 100,
     "Environment": 92,
     "Business": 94,
-    "Technology": 49,
+    "Technology": 48,
     "Agriculture": 30
   },
   "bySponsor": {
@@ -86,7 +86,7 @@
     "CS(Farivar)": 3,
     "(Tharinger)": 8,
     "APP(Mena)": 3,
-    "(Simmons)": 19,
+    "(Simmons)": 18,
     "APP(Goodman)": 4,
     "LAWS(McClintock)": 1,
     "(McClintock)": 13,
@@ -168,7 +168,7 @@
     "(Scott)": 11,
     "CRJ(Goodman)": 1,
     "APP(Rude)": 1,
-    "(Rule)": 30,
+    "(Rule)": 31,
     "ED(McClintock)": 1,
     "HCW(Rule)": 2,
     "APP(Dent)": 3,
@@ -224,7 +224,7 @@
     "(Obras)": 11,
     "(Davis)": 11,
     "APP(Davis)": 3,
-    "HCW(Simmons)": 2,
+    "HCW(Simmons)": 3,
     "SGOV(Salahuddin)": 2,
     "(Abell)": 16,
     "TEDV(Walen)": 1,
@@ -415,7 +415,7 @@
     "ENET(Wilson, J.)": 1,
     "(Chapman)": 15,
     "(Holy)": 8,
-    "(Dhingra)": 21,
+    "(Dhingra)": 22,
     "(Conway)": 14,
     "LC(Stanford)": 5,
     "LC(Riccelli)": 1,
@@ -453,7 +453,7 @@
     "HLTC(Bateman)": 2,
     "(Christian)": 22,
     "HLTC(Valdez)": 1,
-    "(Nobles)": 31,
+    "(Nobles)": 32,
     "HLTC(Frame)": 1,
     "(Trudeau)": 12,
     "EDU(Nobles)": 3,
@@ -638,21 +638,21 @@
     "JM": 30,
     "JR": 23,
     "CR": 17,
-    "HR": 69,
-    "SR": 64,
+    "HR": 70,
+    "SR": 66,
     "GA": 321
   },
   "byAgency": {
     "House": 1706,
     "Senate": 1349,
     "SI IL26-": 1,
-    "HR": 68,
+    "HR": 69,
     "EHR": 1,
-    "SR": 64,
+    "SR": 66,
     "SGA": 321
   },
-  "recentlyUpdated": 3510,
-  "updatedToday": 3510,
+  "recentlyUpdated": 3513,
+  "updatedToday": 3513,
   "topSponsors": [
     [
       "()",
@@ -699,19 +699,19 @@
       32
     ],
     [
+      "(Nobles)",
+      32
+    ],
+    [
+      "(Rule)",
+      31
+    ],
+    [
       "(Lovick)",
       31
     ],
     [
-      "(Nobles)",
-      31
-    ],
-    [
       "(Thai)",
-      30
-    ],
-    [
-      "(Rule)",
       30
     ],
     [
