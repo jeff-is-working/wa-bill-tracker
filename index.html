@@ -555,6 +555,97 @@
         .tag.priority-medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: var(--warning); }
         .tag.priority-low { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
 
+        /* Bill Status Progress Tracker */
+        .bill-progress {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            gap: 0;
+            position: relative;
+        }
+
+        .bill-progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            z-index: 1;
+        }
+
+        .bill-progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .bill-progress-step.completed .bill-progress-dot {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .bill-progress-step.active .bill-progress-dot {
+            background: var(--bg-card);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+
+        .bill-progress-step.failed .bill-progress-dot {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .bill-progress-step.enacted .bill-progress-dot {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .bill-progress-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            opacity: 0.6;
+        }
+
+        .bill-progress-step.completed .bill-progress-label,
+        .bill-progress-step.active .bill-progress-label {
+            color: var(--accent);
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .bill-progress-step.failed .bill-progress-label {
+            color: var(--danger);
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .bill-progress-step.enacted .bill-progress-label {
+            color: var(--success);
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .bill-progress-line {
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+            margin: 0 -2px;
+            margin-bottom: 1.1rem;
+            z-index: 0;
+        }
+
+        .bill-progress-line.completed {
+            background: var(--accent);
+        }
+
         /* Notes Display in Bill Card */
         .bill-notes-preview {
             padding: 0 1.5rem 1rem;

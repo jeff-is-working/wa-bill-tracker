@@ -378,6 +378,73 @@ function renderBills() {
     grid.innerHTML = filteredBills.map(bill => createBillCard(bill)).join('');
 }
 
+// Build a leg.wa.gov-style status progress tracker for a bill
+function buildProgressTracker(bill) {
+    // Stages in legislative order
+    const stages = [
+        { key: 'prefiled',    label: 'Prefiled' },
+        { key: 'introduced',  label: 'Introduced' },
+        { key: 'committee',   label: 'Committee' },
+        { key: 'floor',       label: 'Floor Vote' },
+        { key: 'enacted',     label: 'Enacted' }
+    ];
+
+    // Determine current stage index from bill status + historyLine
+    const status = (bill.status || '').toLowerCase();
+    const history = (bill.historyLine || '').toLowerCase();
+
+    let currentIndex = 0; // prefiled by default
+    let isFailed = false;
+
+    if (status === 'enacted') {
+        currentIndex = 4;
+    } else if (status === 'passed') {
+        // Passed origin chamber floor vote
+        currentIndex = 3;
+    } else if (status === 'committee') {
+        currentIndex = 2;
+    } else if (status === 'introduced') {
+        currentIndex = 1;
+    } else if (status === 'failed') {
+        isFailed = true;
+        // Determine how far it got before failing
+        if (history.includes('third reading') || history.includes('floor')) {
+            currentIndex = 3;
+        } else if (history.includes('committee') || history.includes('referred')) {
+            currentIndex = 2;
+        } else {
+            currentIndex = 1;
+        }
+    }
+
+    let html = '<div class="bill-progress">';
+
+    stages.forEach((stage, i) => {
+        // Add connecting line before each step except the first
+        if (i > 0) {
+            const lineCompleted = i <= currentIndex && !isFailed;
+            html += `<div class="bill-progress-line${lineCompleted ? ' completed' : ''}"></div>`;
+        }
+
+        let stepClass = '';
+        if (isFailed && i === currentIndex) {
+            stepClass = 'failed';
+        } else if (i < currentIndex) {
+            stepClass = 'completed';
+        } else if (i === currentIndex) {
+            stepClass = stage.key === 'enacted' ? 'enacted' : 'active';
+        }
+
+        html += `<div class="bill-progress-step ${stepClass}">`;
+        html += `<div class="bill-progress-dot"></div>`;
+        html += `<span class="bill-progress-label">${stage.label}</span>`;
+        html += `</div>`;
+    });
+
+    html += '</div>';
+    return html;
+}
+
 function createBillCard(bill) {
     const isTracked = APP_STATE.trackedBills.has(bill.id);
     const hasNotes = APP_STATE.userNotes[bill.id] && APP_STATE.userNotes[bill.id].length > 0;
@@ -395,11 +462,13 @@ function createBillCard(bill) {
     return `
         <div class="bill-card ${isTracked ? 'tracked' : ''}" data-bill-id="${bill.id}">
             <div class="bill-header">
-                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ')[1]}&Year=2026" 
+                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ')[1]}&Year=2026"
                    target="_blank" class="bill-number">${bill.number}</a>
                 <div class="bill-title">${bill.title}</div>
             </div>
-            
+
+            ${buildProgressTracker(bill)}
+
             <div class="bill-body">
                 <div class="bill-meta">
                     <span class="meta-item">👤 ${bill.sponsor}</span>
