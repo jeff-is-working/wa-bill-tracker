@@ -563,39 +563,37 @@
         .tag.priority-medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: var(--warning); }
         .tag.priority-low { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
 
-        /* Bill Status Progress Tracker — two-section layout */
+        /* Bill Status Progress Tracker — stacked vertical layout */
         .bill-progress-tracker {
             display: flex;
-            gap: 0.25rem;
-            padding: 0.65rem 1.25rem 0.4rem;
+            flex-direction: column;
+            gap: 0.15rem;
+            padding: 0.75rem 1.5rem 0.6rem;
             border-bottom: 1px solid var(--border);
         }
 
         .bill-progress-section {
-            flex: 1;
             display: flex;
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .bill-progress-section:first-child {
-            flex: 1.2;
+            align-items: center;
+            gap: 0.6rem;
         }
 
         .bill-progress-section-label {
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.06em;
             color: var(--text-muted);
             opacity: 0.5;
-            margin-bottom: 0.3rem;
-            padding-left: 2px;
+            width: 3.5rem;
+            flex-shrink: 0;
+            text-align: right;
         }
 
         .bill-progress-row {
             display: flex;
             align-items: flex-start;
+            flex: 1;
         }
 
         .bill-progress-step {
