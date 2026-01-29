@@ -477,6 +477,148 @@ def get_leg_url(bill_number: int, bill_type: str = "") -> str:
     return f"https://app.leg.wa.gov/billsummary?BillNumber={bill_number}&Year={YEAR}"
 
 
+def get_committee_meetings(begin_date: str, end_date: str) -> List[Dict]:
+    """
+    Fetch committee meetings within a date range using CommitteeMeetingService.
+    Returns a list of meeting dicts with agendaId, date, committee name, etc.
+    """
+    logger.info(f"Fetching committee meetings from {begin_date} to {end_date}...")
+
+    root = make_soap_request(
+        COMMITTEE_MEETING_SERVICE,
+        "GetCommitteeMeetings",
+        {
+            "beginDate": f"{begin_date}T00:00:00",
+            "endDate": f"{end_date}T23:59:59"
+        }
+    )
+
+    if root is None:
+        return []
+
+    meetings = []
+    meeting_elements = find_all_elements(root, "CommitteeMeeting")
+
+    for elem in meeting_elements:
+        cancelled = find_element_text(elem, "Cancelled")
+        if cancelled.lower() == "true":
+            continue
+
+        agenda_id = find_element_text(elem, "AgendaId")
+        date_str = find_element_text(elem, "Date")
+        agency = find_element_text(elem, "Agency")
+        room = find_element_text(elem, "Room")
+
+        # Get committee name from nested Committees/Committee/LongName
+        committee_name = ""
+        committees_elem = None
+        for child in elem:
+            if strip_namespace(child.tag) == "Committees":
+                committees_elem = child
+                break
+        if committees_elem is not None:
+            for child in committees_elem:
+                if strip_namespace(child.tag) == "Committee":
+                    committee_name = find_element_text(child, "LongName")
+                    if not committee_name:
+                        committee_name = find_element_text(child, "Name")
+                    break
+
+        if agenda_id:
+            meetings.append({
+                "agendaId": int(agenda_id),
+                "date": date_str[:10] if date_str else "",
+                "time": date_str[11:16] if date_str and len(date_str) > 11 else "",
+                "committee": committee_name or agency,
+                "room": room,
+                "agency": agency
+            })
+
+    logger.info(f"Found {len(meetings)} non-cancelled committee meetings")
+    return meetings
+
+
+def get_meeting_agenda_items(agenda_id: int) -> List[Dict]:
+    """
+    Fetch the agenda items (bills) for a specific committee meeting.
+    Returns a list of dicts with billId, hearingType, description.
+    """
+    root = make_soap_request(
+        COMMITTEE_MEETING_SERVICE,
+        "GetCommitteeMeetingItems",
+        {"agendaId": str(agenda_id)}
+    )
+
+    if root is None:
+        return []
+
+    items = []
+    item_elements = find_all_elements(root, "CommitteeMeetingItem")
+
+    for elem in item_elements:
+        bill_id = find_element_text(elem, "BillId")
+        if not bill_id:
+            continue
+        hearing_type = find_element_text(elem, "HearingTypeDescription")
+        items.append({
+            "billId": bill_id.replace(" ", ""),
+            "hearingType": hearing_type
+        })
+
+    return items
+
+
+def fetch_hearings_for_bills(bills: List[Dict]) -> None:
+    """
+    Fetch upcoming committee hearings and attach them to matching bills.
+    Modifies bills in-place by populating the 'hearings' field.
+    This runs as a separate step after all bills are collected.
+    """
+    today = datetime.now()
+    # Look 30 days ahead for upcoming hearings
+    end_date = today + timedelta(days=30)
+    begin_str = today.strftime("%Y-%m-%d")
+    end_str = end_date.strftime("%Y-%m-%d")
+
+    try:
+        meetings = get_committee_meetings(begin_str, end_str)
+    except Exception as e:
+        logger.warning(f"Failed to fetch committee meetings (non-fatal): {e}")
+        return
+
+    if not meetings:
+        logger.info("No upcoming committee meetings found")
+        return
+
+    # Build a lookup from bill ID (no spaces) to bill dict
+    bill_lookup = {b["id"]: b for b in bills}
+
+    hearings_attached = 0
+
+    for meeting in meetings:
+        time.sleep(REQUEST_DELAY)
+
+        try:
+            items = get_meeting_agenda_items(meeting["agendaId"])
+        except Exception as e:
+            logger.warning(f"Failed to fetch agenda {meeting['agendaId']} (non-fatal): {e}")
+            continue
+
+        for item in items:
+            bill = bill_lookup.get(item["billId"])
+            if bill is not None:
+                bill["hearings"].append({
+                    "date": meeting["date"],
+                    "time": meeting["time"],
+                    "committee": meeting["committee"],
+                    "room": meeting["room"],
+                    "hearingType": item["hearingType"]
+                })
+                hearings_attached += 1
+
+    logger.info(f"Attached {hearings_attached} hearing entries to bills")
+
+
 def fetch_all_bills() -> List[Dict]:
     """Main function to fetch all bills with full details"""
     logger.info("=" * 60)
@@ -599,7 +741,14 @@ def fetch_all_bills() -> List[Dict]:
             logger.debug(f"No details found for bill number {bill_num}")
     
     logger.info(f"Successfully processed {processed} bills, {failed} failed")
-    
+
+    # Step 4: Fetch upcoming hearings and attach to bills
+    # This is additive only — if it fails, bills are still returned without hearings
+    try:
+        fetch_hearings_for_bills(final_bills)
+    except Exception as e:
+        logger.warning(f"Hearing fetch failed (non-fatal, bills unaffected): {e}")
+
     return final_bills
 
 
