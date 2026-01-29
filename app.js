@@ -378,69 +378,131 @@ function renderBills() {
     grid.innerHTML = filteredBills.map(bill => createBillCard(bill)).join('');
 }
 
-// Build a leg.wa.gov-style status progress tracker for a bill
-function buildProgressTracker(bill) {
-    // Stages in legislative order
-    const stages = [
-        { key: 'prefiled',    label: 'Prefiled' },
-        { key: 'introduced',  label: 'Introduced' },
-        { key: 'committee',   label: 'Committee' },
-        { key: 'floor',       label: 'Floor Vote' },
-        { key: 'enacted',     label: 'Enacted' }
-    ];
+// Human-readable status labels
+const STATUS_LABELS = {
+    'prefiled': 'Pre-filed',
+    'introduced': 'Introduced',
+    'committee': 'In Committee',
+    'floor': 'Floor Vote',
+    'passed_origin': 'Passed Chamber',
+    'passed': 'Passed Chamber',
+    'opposite_committee': 'Opposite Committee',
+    'opposite_floor': 'Opposite Floor',
+    'passed_legislature': 'Passed Legislature',
+    'governor': 'Governor',
+    'enacted': 'Enacted',
+    'vetoed': 'Vetoed',
+    'failed': 'Failed'
+};
 
-    // Determine current stage index from bill status + historyLine
+// Map bill status to a numeric stage index across the full legislative lifecycle.
+// Origin chamber:     0=Prefiled  1=Introduced  2=Committee  3=Floor  4=Passed
+// Opposite chamber:   5=Committee  6=Floor
+// Final:              7=Governor   8=Enacted
+// Special:            -1=Failed, -2=Vetoed
+function getBillStageIndex(bill) {
     const status = (bill.status || '').toLowerCase();
     const history = (bill.historyLine || '').toLowerCase();
 
-    let currentIndex = 0; // prefiled by default
-    let isFailed = false;
+    // New granular statuses (from updated fetch script)
+    if (status === 'enacted')               return 8;
+    if (status === 'governor')              return 7;
+    if (status === 'passed_legislature')    return 7; // awaiting governor
+    if (status === 'opposite_floor')        return 6;
+    if (status === 'opposite_committee')    return 5;
+    if (status === 'passed_origin')         return 4;
+    if (status === 'floor')                 return 3;
+    if (status === 'vetoed')                return -2;
+    if (status === 'failed')                return -1;
 
-    if (status === 'enacted') {
-        currentIndex = 4;
-    } else if (status === 'passed') {
-        // Passed origin chamber floor vote
-        currentIndex = 3;
-    } else if (status === 'committee') {
-        currentIndex = 2;
-    } else if (status === 'introduced') {
-        currentIndex = 1;
-    } else if (status === 'failed') {
-        isFailed = true;
-        // Determine how far it got before failing
-        if (history.includes('third reading') || history.includes('floor')) {
-            currentIndex = 3;
-        } else if (history.includes('committee') || history.includes('referred')) {
-            currentIndex = 2;
-        } else {
-            currentIndex = 1;
-        }
+    // Legacy statuses (from existing bills.json before next fetch)
+    if (status === 'passed')                return 4;
+    if (status === 'committee')             return 2;
+    if (status === 'introduced')            return 1;
+
+    // Fallback: infer from historyLine
+    if (history.includes('effective date') || history.includes('governor signed'))   return 8;
+    if (history.includes('delivered to governor'))                                    return 7;
+    if (history.includes('third reading') && history.includes('passed'))             return 4;
+    if (history.includes('second reading') || history.includes('third reading'))     return 3;
+    if (history.includes('rules committee') || history.includes('placed on'))        return 3;
+    if (history.includes('referred to'))                                             return 2;
+    if (history.includes('first reading'))                                           return 1;
+
+    return 0; // prefiled
+}
+
+// Build a leg.wa.gov-style two-section status progress tracker
+function buildProgressTracker(bill) {
+    const agency = (bill.originalAgency || '').toLowerCase();
+    const originLabel  = agency === 'senate' ? 'Senate' : 'House';
+    const oppositeLabel = agency === 'senate' ? 'House' : 'Senate';
+
+    const stageIndex = getBillStageIndex(bill);
+    const isFailed = stageIndex === -1;
+    const isVetoed = stageIndex === -2;
+    // For failed/vetoed, infer how far the bill got from historyLine
+    let failedAt = 0;
+    if (isFailed || isVetoed) {
+        const history = (bill.historyLine || '').toLowerCase();
+        if (isVetoed)                                                    failedAt = 7;
+        else if (history.includes('third reading') || history.includes('floor')) failedAt = 3;
+        else if (history.includes('committee') || history.includes('referred'))  failedAt = 2;
+        else if (history.includes('first reading'))                              failedAt = 1;
+        else                                                                     failedAt = 1;
+    }
+    const effectiveIndex = (isFailed || isVetoed) ? failedAt : stageIndex;
+
+    // Section 1: Origin chamber
+    const originStages = [
+        { idx: 0, label: 'Prefiled' },
+        { idx: 1, label: 'Introduced' },
+        { idx: 2, label: 'Committee' },
+        { idx: 3, label: 'Floor' },
+        { idx: 4, label: 'Passed' }
+    ];
+
+    // Section 2: Opposite chamber + Final
+    const finalStages = [
+        { idx: 5, label: 'Committee' },
+        { idx: 6, label: 'Floor' },
+        { idx: 7, label: 'Governor' },
+        { idx: 8, label: 'Enacted' }
+    ];
+
+    function renderSection(stages, sectionLabel) {
+        let html = `<div class="bill-progress-section">`;
+        html += `<span class="bill-progress-section-label">${sectionLabel}</span>`;
+        html += `<div class="bill-progress-row">`;
+
+        stages.forEach((stage, i) => {
+            if (i > 0) {
+                const lineOn = effectiveIndex >= stage.idx && !(isFailed || isVetoed);
+                html += `<div class="bill-progress-line${lineOn ? ' completed' : ''}"></div>`;
+            }
+
+            let cls = '';
+            if ((isFailed || isVetoed) && stage.idx === failedAt) {
+                cls = isFailed ? 'failed' : 'vetoed';
+            } else if (effectiveIndex > stage.idx) {
+                cls = 'completed';
+            } else if (effectiveIndex === stage.idx && !(isFailed || isVetoed)) {
+                cls = stage.idx === 8 ? 'enacted' : 'active';
+            }
+
+            html += `<div class="bill-progress-step ${cls}">`;
+            html += `<div class="bill-progress-dot"></div>`;
+            html += `<span class="bill-progress-label">${stage.label}</span>`;
+            html += `</div>`;
+        });
+
+        html += `</div></div>`;
+        return html;
     }
 
-    let html = '<div class="bill-progress">';
-
-    stages.forEach((stage, i) => {
-        // Add connecting line before each step except the first
-        if (i > 0) {
-            const lineCompleted = i <= currentIndex && !isFailed;
-            html += `<div class="bill-progress-line${lineCompleted ? ' completed' : ''}"></div>`;
-        }
-
-        let stepClass = '';
-        if (isFailed && i === currentIndex) {
-            stepClass = 'failed';
-        } else if (i < currentIndex) {
-            stepClass = 'completed';
-        } else if (i === currentIndex) {
-            stepClass = stage.key === 'enacted' ? 'enacted' : 'active';
-        }
-
-        html += `<div class="bill-progress-step ${stepClass}">`;
-        html += `<div class="bill-progress-dot"></div>`;
-        html += `<span class="bill-progress-label">${stage.label}</span>`;
-        html += `</div>`;
-    });
-
+    let html = '<div class="bill-progress-tracker">';
+    html += renderSection(originStages, originLabel);
+    html += renderSection(finalStages, oppositeLabel);
     html += '</div>';
     return html;
 }
@@ -481,7 +543,7 @@ function createBillCard(bill) {
                 ${hasNotes ? `<div class="bill-notes-preview">📝 "${latestNote}"</div>` : ''}
                 
                 <div class="bill-tags">
-                    <span class="tag status-${bill.status}">${bill.status}</span>
+                    <span class="tag status-${bill.status}">${STATUS_LABELS[bill.status] || bill.status}</span>
                     <span class="tag priority-${bill.priority}">${bill.priority} priority</span>
                     <span class="tag">${bill.topic}</span>
                 </div>
@@ -534,7 +596,23 @@ function filterBills() {
     }
     
     if (APP_STATE.filters.status && APP_STATE.filters.status.length > 0) {
-        filtered = filtered.filter(bill => APP_STATE.filters.status.includes(bill.status));
+        // Expand selected filters to also match related statuses
+        // (handles backward compatibility and logical grouping)
+        const statusAliases = {
+            'committee':     ['committee', 'opposite_committee'],
+            'floor':         ['floor', 'opposite_floor'],
+            'passed_origin': ['passed_origin', 'passed', 'passed_legislature'],
+            'passed':        ['passed', 'passed_origin', 'passed_legislature'],
+            'enacted':       ['enacted'],
+            'governor':      ['governor'],
+            'vetoed':        ['vetoed'],
+            'failed':        ['failed']
+        };
+        const expandedStatuses = new Set();
+        APP_STATE.filters.status.forEach(s => {
+            (statusAliases[s] || [s]).forEach(v => expandedStatuses.add(v));
+        });
+        filtered = filtered.filter(bill => expandedStatuses.has(bill.status));
     }
 
     if (APP_STATE.filters.priority && APP_STATE.filters.priority.length > 0) {

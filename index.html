@@ -547,35 +547,68 @@
 
         .tag.status-prefiled { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: var(--warning); }
         .tag.status-introduced { background: rgba(59, 130, 246, 0.1); color: var(--accent); border-color: var(--accent); }
-        .tag.status-committee { background: rgba(168, 85, 247, 0.1); color: #a855f7; border-color: #a855f7; }
-        .tag.status-passed { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
+        .tag.status-committee,
+        .tag.status-opposite_committee { background: rgba(168, 85, 247, 0.1); color: #a855f7; border-color: #a855f7; }
+        .tag.status-floor,
+        .tag.status-opposite_floor { background: rgba(99, 102, 241, 0.1); color: #818cf8; border-color: #818cf8; }
+        .tag.status-passed,
+        .tag.status-passed_origin,
+        .tag.status-passed_legislature { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
+        .tag.status-governor { background: rgba(234, 179, 8, 0.1); color: #eab308; border-color: #eab308; }
+        .tag.status-enacted { background: rgba(16, 185, 129, 0.15); color: var(--success); border-color: var(--success); font-weight: 700; }
+        .tag.status-vetoed,
         .tag.status-failed { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger); }
 
         .tag.priority-high { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: var(--danger); }
         .tag.priority-medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: var(--warning); }
         .tag.priority-low { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: var(--success); }
 
-        /* Bill Status Progress Tracker */
-        .bill-progress {
+        /* Bill Status Progress Tracker — two-section layout */
+        .bill-progress-tracker {
             display: flex;
-            align-items: center;
-            padding: 0.75rem 1.5rem;
-            gap: 0;
-            position: relative;
+            gap: 0.25rem;
+            padding: 0.65rem 1.25rem 0.4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .bill-progress-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .bill-progress-section:first-child {
+            flex: 1.2;
+        }
+
+        .bill-progress-section-label {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            opacity: 0.5;
+            margin-bottom: 0.3rem;
+            padding-left: 2px;
+        }
+
+        .bill-progress-row {
+            display: flex;
+            align-items: flex-start;
         }
 
         .bill-progress-step {
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
             flex: 1;
             z-index: 1;
         }
 
         .bill-progress-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--border);
             border: 2px solid var(--border);
@@ -591,10 +624,11 @@
         .bill-progress-step.active .bill-progress-dot {
             background: var(--bg-card);
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
         }
 
-        .bill-progress-step.failed .bill-progress-dot {
+        .bill-progress-step.failed .bill-progress-dot,
+        .bill-progress-step.vetoed .bill-progress-dot {
             background: var(--danger);
             border-color: var(--danger);
         }
@@ -605,13 +639,13 @@
         }
 
         .bill-progress-label {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--text-muted);
-            margin-top: 0.35rem;
+            margin-top: 0.25rem;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.02em;
             white-space: nowrap;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         .bill-progress-step.completed .bill-progress-label,
@@ -621,7 +655,8 @@
             font-weight: 600;
         }
 
-        .bill-progress-step.failed .bill-progress-label {
+        .bill-progress-step.failed .bill-progress-label,
+        .bill-progress-step.vetoed .bill-progress-label {
             color: var(--danger);
             opacity: 1;
             font-weight: 600;
@@ -637,8 +672,8 @@
             flex: 1;
             height: 2px;
             background: var(--border);
-            margin: 0 -2px;
-            margin-bottom: 1.1rem;
+            margin: 0 -1px;
+            margin-top: 6px;
             z-index: 0;
         }
 
@@ -1108,7 +1143,11 @@
                         <span class="filter-tag" data-filter="status" data-value="prefiled">Pre-filed</span>
                         <span class="filter-tag" data-filter="status" data-value="introduced">Introduced</span>
                         <span class="filter-tag" data-filter="status" data-value="committee">In Committee</span>
-                        <span class="filter-tag" data-filter="status" data-value="passed">Passed</span>
+                        <span class="filter-tag" data-filter="status" data-value="floor">Floor Vote</span>
+                        <span class="filter-tag" data-filter="status" data-value="passed_origin">Passed Chamber</span>
+                        <span class="filter-tag" data-filter="status" data-value="governor">Governor</span>
+                        <span class="filter-tag" data-filter="status" data-value="enacted">Enacted</span>
+                        <span class="filter-tag" data-filter="status" data-value="vetoed">Vetoed</span>
                         <span class="filter-tag" data-filter="status" data-value="failed">Failed</span>
                     </div>
                 </div>

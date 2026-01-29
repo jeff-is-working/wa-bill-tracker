@@ -414,41 +414,89 @@ def determine_priority(title: str, requested_by_governor: bool = False) -> str:
     return "medium"
 
 
-def normalize_status(status: str, history_line: str = "") -> str:
-    """Normalize status to standard values"""
+def normalize_status(status: str, history_line: str = "", original_agency: str = "") -> str:
+    """
+    Normalize status to standard values reflecting the full legislative lifecycle.
+
+    Possible return values (in progression order):
+      prefiled, introduced, committee, floor,
+      passed_origin, opposite_committee, opposite_floor,
+      passed_legislature, governor, enacted,
+      vetoed, failed
+    """
     status_lower = (status or "").lower()
     history_lower = (history_line or "").lower()
-    
-    # Check history line first for more specific status indicators
+    agency_lower = (original_agency or "").lower()
+
+    # Determine the opposite chamber name for cross-chamber detection
+    if "house" in agency_lower:
+        opposite = "senate"
+    elif "senate" in agency_lower:
+        opposite = "house"
+    else:
+        opposite = ""
+
+    # --- Post-legislature stages (check first, most specific) ---
     if history_lower:
-        if "governor signed" in history_lower or "c " in history_lower:
+        if "effective date" in history_lower:
             return "enacted"
+        if "governor signed" in history_lower or "signed by governor" in history_lower:
+            return "enacted"
+        # "C 123 L 2025" pattern = chapter law reference
+        if re.match(r'c \d+ l \d{4}', history_lower):
+            return "enacted"
+        if "delivered to governor" in history_lower or "governor's desk" in history_lower:
+            return "governor"
         if "veto" in history_lower:
             return "vetoed"
         if "died" in history_lower or "failed" in history_lower:
             return "failed"
-        if "first reading" in history_lower:
-            return "introduced"
-        if "referred to" in history_lower:
-            return "committee"
-    
-    # Check status field
+
+    # --- Cross-chamber / passed stages ---
+    if history_lower:
+        # Both chambers mentioned in "passed" context = passed legislature
+        if "passed" in history_lower and "house" in history_lower and "senate" in history_lower:
+            return "passed_legislature"
+
+        # "Third reading, passed" = passed a chamber floor vote
+        if "third reading" in history_lower and "passed" in history_lower:
+            # If the history also references the opposite chamber, the bill crossed over
+            if opposite and opposite in history_lower:
+                return "opposite_floor"
+            return "passed_origin"
+
+        # Detect cross-chamber referral: origin=House but "referred to Senate ..."
+        if opposite and f"referred to {opposite}" in history_lower:
+            return "opposite_committee"
+        if opposite and f"first reading" in history_lower:
+            # "First reading" with no "referred to" in origin context = introduced
+            # But if it references the opposite chamber it crossed over
+            # This is ambiguous; use the simpler "first reading" = introduced in origin
+            pass
+
+    # --- Origin chamber stages ---
     if status_lower:
         if "passed" in status_lower:
-            return "passed"
+            return "passed_origin"
         if "committee" in status_lower:
             return "committee"
         if "introduced" in status_lower:
             return "introduced"
         if "prefiled" in status_lower or "pre-filed" in status_lower:
             return "prefiled"
-    
-    # Check history again for passed status
-    if "passed" in history_lower:
-        if "house" in history_lower and "senate" in history_lower:
-            return "passed"
-        return "committee"  # Passed one chamber, still in process
-    
+
+    if history_lower:
+        if "referred to" in history_lower:
+            return "committee"
+        if "first reading" in history_lower:
+            return "introduced"
+        if "second reading" in history_lower or "third reading" in history_lower:
+            return "floor"
+        if "rules committee" in history_lower or "placed on" in history_lower:
+            return "floor"
+        if "passed" in history_lower:
+            return "passed_origin"
+
     return "prefiled"
 
 
@@ -698,21 +746,22 @@ def fetch_all_bills() -> List[Dict]:
         if details and details.get("bill_id"):
             bill_id = details["bill_id"]
             prefix, num = extract_bill_number_from_id(bill_id)
-            
-            title = details.get("short_description") or details.get("long_description") or "No title available"
-            sponsor = details.get("sponsor") or "Unknown"
-            status = normalize_status(
-                details.get("status", ""),
-                details.get("history_line", "")
-            )
-            
-            # Determine chamber/agency from bill prefix
+
+            # Determine chamber/agency from bill prefix (needed for status detection)
             if prefix.endswith("HB") or prefix.endswith("HJR") or prefix.endswith("HJM") or prefix.endswith("HCR"):
                 original_agency = "House"
             elif prefix.endswith("SB") or prefix.endswith("SJR") or prefix.endswith("SJM") or prefix.endswith("SCR"):
                 original_agency = "Senate"
             else:
                 original_agency = prefix
+
+            title = details.get("short_description") or details.get("long_description") or "No title available"
+            sponsor = details.get("sponsor") or "Unknown"
+            status = normalize_status(
+                details.get("status", ""),
+                details.get("history_line", ""),
+                original_agency
+            )
             
             bill = {
                 "id": bill_id.replace(" ", ""),
