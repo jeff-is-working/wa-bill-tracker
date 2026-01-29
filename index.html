@@ -73,6 +73,7 @@
         /* Header */
         header {
             background: rgba(30, 41, 59, 0.8);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             position: sticky;
@@ -150,7 +151,6 @@
             display: flex;
             gap: 0.5rem;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: var(--accent) var(--primary);
         }
@@ -771,6 +771,11 @@
             font-weight: 600;
         }
 
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
         .expand-btn {
             background: none;
             border: none;
@@ -807,6 +812,11 @@
 
         .user-notes-section.active {
             display: block;
+        }
+
+        .user-notes-section h4 {
+            margin-bottom: 1rem;
+            color: var(--text);
         }
 
         .user-note-item {
@@ -1194,7 +1204,7 @@
                 <div class="user-avatar" id="userAvatar">?</div>
                 <div>
                     <div class="user-name" id="userName">Guest User</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Session Tracker</div>
+                    <div class="user-role">Session Tracker</div>
                 </div>
             </div>
             <button class="expand-btn" id="expandBtn" onclick="toggleUserPanel()">▼</button>
@@ -1205,7 +1215,7 @@
             <div>🔄 Auto-save enabled (cookies)</div>
         </div>
         <div class="user-notes-section" id="userNotesSection">
-            <h4 style="margin-bottom: 1rem; color: var(--text);">Your Recent Notes</h4>
+            <h4>Your Recent Notes</h4>
             <div id="userNotesList">
                 <!-- User notes will be displayed here -->
             </div>
@@ -1232,8 +1242,8 @@
         <p>
             <strong>WA Legislative Tracker 2026</strong><br>
             Open source bill tracking for Washington State<br>
-            <a href="https://github.com/jeff-is-working/wa-bill-tracker" target="_blank">GitHub Repository</a> | 
-            <a href="https://app.leg.wa.gov/" target="_blank">Official WA Legislature Site</a><br>
+            <a href="https://github.com/jeff-is-working/wa-bill-tracker" target="_blank" rel="noopener">GitHub Repository</a> |
+            <a href="https://app.leg.wa.gov/" target="_blank" rel="noopener">Official WA Legislature Site</a><br>
             <small>Data updated automatically via GitHub Actions</small>
         </p>
     </footer>
