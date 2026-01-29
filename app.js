@@ -162,15 +162,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Ensure we have a valid bill type set
     if (!APP_STATE.currentBillType) {
-        console.log('No currentBillType set, defaulting to all');
         APP_STATE.currentBillType = 'all';
     }
-    
-    handleHashChange(); // Handle initial hash
-    updateUI();
+
+    // Force initial render by temporarily clearing currentBillType so
+    // navigateToBillType's early-return guard doesn't skip the first render
+    const initialType = APP_STATE.currentBillType;
+    APP_STATE.currentBillType = null;
+    handleHashChange(); // Handle initial hash (calls navigateToBillType -> updateUI)
+    // If handleHashChange didn't set a type (e.g. shared bill hash), restore it
+    if (!APP_STATE.currentBillType) {
+        APP_STATE.currentBillType = initialType;
+        updateUI();
+    }
     checkForSharedBill();
-    
-    console.log('App initialized with currentBillType:', APP_STATE.currentBillType);
 });
 
 // User Initialization
@@ -238,13 +243,9 @@ function handleHashChange() {
 
 // Navigate to a specific bill type
 function navigateToBillType(type) {
-    console.log('navigateToBillType called with:', type);
-    
     // Normalize the type - convert to uppercase except for 'all'
     const normalizedType = type.toLowerCase() === 'all' ? 'all' : type.toUpperCase();
-    
-    console.log('Normalized type:', normalizedType);
-    
+
     // Validate the type exists in config
     if (!APP_CONFIG.billTypes[normalizedType]) {
         console.warn(`Invalid bill type: ${type}, defaulting to 'all'`);
@@ -252,10 +253,19 @@ function navigateToBillType(type) {
     } else {
         type = normalizedType;
     }
-    
-    console.log('Setting currentBillType to:', type);
+
+    // Skip if already on this bill type (prevents circular calls from hashchange)
+    if (APP_STATE.currentBillType === type && APP_STATE.currentView === 'main') {
+        return;
+    }
+
     APP_STATE.currentBillType = type;
-    
+
+    // Ensure we switch back to the main view (e.g. if user was in stats view)
+    APP_STATE.currentView = 'main';
+    document.getElementById('statsView').classList.remove('active');
+    document.getElementById('mainView').classList.add('active');
+
     // Update active nav tab
     document.querySelectorAll('.nav-tab').forEach(tab => {
         const tabType = tab.dataset.type.toLowerCase() === 'all' ? 'all' : tab.dataset.type.toUpperCase();
@@ -265,27 +275,28 @@ function navigateToBillType(type) {
             tab.classList.remove('active');
         }
     });
-    
+
     // Update page title and description
     const typeInfo = APP_CONFIG.billTypes[type];
     document.getElementById('pageTitle').textContent = typeInfo.name;
     document.getElementById('pageDescription').textContent = typeInfo.description;
-    
-    // Update the URL hash
-    window.location.hash = type.toLowerCase();
-    
+
+    // Update the URL hash without re-triggering handleHashChange
+    const newHash = type.toLowerCase();
+    if (window.location.hash.slice(1) !== newHash) {
+        window.location.hash = newHash;
+    }
+
     // Update filters - clear type filter when switching pages
     if (type !== 'all') {
         APP_STATE.filters.type = '';
-        // Also clear type filter tags
         document.querySelectorAll('.filter-tag[data-filter="type"]').forEach(tag => {
             tag.classList.remove('active');
         });
     }
-    
+
     // Save state and update UI
     StorageManager.save();
-    console.log('About to call updateUI');
     updateUI();
 }
 
@@ -876,26 +887,26 @@ function updateSyncStatus() {
 function setupEventListeners() {
     document.getElementById('searchInput').addEventListener('input', (e) => {
         APP_STATE.filters.search = e.target.value;
-        renderBills();
+        updateUI();
     });
     
     document.querySelectorAll('.filter-tag').forEach(tag => {
         tag.addEventListener('click', () => {
             const filter = tag.dataset.filter;
             const value = tag.dataset.value;
-            
+
             if (tag.classList.contains('active')) {
                 tag.classList.remove('active');
                 APP_STATE.filters[filter] = '';
             } else {
-                tag.parentElement.querySelectorAll('.filter-tag').forEach(t => 
+                tag.parentElement.querySelectorAll('.filter-tag').forEach(t =>
                     t.classList.remove('active')
                 );
                 tag.classList.add('active');
                 APP_STATE.filters[filter] = value;
             }
-            
-            renderBills();
+
+            updateUI();
             StorageManager.save();
         });
     });
