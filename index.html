@@ -70,6 +70,13 @@
             66% { transform: translate(20px, -10px) scale(0.9); }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            body::before {
+                animation: none;
+                transform: none;
+            }
+        }
+
         /* Header */
         header {
             background: rgba(30, 41, 59, 0.8);
@@ -118,7 +125,7 @@
             background: rgba(59, 130, 246, 0.1);
             border: 1px solid var(--accent);
             border-radius: 9999px;
-            transition: all 0.3s;
+            transition: opacity 0.3s, background-color 0.3s;
         }
 
         .sync-status.syncing {
@@ -153,6 +160,7 @@
             overflow-x: auto;
             scrollbar-width: thin;
             scrollbar-color: var(--accent) var(--primary);
+            touch-action: pan-x;
         }
 
         .bill-type-nav::-webkit-scrollbar {
@@ -178,14 +186,16 @@
             font-size: 0.875rem;
             font-weight: 500;
             white-space: nowrap;
-            transition: all 0.3s;
+            transition: color 0.3s, border-color 0.3s, background-color 0.3s;
             cursor: pointer;
         }
 
-        .nav-tab:hover {
-            background: var(--secondary);
-            color: var(--text);
-            border-color: var(--accent);
+        @media (hover: hover) {
+            .nav-tab:hover {
+                background: var(--secondary);
+                color: var(--text);
+                border-color: var(--accent);
+            }
         }
 
         .nav-tab.active {
@@ -244,17 +254,19 @@
             padding: 1.5rem;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
             cursor: pointer;
             text-decoration: none;
             color: inherit;
             display: block;
         }
 
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border-color: var(--accent);
+        @media (hover: hover) {
+            .stat-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                border-color: var(--accent);
+            }
         }
 
         .stat-card::before {
@@ -309,7 +321,7 @@
             border-radius: 8px;
             color: var(--text);
             font-size: 1rem;
-            transition: all 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .search-input:focus {
@@ -335,15 +347,17 @@
             font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .filter-btn:hover {
-            background: var(--secondary);
-            border-color: var(--accent);
+        @media (hover: hover) {
+            .filter-btn:hover {
+                background: var(--secondary);
+                border-color: var(--accent);
+            }
         }
 
         .filter-btn.active {
@@ -360,16 +374,18 @@
             font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .btn-primary:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        @media (hover: hover) {
+            .btn-primary:hover {
+                background: #2563eb;
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            }
         }
 
         /* Filters Panel */
@@ -425,12 +441,14 @@
             border-radius: 20px;
             font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
         }
 
-        .filter-tag:hover {
-            background: var(--secondary);
-            border-color: var(--accent);
+        @media (hover: hover) {
+            .filter-tag:hover {
+                background: var(--secondary);
+                border-color: var(--accent);
+            }
         }
 
         .filter-tag.active {
@@ -452,14 +470,16 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
             position: relative;
         }
 
-        .bill-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: var(--accent);
+        @media (hover: hover) {
+            .bill-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                border-color: var(--accent);
+            }
         }
 
         .bill-card.tracked {
@@ -610,7 +630,7 @@
             border-radius: 50%;
             background: var(--border);
             border: 2px solid var(--border);
-            transition: all 0.3s;
+            transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
             flex-shrink: 0;
         }
 
@@ -704,14 +724,16 @@
             color: var(--text-muted);
             font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
             text-align: center;
         }
 
-        .action-btn:hover {
-            background: var(--secondary);
-            color: var(--text);
-            border-color: var(--accent);
+        @media (hover: hover) {
+            .action-btn:hover {
+                background: var(--secondary);
+                color: var(--text);
+                border-color: var(--accent);
+            }
         }
 
         .action-btn.active {
@@ -733,7 +755,7 @@
             z-index: 1000;
             min-width: 300px;
             max-width: 400px;
-            transition: all 0.3s;
+            transition: transform 0.3s, opacity 0.3s;
         }
 
         .user-panel.expanded {
@@ -896,13 +918,15 @@
             text-decoration: none;
             font-weight: 500;
             margin-bottom: 2rem;
-            transition: all 0.3s;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
         }
 
-        .back-btn:hover {
-            background: var(--primary);
-            border-color: var(--accent);
-            transform: translateX(-4px);
+        @media (hover: hover) {
+            .back-btn:hover {
+                background: var(--primary);
+                border-color: var(--accent);
+                transform: translateX(-4px);
+            }
         }
 
         /* Modal for Notes */
@@ -1015,7 +1039,7 @@
             font-size: 0.875rem;
             font-weight: 500;
             opacity: 0;
-            transition: all 0.3s;
+            transition: transform 0.3s, opacity 0.3s;
             z-index: 3000;
         }
 
@@ -1026,6 +1050,18 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            body::before {
+                animation: none;
+                transform: none;
+                background: radial-gradient(circle at 50% 50%, var(--glow) 0%, transparent 60%);
+            }
+
+            header {
+                background: rgba(30, 41, 59, 1);
+                -webkit-backdrop-filter: none;
+                backdrop-filter: none;
+            }
+
             .header-content {
                 flex-direction: column;
                 text-align: center;
@@ -1048,6 +1084,21 @@
                 right: 1rem;
                 left: 1rem;
                 max-width: none;
+            }
+
+            .filter-tag,
+            .filter-btn {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+            }
+
+            .action-btn {
+                min-height: 48px;
+                padding: 0.75rem;
+            }
+
+            .nav-tab {
+                padding: 0.75rem 1.25rem;
             }
         }
 
