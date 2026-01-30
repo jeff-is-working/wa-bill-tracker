@@ -457,6 +457,38 @@
             color: white;
         }
 
+        /* Pagination Controls */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination-controls button {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            min-height: 48px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .pagination-controls button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination-controls .page-info {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
         /* Bills Grid */
         .bills-grid {
             display: grid;
@@ -1235,6 +1267,7 @@
             <div class="bills-grid" id="billsGrid">
                 <!-- Bills will be dynamically inserted here -->
             </div>
+            <div id="paginationControls" class="pagination-controls"></div>
         </div>
 
         <!-- Stats Detail View -->

@@ -1,6 +1,15 @@
 // WA Legislative Tracker 2026 - Enhanced JavaScript Application
 // With persistent cookies, note management, stats views, proper sharing, and bill type navigation
 
+// Utility: Debounce
+function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+}
+
 // Application Configuration
 const APP_CONFIG = {
     siteName: 'WA Bill Tracker',
@@ -44,7 +53,12 @@ const APP_STATE = {
         id: null
     },
     currentView: 'main',
-    currentNoteBillId: null
+    currentNoteBillId: null,
+    pagination: {
+        page: 1,
+        pageSize: 25
+    },
+    _dirty: false
 };
 
 // Cookie Management with Long-term Persistence
@@ -324,7 +338,8 @@ function navigateToBillType(type) {
         });
     }
 
-    // Save state and update UI
+    // Reset pagination and save state
+    APP_STATE.pagination.page = 1;
     StorageManager.save();
     updateUI();
 }
@@ -336,9 +351,12 @@ async function loadBillsData() {
         
         if (response.ok) {
             const data = await response.json();
-            APP_STATE.bills = data.bills || [];
+            APP_STATE.bills = (data.bills || []).map(bill => ({
+                ...bill,
+                _searchText: [bill.number, bill.title, bill.description, bill.sponsor].join(' ').toLowerCase()
+            }));
             APP_STATE.lastSync = data.lastSync || new Date().toISOString();
-            
+
             // Cache in localStorage
             localStorage.setItem('billsData', JSON.stringify(data));
             localStorage.setItem('lastDataFetch', new Date().toISOString());
@@ -354,7 +372,10 @@ async function loadBillsData() {
         const cachedData = localStorage.getItem('billsData');
         if (cachedData) {
             const data = JSON.parse(cachedData);
-            APP_STATE.bills = data.bills || [];
+            APP_STATE.bills = (data.bills || []).map(bill => ({
+                ...bill,
+                _searchText: [bill.number, bill.title, bill.description, bill.sponsor].join(' ').toLowerCase()
+            }));
             APP_STATE.lastSync = data.lastSync || null;
             showToast('📦 Using cached data');
         } else {
@@ -370,16 +391,17 @@ async function loadBillsData() {
 // Render Functions
 function updateUI() {
     if (APP_STATE.currentView === 'main') {
-        renderBills();
-        updateStats();
+        const filtered = filterBills();
+        renderBills(filtered);
+        updateStats(filtered);
     }
     updateUserPanel();
 }
 
-function renderBills() {
+function renderBills(filteredBills) {
     const grid = document.getElementById('billsGrid');
-    const filteredBills = filterBills();
-    
+    if (!filteredBills) filteredBills = filterBills();
+
     if (filteredBills.length === 0) {
         grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">
@@ -387,10 +409,45 @@ function renderBills() {
                 <p>Try adjusting your filters or search terms</p>
             </div>
         `;
+        renderPaginationControls(0, 0, 1);
         return;
     }
-    
-    grid.innerHTML = filteredBills.map(bill => createBillCard(bill)).join('');
+
+    const { page, pageSize } = APP_STATE.pagination;
+    const totalItems = filteredBills.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const start = (page - 1) * pageSize;
+    const paginated = filteredBills.slice(start, start + pageSize);
+
+    grid.innerHTML = paginated.map(bill => createBillCard(bill)).join('');
+    renderPaginationControls(totalItems, totalPages, page);
+}
+
+function renderPaginationControls(totalItems, totalPages, currentPage) {
+    const container = document.getElementById('paginationControls');
+    if (!container) return;
+
+    if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+
+    const prevDisabled = currentPage === 1 ? 'disabled' : '';
+    const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+
+    container.innerHTML =
+        '<button ' + prevDisabled + ' data-page="1">First</button>' +
+        '<button ' + prevDisabled + ' data-page="' + (currentPage - 1) + '">\u2190 Prev</button>' +
+        '<span class="page-info">Page ' + currentPage + ' of ' + totalPages + ' (' + totalItems + ' bills)</span>' +
+        '<button ' + nextDisabled + ' data-page="' + (currentPage + 1) + '">Next \u2192</button>' +
+        '<button ' + nextDisabled + ' data-page="' + totalPages + '">Last</button>';
+}
+
+function goToPage(page) {
+    const totalPages = Math.ceil(filterBills().length / APP_STATE.pagination.pageSize);
+    APP_STATE.pagination.page = Math.max(1, Math.min(page, totalPages));
+    updateUI();
+    document.getElementById('billsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Human-readable status labels
@@ -565,13 +622,13 @@ function createBillCard(bill) {
             </div>
             
             <div class="bill-actions">
-                <button class="action-btn ${isTracked ? 'active' : ''}" onclick="toggleTrack('${bill.id}')">
+                <button class="action-btn ${isTracked ? 'active' : ''}" data-action="track" data-bill-id="${bill.id}">
                     ${isTracked ? '⭐ Tracked' : '☆ Track'}
                 </button>
-                <button class="action-btn" onclick="openNoteModal('${bill.id}')">
+                <button class="action-btn" data-action="note" data-bill-id="${bill.id}">
                     📝 ${hasNotes ? 'Notes (' + APP_STATE.userNotes[bill.id].length + ')' : 'Add Note'}
                 </button>
-                <button class="action-btn" onclick="shareBill('${bill.id}')">
+                <button class="action-btn" data-action="share" data-bill-id="${bill.id}">
                     🔗 Share
                 </button>
             </div>
@@ -602,12 +659,7 @@ function filterBills() {
     
     if (APP_STATE.filters.search) {
         const search = APP_STATE.filters.search.toLowerCase();
-        filtered = filtered.filter(bill => 
-            bill.number.toLowerCase().includes(search) ||
-            bill.title.toLowerCase().includes(search) ||
-            bill.description.toLowerCase().includes(search) ||
-            bill.sponsor.toLowerCase().includes(search)
-        );
+        filtered = filtered.filter(bill => bill._searchText.includes(search));
     }
     
     if (APP_STATE.filters.status && APP_STATE.filters.status.length > 0) {
@@ -665,8 +717,10 @@ function toggleTrack(billId) {
         APP_STATE.trackedBills.add(billId);
         showToast('⭐ Bill added to tracking');
     }
-    
+
+    APP_STATE._dirty = true;
     StorageManager.save();
+    APP_STATE._dirty = false;
     updateUI();
 }
 
@@ -708,7 +762,9 @@ function saveNote() {
         }];
     }
     
+    APP_STATE._dirty = true;
     StorageManager.save();
+    APP_STATE._dirty = false;
     closeNoteModal();
     showToast('📝 Note saved');
     updateUI();
@@ -765,8 +821,15 @@ function highlightBill(billId) {
         trackedOnly: false
     };
     
+    // Find the bill's page in the filtered list
+    const filtered = filterBills();
+    const index = filtered.findIndex(b => b.id === billId);
+    if (index >= 0) {
+        APP_STATE.pagination.page = Math.floor(index / APP_STATE.pagination.pageSize) + 1;
+    }
+
     showMainView();
-    
+
     setTimeout(() => {
         const billCard = document.querySelector(`[data-bill-id="${billId}"]`);
         if (billCard) {
@@ -963,9 +1026,9 @@ function calculateBillStats() {
 }
 
 // UI Updates
-function updateStats() {
+function updateStats(filteredBills) {
     // Get filtered bills for current page
-    const filteredBills = filterBills();
+    if (!filteredBills) filteredBills = filterBills();
     
     document.getElementById('totalBills').textContent = filteredBills.length;
     
@@ -1063,9 +1126,14 @@ function updateSyncStatus() {
 
 // Event Listeners
 function setupEventListeners() {
+    const debouncedSearch = debounce(() => {
+        updateUI();
+    }, 250);
+
     document.getElementById('searchInput').addEventListener('input', (e) => {
         APP_STATE.filters.search = e.target.value;
-        updateUI();
+        APP_STATE.pagination.page = 1;
+        debouncedSearch();
     });
     
     document.querySelectorAll('.filter-tag').forEach(tag => {
@@ -1085,16 +1153,45 @@ function setupEventListeners() {
                 APP_STATE.filters[filter].push(value);
             }
 
+            APP_STATE.pagination.page = 1;
+            APP_STATE._dirty = true;
             updateUI();
             StorageManager.save();
+            APP_STATE._dirty = false;
         });
+    });
+
+    // Pagination button delegation
+    const paginationContainer = document.getElementById('paginationControls');
+    if (paginationContainer) {
+        paginationContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-page]');
+            if (!btn || btn.disabled) return;
+            goToPage(parseInt(btn.dataset.page, 10));
+        });
+    }
+
+    // Bill action button delegation
+    document.getElementById('billsGrid').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+
+        const billId = btn.dataset.billId;
+        switch (btn.dataset.action) {
+            case 'track': toggleTrack(billId); break;
+            case 'note': openNoteModal(billId); break;
+            case 'share': shareBill(billId); break;
+        }
     });
 }
 
 // Auto-save functionality
 function setupAutoSave() {
     setInterval(() => {
-        StorageManager.save();
+        if (APP_STATE._dirty) {
+            StorageManager.save();
+            APP_STATE._dirty = false;
+        }
     }, APP_CONFIG.autoSaveInterval);
 }
 
@@ -1111,7 +1208,8 @@ function toggleTrackedOnly() {
     const btn = document.getElementById('trackedToggle');
     APP_STATE.filters.trackedOnly = !APP_STATE.filters.trackedOnly;
     btn.classList.toggle('active');
-    renderBills();
+    APP_STATE.pagination.page = 1;
+    updateUI();
     StorageManager.save();
 }
 
