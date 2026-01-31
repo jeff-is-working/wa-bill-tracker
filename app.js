@@ -21,8 +21,8 @@ const APP_CONFIG = {
     sessionEnd: new Date('2026-03-12'),
     sessionStart: new Date('2026-01-12'),
     cutoffDates: [
-        { date: '2026-02-05', label: 'Policy Committee (Origin)', failsBefore: ['prefiled', 'introduced'] },
-        { date: '2026-02-10', label: 'Fiscal Committee (Origin)', failsBefore: ['prefiled', 'introduced', 'committee'] },
+        { date: '2026-02-04', label: 'Policy Committee (Origin)', failsBefore: ['prefiled', 'introduced'] },
+        { date: '2026-02-09', label: 'Fiscal Committee (Origin)', failsBefore: ['prefiled', 'introduced', 'committee'] },
         { date: '2026-02-17', label: 'House of Origin', failsBefore: ['prefiled', 'introduced', 'committee', 'floor'] },
         { date: '2026-02-25', label: 'Policy Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin'] },
         { date: '2026-03-04', label: 'Fiscal Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber'] },
@@ -494,9 +494,17 @@ function updateUI() {
     updateUserPanel();
 }
 
+// Infinite scroll state
+let scrollObserver = null;
+let currentFilteredBills = [];
+
 function renderBills(filteredBills) {
     const grid = document.getElementById('billsGrid');
     if (!filteredBills) filteredBills = filterBills();
+
+    // Store for infinite scroll appending
+    currentFilteredBills = filteredBills;
+    APP_STATE.pagination.page = 1;
 
     if (filteredBills.length === 0) {
         grid.innerHTML = `
@@ -505,38 +513,65 @@ function renderBills(filteredBills) {
                 <p>Try adjusting your filters or search terms</p>
             </div>
         `;
-        renderPaginationControls(0, 0, 1);
+        updatePageInfo(0, 0);
         return;
     }
 
-    const { page, pageSize } = APP_STATE.pagination;
-    const totalItems = filteredBills.length;
-    const totalPages = Math.ceil(totalItems / pageSize);
-    const start = (page - 1) * pageSize;
-    const paginated = filteredBills.slice(start, start + pageSize);
+    const { pageSize } = APP_STATE.pagination;
+    const paginated = filteredBills.slice(0, pageSize);
 
     grid.innerHTML = paginated.map(bill => createBillCard(bill)).join('');
-    renderPaginationControls(totalItems, totalPages, page);
+    updatePageInfo(paginated.length, filteredBills.length);
+    setupInfiniteScroll();
 }
 
-function renderPaginationControls(totalItems, totalPages, currentPage) {
+function loadNextPage() {
+    const { page, pageSize } = APP_STATE.pagination;
+    const totalItems = currentFilteredBills.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    if (page >= totalPages) return;
+
+    APP_STATE.pagination.page++;
+    const start = (APP_STATE.pagination.page - 1) * pageSize;
+    const nextBills = currentFilteredBills.slice(start, start + pageSize);
+
+    const grid = document.getElementById('billsGrid');
+    grid.insertAdjacentHTML('beforeend', nextBills.map(createBillCard).join(''));
+
+    const displayed = Math.min(APP_STATE.pagination.page * pageSize, totalItems);
+    updatePageInfo(displayed, totalItems);
+}
+
+function setupInfiniteScroll() {
+    const sentinel = document.getElementById('scrollSentinel');
+    if (!sentinel) return;
+
+    if (scrollObserver) scrollObserver.disconnect();
+
+    // Hide old pagination buttons when IntersectionObserver is available
+    const paginationControls = document.getElementById('paginationControls');
+    if (paginationControls) paginationControls.innerHTML = '';
+
+    scrollObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadNextPage();
+        }
+    }, { rootMargin: '300px' });
+
+    scrollObserver.observe(sentinel);
+}
+
+function updatePageInfo(displayed, total) {
     const container = document.getElementById('paginationControls');
     if (!container) return;
 
-    if (totalPages <= 1) {
+    if (total === 0) {
         container.innerHTML = '';
         return;
     }
 
-    const prevDisabled = currentPage === 1 ? 'disabled' : '';
-    const nextDisabled = currentPage === totalPages ? 'disabled' : '';
-
-    container.innerHTML =
-        '<button ' + prevDisabled + ' data-page="1">First</button>' +
-        '<button ' + prevDisabled + ' data-page="' + (currentPage - 1) + '">\u2190 Prev</button>' +
-        '<span class="page-info">Page ' + currentPage + ' of ' + totalPages + ' (' + totalItems + ' bills)</span>' +
-        '<button ' + nextDisabled + ' data-page="' + (currentPage + 1) + '">Next \u2192</button>' +
-        '<button ' + nextDisabled + ' data-page="' + totalPages + '">Last</button>';
+    container.innerHTML = '<span class="page-info">Showing ' + displayed + ' of ' + total + ' bills</span>';
 }
 
 function updateCutoffBanner() {
@@ -550,18 +585,17 @@ function updateCutoffBanner() {
     }
 
     const dateStr = next.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const daysText = next.daysUntil === 0 ? 'Today' : next.daysUntil + ' day' + (next.daysUntil !== 1 ? 's' : '') + ' away';
     banner.style.display = 'flex';
     banner.innerHTML =
         '<span>📅</span>' +
         '<span class="cutoff-label">Next cutoff: ' + next.label + ' — ' + dateStr + '</span>' +
-        '<span class="cutoff-days">' + next.daysUntil + ' day' + (next.daysUntil !== 1 ? 's' : '') + ' away</span>';
+        '<span class="cutoff-days">' + daysText + '</span>';
 }
 
 function goToPage(page) {
-    const totalPages = Math.ceil(filterBills().length / APP_STATE.pagination.pageSize);
-    APP_STATE.pagination.page = Math.max(1, Math.min(page, totalPages));
+    // Legacy — kept for compatibility. Infinite scroll handles navigation now.
     updateUI();
-    document.getElementById('billsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Human-readable status labels
@@ -750,12 +784,28 @@ function createBillCard(bill) {
                 <button class="action-btn" data-action="share" data-bill-id="${bill.id}">
                     🔗 Share
                 </button>
+                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ').pop()}&Year=2026#commentForm"
+                   target="_blank" rel="noopener" class="action-btn" title="Contact your legislator about this bill">
+                    ✉ Contact
+                </a>
+                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ').pop()}&Year=2026"
+                   target="_blank" rel="noopener" class="action-btn" title="Follow this bill by email on leg.wa.gov">
+                    📧 Follow
+                </a>
             </div>
         </div>
     `;
 }
 
 // Filter Bills
+// Parse a YYYY-MM-DD date string as end-of-day in local time (11:59:59 PM).
+// Cutoff dates represent the LAST day for action, so the cutoff doesn't pass
+// until the day is over.
+function endOfDayLocal(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(y, m - 1, d, 23, 59, 59);
+}
+
 // Determine if a bill has effectively failed based on legislative cutoff dates.
 // Returns the cutoff label if the bill missed a deadline, or null if still active.
 function getBillCutoffStatus(bill) {
@@ -768,7 +818,7 @@ function getBillCutoffStatus(bill) {
     let cutoffLabel = null;
 
     for (const cutoff of APP_CONFIG.cutoffDates) {
-        if (now < new Date(cutoff.date)) break; // future cutoffs don't apply yet
+        if (now <= endOfDayLocal(cutoff.date)) break; // cutoff day hasn't ended yet
         if (cutoff.failsBefore.includes(bill.status)) {
             cutoffLabel = cutoff.label;
             // Don't break — later cutoffs may also apply
@@ -780,11 +830,14 @@ function getBillCutoffStatus(bill) {
 // Get the next upcoming cutoff date
 function getNextCutoff() {
     const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
     for (const cutoff of APP_CONFIG.cutoffDates) {
-        const cutoffDate = new Date(cutoff.date);
-        if (cutoffDate > now) {
-            const daysUntil = Math.ceil((cutoffDate - now) / (1000 * 60 * 60 * 24));
-            return { ...cutoff, daysUntil, dateObj: cutoffDate };
+        const cutoffEnd = endOfDayLocal(cutoff.date);
+        if (cutoffEnd > now) {
+            const cutoffDay = new Date(cutoffEnd.getFullYear(), cutoffEnd.getMonth(), cutoffEnd.getDate());
+            const daysUntil = Math.round((cutoffDay - today) / (1000 * 60 * 60 * 24));
+            return { ...cutoff, daysUntil, dateObj: cutoffEnd };
         }
     }
     return null; // all cutoffs passed
@@ -1286,6 +1339,49 @@ function updateUserNotesList() {
     }
 }
 
+function formatNotesForExport() {
+    const lines = [];
+    Object.entries(APP_STATE.userNotes).forEach(([billId, notes]) => {
+        const bill = APP_STATE.bills.find(b => b.id === billId);
+        const billLabel = bill ? `${bill.number} — ${bill.title}` : billId;
+        notes.forEach(note => {
+            lines.push(`Bill: ${billLabel}`);
+            lines.push(`Note: ${note.text}`);
+            lines.push(`Date: ${new Date(note.date).toLocaleDateString()}`);
+            lines.push('');
+        });
+    });
+    if (lines.length > 0) {
+        lines.push('---');
+        lines.push('Exported from WA Bill Tracker');
+    }
+    return lines.join('\n');
+}
+
+async function copyAllNotes() {
+    const text = formatNotesForExport();
+    if (!text) { showToast('No notes to copy'); return; }
+    try {
+        await navigator.clipboard.writeText(text);
+    } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+    }
+    showToast('Notes copied to clipboard');
+}
+
+function emailAllNotes() {
+    const text = formatNotesForExport();
+    if (!text) { showToast('No notes to email'); return; }
+    const subject = encodeURIComponent('My WA Bill Tracker Notes');
+    const body = encodeURIComponent(text);
+    window.open(`mailto:?subject=${subject}&body=${body}`);
+}
+
 function updateSyncStatus() {
     const syncText = document.getElementById('syncText');
     if (APP_STATE.lastSync) {
@@ -1352,16 +1448,6 @@ function setupEventListeners() {
         });
     }
 
-    // Pagination button delegation
-    const paginationContainer = document.getElementById('paginationControls');
-    if (paginationContainer) {
-        paginationContainer.addEventListener('click', (e) => {
-            const btn = e.target.closest('button[data-page]');
-            if (!btn || btn.disabled) return;
-            goToPage(parseInt(btn.dataset.page, 10));
-        });
-    }
-
     // Bill action button delegation
     document.getElementById('billsGrid').addEventListener('click', (e) => {
         const btn = e.target.closest('[data-action]');
@@ -1375,14 +1461,25 @@ function setupEventListeners() {
         }
     });
 
-    // Mobile user panel toggle
+    // User panel toggle (all screen sizes)
     const panel = document.getElementById('userPanel');
     const avatar = document.getElementById('userAvatar');
 
+    // Restore saved panel state
+    const savedPanelState = CookieManager.get('wa_tracker_panel_collapsed');
+    if (savedPanelState === '1') {
+        panel.classList.add('panel-collapsed');
+    }
+
     avatar.addEventListener('click', (e) => {
-        if (window.innerWidth > 768) return;
         e.stopPropagation();
-        panel.classList.toggle('mobile-expanded');
+        if (window.innerWidth <= 768) {
+            panel.classList.toggle('mobile-expanded');
+        } else {
+            panel.classList.toggle('panel-collapsed');
+            const isCollapsed = panel.classList.contains('panel-collapsed');
+            CookieManager.set('wa_tracker_panel_collapsed', isCollapsed ? '1' : '0', 365);
+        }
     });
 
     document.addEventListener('click', (e) => {

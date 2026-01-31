@@ -859,6 +859,7 @@
             background: rgba(0, 0, 0, 0.2);
             border-top: 1px solid var(--border);
             display: flex;
+            flex-wrap: wrap;
             gap: 0.5rem;
         }
 
@@ -873,6 +874,7 @@
             cursor: pointer;
             transition: background-color 0.2s, color 0.2s, border-color 0.2s;
             text-align: center;
+            text-decoration: none;
         }
 
         @media (hover: hover) {
@@ -907,6 +909,36 @@
 
         .user-panel.expanded {
             min-height: 400px;
+        }
+
+        .user-panel.panel-collapsed {
+            min-width: auto;
+            max-width: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-panel.panel-collapsed .user-header {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .user-panel.panel-collapsed .user-info > div:last-child,
+        .user-panel.panel-collapsed .user-stats,
+        .user-panel.panel-collapsed .expand-btn,
+        .user-panel.panel-collapsed .user-notes-section {
+            display: none;
+        }
+
+        .user-panel.panel-collapsed .user-info {
+            gap: 0;
         }
 
         .user-header {
@@ -981,6 +1013,38 @@
 
         .user-notes-section.active {
             display: block;
+        }
+
+        .notes-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .notes-section-header h4 {
+            margin: 0;
+        }
+
+        .notes-export-btns {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .notes-export-btn {
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .notes-export-btn:hover {
+            background: var(--secondary);
+            color: var(--text);
         }
 
         .user-notes-section h4 {
@@ -1522,6 +1586,7 @@
                     <div class="skeleton-line skeleton-medium"></div>
                 </div>
             </div>
+            <div id="scrollSentinel" style="height: 1px;"></div>
             <div id="paginationControls" class="pagination-controls"></div>
         </div>
 
@@ -1554,7 +1619,13 @@
             <div>🔄 Auto-save enabled (cookies)</div>
         </div>
         <div class="user-notes-section" id="userNotesSection">
-            <h4>Your Recent Notes</h4>
+            <div class="notes-section-header">
+                <h4>Your Recent Notes</h4>
+                <div class="notes-export-btns">
+                    <button class="notes-export-btn" onclick="copyAllNotes()" title="Copy all notes to clipboard">📋 Copy</button>
+                    <button class="notes-export-btn" onclick="emailAllNotes()" title="Email all notes">✉ Email</button>
+                </div>
+            </div>
             <div id="userNotesList">
                 <!-- User notes will be displayed here -->
             </div>

@@ -394,24 +394,50 @@ def determine_topic(title: str) -> str:
     return "General Government"
 
 
-def determine_priority(title: str, requested_by_governor: bool = False) -> str:
-    """Determine bill priority based on keywords and source"""
+def determine_priority(title: str, requested_by_governor: bool = False,
+                       bill_prefix: str = "") -> str:
+    """Determine bill priority based on keywords, bill type, and source.
+
+    Signals (checked in order):
+      1. Governor-requested bills → high
+      2. Joint memorials / concurrent resolutions → low (ceremonial)
+      3. Keyword match in title → high or low
+      4. Default → medium
+
+    Args:
+        title: Short description / title of the bill.
+        requested_by_governor: Whether the governor requested the bill.
+        bill_prefix: Bill type prefix, e.g. "HB", "SJM", "HCR".
+    """
     if requested_by_governor:
         return "high"
-    
+
+    # Joint memorials and concurrent resolutions are ceremonial / low priority
+    if bill_prefix.upper().endswith(("JM", "CR")):
+        return "low"
+
     if not title:
         return "medium"
-    
+
     title_lower = title.lower()
-    
-    high_priority = ["emergency", "budget", "funding", "safety", "crisis", "urgent"]
-    low_priority = ["technical", "clarifying", "housekeeping", "minor", "study", "report"]
-    
-    if any(kw in title_lower for kw in high_priority):
+
+    high_keywords = [
+        "emergency", "budget", "funding", "safety", "crisis", "urgent",
+        "appropriation", "revenue", "public safety", "health care",
+        "education funding", "housing", "transportation",
+        "child welfare", "fentanyl", "opioid", "homelessness",
+    ]
+    low_keywords = [
+        "technical", "clarifying", "housekeeping", "minor", "study", "report",
+        "commemorat", "proclaim", "memorializ", "designat", "renam",
+        "recogni", "joint memorial",
+    ]
+
+    if any(kw in title_lower for kw in high_keywords):
         return "high"
-    if any(kw in title_lower for kw in low_priority):
+    if any(kw in title_lower for kw in low_keywords):
         return "low"
-    
+
     return "medium"
 
 
@@ -582,7 +608,7 @@ def build_bill_dict(details: Dict, original_agency: str) -> Dict:
         "description": details.get("long_description") or f"A bill relating to {title.lower()}",
         "status": status,
         "committee": "",  # Populated from hearing data
-        "priority": determine_priority(title, details.get("requested_by_governor", False)),
+        "priority": determine_priority(title, details.get("requested_by_governor", False), prefix),
         "topic": determine_topic(title),
         "introducedDate": introduced_date,
         "lastUpdated": datetime.now().isoformat(),
