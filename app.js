@@ -784,11 +784,11 @@ function createBillCard(bill) {
                 <button class="action-btn" data-action="share" data-bill-id="${bill.id}">
                     🔗 Share
                 </button>
-                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ').pop()}&Year=2026#commentForm"
+                <a href="https://app.leg.wa.gov/pbc/bill/${bill.number.split(' ').pop()}"
                    target="_blank" rel="noopener" class="action-btn" title="Contact your legislator about this bill">
                     ✉ Contact
                 </a>
-                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ').pop()}&Year=2026"
+                <a href="https://app.leg.wa.gov/billsummary/Home/GetEmailNotifications?billTitle=${encodeURIComponent(bill.number.replace(' ', ' ') + '-' + bill.biennium)}&billNumber=${bill.number.split(' ').pop()}&year=${bill.biennium.split('-')[0]}&agency=${bill.originalAgency}&initiative=False"
                    target="_blank" rel="noopener" class="action-btn" title="Follow this bill by email on leg.wa.gov">
                     📧 Follow
                 </a>
