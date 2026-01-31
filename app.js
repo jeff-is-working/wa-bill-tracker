@@ -21,8 +21,8 @@ const APP_CONFIG = {
     sessionEnd: new Date('2026-03-12'),
     sessionStart: new Date('2026-01-12'),
     cutoffDates: [
-        { date: '2026-02-04', label: 'Policy Committee (Origin)', failsBefore: ['prefiled', 'introduced'] },
-        { date: '2026-02-09', label: 'Fiscal Committee (Origin)', failsBefore: ['prefiled', 'introduced', 'committee'] },
+        { date: '2026-02-05', label: 'Policy Committee (Origin)', failsBefore: ['prefiled', 'introduced'] },
+        { date: '2026-02-10', label: 'Fiscal Committee (Origin)', failsBefore: ['prefiled', 'introduced', 'committee'] },
         { date: '2026-02-17', label: 'House of Origin', failsBefore: ['prefiled', 'introduced', 'committee', 'floor'] },
         { date: '2026-02-25', label: 'Policy Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin'] },
         { date: '2026-03-04', label: 'Fiscal Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber'] },
