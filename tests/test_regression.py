@@ -76,7 +76,7 @@ class TestBillsJSONStructure(unittest.TestCase):
         required_bill_fields = [
             'id', 'number', 'title', 'status', 'committee',
             'priority', 'topic', 'introducedDate', 'lastUpdated',
-            'legUrl', 'hearings'
+            'legUrl', 'hearings', 'session'
         ]
         
         for bill in self.bills_data.get('bills', []):

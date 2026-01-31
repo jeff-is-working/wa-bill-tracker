@@ -19,7 +19,7 @@ from pathlib import Path
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
-REQUIRED_FIELDS = {"id", "number", "title", "status", "priority", "topic"}
+REQUIRED_FIELDS = {"id", "number", "title", "status", "priority", "topic", "session"}
 
 VALID_STATUSES = {
     "prefiled", "introduced", "committee", "floor",

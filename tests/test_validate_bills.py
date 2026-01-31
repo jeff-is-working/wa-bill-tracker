@@ -40,6 +40,7 @@ class TestValidateBillsJson(unittest.TestCase):
             "status": "committee",
             "priority": "medium",
             "topic": "Education",
+            "session": "2026",
         }
 
     def test_valid_data_passes(self):

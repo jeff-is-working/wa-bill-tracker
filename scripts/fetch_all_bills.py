@@ -561,6 +561,19 @@ def build_bill_dict(details: Dict, original_agency: str) -> Dict:
         original_agency
     )
 
+    history_line = details.get("history_line", "")
+    introduced_date = details.get("introduced_date", "")[:10] if details.get("introduced_date") else ""
+
+    # Determine which session this bill belongs to.
+    # Bills enacted/vetoed/failed in the 2025 long session are not active in 2026.
+    # Bills with "reintroduced and retained" carried over to 2026.
+    terminal = status in ("enacted", "vetoed", "failed", "partial_veto")
+    reintroduced = "reintroduced" in history_line.lower()
+    if terminal and not reintroduced:
+        session = "2025"
+    else:
+        session = "2026"
+
     return {
         "id": bill_id.replace(" ", ""),
         "number": format_bill_number(bill_id),
@@ -571,14 +584,15 @@ def build_bill_dict(details: Dict, original_agency: str) -> Dict:
         "committee": "",  # Populated from hearing data
         "priority": determine_priority(title, details.get("requested_by_governor", False)),
         "topic": determine_topic(title),
-        "introducedDate": details.get("introduced_date", "")[:10] if details.get("introduced_date") else "",
+        "introducedDate": introduced_date,
         "lastUpdated": datetime.now().isoformat(),
         "legUrl": get_leg_url(num, prefix),
         "hearings": [],
         "active": True,
         "biennium": BIENNIUM,
+        "session": session,
         "originalAgency": original_agency,
-        "historyLine": details.get("history_line", "")
+        "historyLine": history_line
     }
 
 

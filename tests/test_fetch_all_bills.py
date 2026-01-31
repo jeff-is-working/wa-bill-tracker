@@ -403,9 +403,9 @@ class TestDataOutputFormat(unittest.TestCase):
         required_fields = [
             "id", "number", "title", "sponsor", "description",
             "status", "committee", "priority", "topic",
-            "introducedDate", "lastUpdated", "legUrl", "hearings"
+            "introducedDate", "lastUpdated", "legUrl", "hearings", "session"
         ]
-        
+
         # Create a sample bill object
         bill = {
             "id": "HB1001",
@@ -420,7 +420,8 @@ class TestDataOutputFormat(unittest.TestCase):
             "introducedDate": "2026-01-12",
             "lastUpdated": datetime.now().isoformat(),
             "legUrl": "https://app.leg.wa.gov/billsummary?BillNumber=1001&Year=2026",
-            "hearings": []
+            "hearings": [],
+            "session": "2026"
         }
         
         for field in required_fields:

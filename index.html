@@ -367,6 +367,61 @@
             border-color: var(--accent);
         }
 
+        .inactive-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .inactive-toggle input[type="checkbox"] {
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .cutoff-banner {
+            background: linear-gradient(135deg, var(--warning-bg, #fff8e1), #fff3cd);
+            border: 1px solid var(--warning-border, #ffc107);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text);
+        }
+
+        .cutoff-banner .cutoff-label {
+            font-weight: 600;
+        }
+
+        .cutoff-banner .cutoff-days {
+            margin-left: auto;
+            font-weight: 700;
+            color: #d35400;
+        }
+
+        .bill-card.inactive-bill {
+            opacity: 0.6;
+            border-left: 3px solid var(--text-muted);
+        }
+
+        .tag.session-2025 {
+            background: #6c757d;
+            color: white;
+            font-size: 0.7rem;
+        }
+
+        .tag.cutoff-failed {
+            background: #dc3545;
+            color: white;
+            font-size: 0.7rem;
+        }
+
         .btn-primary {
             padding: 0.75rem 1.5rem;
             background: var(--accent);
@@ -1391,6 +1446,9 @@
                 </a>
             </div>
 
+            <!-- Cutoff Banner -->
+            <div class="cutoff-banner" id="cutoffBanner"></div>
+
             <!-- Controls -->
             <div class="controls">
                 <div class="search-box">
@@ -1403,6 +1461,9 @@
                 <button class="filter-btn" id="trackedToggle" onclick="toggleTrackedOnly()">
                     ⭐ My Tracked
                 </button>
+                <label class="inactive-toggle" title="Show bills from 2025 session and bills that missed cutoff deadlines">
+                    <input type="checkbox" id="showInactiveBills"> Show inactive bills
+                </label>
                 <button class="btn-primary" onclick="refreshData()">
                     🔄 Refresh
                 </button>

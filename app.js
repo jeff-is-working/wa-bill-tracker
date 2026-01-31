@@ -19,6 +19,16 @@ const APP_CONFIG = {
     dataRefreshInterval: 3600000, // 1 hour
     githubDataUrl: 'https://raw.githubusercontent.com/jeff-is-working/wa-bill-tracker/main/data/bills.json',
     sessionEnd: new Date('2026-03-12'),
+    sessionStart: new Date('2026-01-12'),
+    cutoffDates: [
+        { date: '2026-02-04', label: 'Policy Committee (Origin)', failsBefore: ['prefiled', 'introduced'] },
+        { date: '2026-02-09', label: 'Fiscal Committee (Origin)', failsBefore: ['prefiled', 'introduced', 'committee'] },
+        { date: '2026-02-17', label: 'House of Origin', failsBefore: ['prefiled', 'introduced', 'committee', 'floor'] },
+        { date: '2026-02-25', label: 'Policy Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin'] },
+        { date: '2026-03-04', label: 'Fiscal Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber'] },
+        { date: '2026-03-06', label: 'Opposite House', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber'] },
+        { date: '2026-03-12', label: 'Sine Die', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber', 'passed_both', 'passed_legislature'] },
+    ],
     billTypes: {
         'all': { name: 'All Bills', description: 'Showing all Washington State legislative bills for the 2026 session' },
         'SB': { name: 'Senate Bills', description: 'Bills introduced in the Washington State Senate' },
@@ -43,7 +53,8 @@ const APP_STATE = {
         priority: [],
         committee: [],
         type: '',
-        trackedOnly: false
+        trackedOnly: false,
+        showInactiveBills: false
     },
     currentBillType: 'all', // Track current bill type page
     lastSync: null,
@@ -478,6 +489,7 @@ function updateUI() {
         const filtered = filterBills();
         renderBills(filtered);
         updateStats(filtered);
+        updateCutoffBanner();
     }
     updateUserPanel();
 }
@@ -525,6 +537,24 @@ function renderPaginationControls(totalItems, totalPages, currentPage) {
         '<span class="page-info">Page ' + currentPage + ' of ' + totalPages + ' (' + totalItems + ' bills)</span>' +
         '<button ' + nextDisabled + ' data-page="' + (currentPage + 1) + '">Next \u2192</button>' +
         '<button ' + nextDisabled + ' data-page="' + totalPages + '">Last</button>';
+}
+
+function updateCutoffBanner() {
+    const banner = document.getElementById('cutoffBanner');
+    if (!banner) return;
+
+    const next = getNextCutoff();
+    if (!next) {
+        banner.style.display = 'none';
+        return;
+    }
+
+    const dateStr = next.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    banner.style.display = 'flex';
+    banner.innerHTML =
+        '<span>📅</span>' +
+        '<span class="cutoff-label">Next cutoff: ' + next.label + ' — ' + dateStr + '</span>' +
+        '<span class="cutoff-days">' + next.daysUntil + ' day' + (next.daysUntil !== 1 ? 's' : '') + ' away</span>';
 }
 
 function goToPage(page) {
@@ -667,7 +697,10 @@ function createBillCard(bill) {
     const isTracked = APP_STATE.trackedBills.has(bill.id);
     const hasNotes = APP_STATE.userNotes[bill.id] && APP_STATE.userNotes[bill.id].length > 0;
     const hasHearings = bill.hearings && bill.hearings.length > 0;
-    
+    const isFrom2025 = bill.session === '2025';
+    const cutoffStatus = getBillCutoffStatus(bill);
+    const isInactive = isFrom2025 || cutoffStatus;
+
     let latestNote = '';
     if (hasNotes) {
         const notes = APP_STATE.userNotes[bill.id];
@@ -676,11 +709,11 @@ function createBillCard(bill) {
             latestNote = latestNote.substring(0, 100) + '...';
         }
     }
-    
+
     return `
-        <div class="bill-card ${isTracked ? 'tracked' : ''}" data-bill-id="${bill.id}">
+        <div class="bill-card ${isTracked ? 'tracked' : ''} ${isInactive ? 'inactive-bill' : ''}" data-bill-id="${bill.id}">
             <div class="bill-header">
-                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ')[1]}&Year=2026"
+                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ').pop()}&Year=2026"
                    target="_blank" class="bill-number">${bill.number}</a>
                 <div class="bill-title">${bill.title}</div>
             </div>
@@ -693,15 +726,17 @@ function createBillCard(bill) {
                     <span class="meta-item">🏛️ ${bill.committee}</span>
                     ${hasHearings ? `<span class="meta-item" style="color: var(--warning);">📅 ${bill.hearings[0].date}</span>` : ''}
                 </div>
-                
+
                 <div class="bill-description">${bill.description}</div>
-                
+
                 ${hasNotes ? `<div class="bill-notes-preview">📝 "${latestNote}"</div>` : ''}
-                
+
                 <div class="bill-tags">
                     <span class="tag status-${bill.status}">${STATUS_LABELS[bill.status] || bill.status}</span>
                     <span class="tag priority-${bill.priority}">${bill.priority} priority</span>
                     <span class="tag">${bill.topic}</span>
+                    ${isFrom2025 ? '<span class="tag session-2025">2025 Session</span>' : ''}
+                    ${cutoffStatus ? '<span class="tag cutoff-failed">Missed: ' + cutoffStatus + '</span>' : ''}
                 </div>
             </div>
             
@@ -721,13 +756,58 @@ function createBillCard(bill) {
 }
 
 // Filter Bills
+// Determine if a bill has effectively failed based on legislative cutoff dates.
+// Returns the cutoff label if the bill missed a deadline, or null if still active.
+function getBillCutoffStatus(bill) {
+    // Only applies to 2026 session bills
+    if (bill.session === '2025') return null;
+    // Already terminal — not a cutoff failure
+    if (['enacted', 'vetoed', 'failed', 'partial_veto'].includes(bill.status)) return null;
+
+    const now = new Date();
+    let cutoffLabel = null;
+
+    for (const cutoff of APP_CONFIG.cutoffDates) {
+        if (now < new Date(cutoff.date)) break; // future cutoffs don't apply yet
+        if (cutoff.failsBefore.includes(bill.status)) {
+            cutoffLabel = cutoff.label;
+            // Don't break — later cutoffs may also apply
+        }
+    }
+    return cutoffLabel;
+}
+
+// Get the next upcoming cutoff date
+function getNextCutoff() {
+    const now = new Date();
+    for (const cutoff of APP_CONFIG.cutoffDates) {
+        const cutoffDate = new Date(cutoff.date);
+        if (cutoffDate > now) {
+            const daysUntil = Math.ceil((cutoffDate - now) / (1000 * 60 * 60 * 24));
+            return { ...cutoff, daysUntil, dateObj: cutoffDate };
+        }
+    }
+    return null; // all cutoffs passed
+}
+
 function filterBills() {
     let filtered = [...APP_STATE.bills];
-    
+
     console.log('filterBills called:', {
         currentBillType: APP_STATE.currentBillType,
         totalBills: APP_STATE.bills.length
     });
+
+    // Filter out inactive bills (2025 session + cutoff failures) unless toggle is on
+    if (!APP_STATE.filters.showInactiveBills) {
+        filtered = filtered.filter(bill => {
+            // Hide 2025 session bills
+            if (bill.session === '2025') return false;
+            // Hide bills that missed a cutoff deadline
+            if (getBillCutoffStatus(bill)) return false;
+            return true;
+        });
+    }
     
     // Filter by current bill type page
     if (APP_STATE.currentBillType && APP_STATE.currentBillType.toLowerCase() !== 'all') {
@@ -1055,11 +1135,23 @@ function renderHearingsStats() {
 
 function renderSessionStats() {
     const daysLeft = Math.ceil((APP_CONFIG.sessionEnd - new Date()) / (1000 * 60 * 60 * 24));
-    const sessionStart = new Date('2026-01-12');
-    const totalDays = Math.ceil((APP_CONFIG.sessionEnd - sessionStart) / (1000 * 60 * 60 * 24));
+    const totalDays = Math.ceil((APP_CONFIG.sessionEnd - APP_CONFIG.sessionStart) / (1000 * 60 * 60 * 24));
     const daysPassed = totalDays - daysLeft;
     const percentComplete = Math.round((daysPassed / totalDays) * 100);
-    
+
+    const totalBills = APP_STATE.bills.length;
+    const session2026 = APP_STATE.bills.filter(b => b.session !== '2025').length;
+    const session2025 = totalBills - session2026;
+    const activeBills = APP_STATE.bills.filter(b => b.session !== '2025' && !getBillCutoffStatus(b)).length;
+
+    const next = getNextCutoff();
+    const nextCutoffHtml = next
+        ? `<div class="stats-item">
+               <span class="stats-item-label">Next Cutoff: ${next.label}</span>
+               <span class="stats-item-value">${next.daysUntil} day${next.daysUntil !== 1 ? 's' : ''}</span>
+           </div>`
+        : '';
+
     return `
         <h2>Session Progress</h2>
         <div class="stats-list">
@@ -1068,12 +1160,17 @@ function renderSessionStats() {
                 <span class="stats-item-value">${Math.max(0, daysLeft)}</span>
             </div>
             <div class="stats-item">
-                <span class="stats-item-label">Days Passed</span>
-                <span class="stats-item-value">${daysPassed}</span>
-            </div>
-            <div class="stats-item">
                 <span class="stats-item-label">Session Progress</span>
                 <span class="stats-item-value">${percentComplete}%</span>
+            </div>
+            ${nextCutoffHtml}
+            <div class="stats-item">
+                <span class="stats-item-label">Active 2026 Bills</span>
+                <span class="stats-item-value">${activeBills}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-item-label">2025 Session (enacted)</span>
+                <span class="stats-item-value">${session2025}</span>
             </div>
             <div class="stats-item">
                 <span class="stats-item-label">Session Ends</span>
@@ -1244,6 +1341,16 @@ function setupEventListeners() {
             APP_STATE._dirty = false;
         });
     });
+
+    // Inactive bills toggle
+    const inactiveToggle = document.getElementById('showInactiveBills');
+    if (inactiveToggle) {
+        inactiveToggle.addEventListener('change', (e) => {
+            APP_STATE.filters.showInactiveBills = e.target.checked;
+            APP_STATE.pagination.page = 1;
+            updateUI();
+        });
+    }
 
     // Pagination button delegation
     const paginationContainer = document.getElementById('paginationControls');
