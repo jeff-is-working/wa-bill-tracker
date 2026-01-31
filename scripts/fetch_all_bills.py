@@ -770,7 +770,7 @@ def fetch_all_bills() -> List[Dict]:
                 "sponsor": sponsor,
                 "description": details.get("long_description") or f"A bill relating to {title.lower()}",
                 "status": status,
-                "committee": "",  # Would need additional API call to get current committee
+                "committee": "",  # Populated from hearing data in Step 5 below
                 "priority": determine_priority(title, details.get("requested_by_governor", False)),
                 "topic": determine_topic(title),
                 "introducedDate": details.get("introduced_date", "")[:10] if details.get("introduced_date") else "",
@@ -797,6 +797,16 @@ def fetch_all_bills() -> List[Dict]:
         fetch_hearings_for_bills(final_bills)
     except Exception as e:
         logger.warning(f"Hearing fetch failed (non-fatal, bills unaffected): {e}")
+
+    # Step 5: Populate top-level committee field from hearing data
+    # The API does not provide a current committee assignment directly,
+    # so we derive it from the most recent hearing's committee name.
+    committees_populated = 0
+    for bill in final_bills:
+        if not bill.get("committee") and bill.get("hearings"):
+            bill["committee"] = bill["hearings"][-1]["committee"]
+            committees_populated += 1
+    logger.info(f"Populated committee field for {committees_populated} bills from hearing data")
 
     return final_bills
 
