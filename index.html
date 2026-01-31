@@ -436,6 +436,26 @@
             gap: 0.5rem;
         }
 
+        .committee-filter-options {
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 0.25rem;
+        }
+
+        .filter-group-label {
+            width: 100%;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .filter-group-label:first-child {
+            margin-top: 0;
+        }
+
         .filter-tag {
             padding: 0.5rem 1rem;
             background: var(--primary);
@@ -1414,13 +1434,8 @@
                 </div>
                 <div class="filter-group">
                     <label class="filter-label">Committee</label>
-                    <div class="filter-options" id="committeeFilters">
-                        <span class="filter-tag" data-filter="committee" data-value="education">Education</span>
-                        <span class="filter-tag" data-filter="committee" data-value="transportation">Transportation</span>
-                        <span class="filter-tag" data-filter="committee" data-value="housing">Housing</span>
-                        <span class="filter-tag" data-filter="committee" data-value="environment">Environment</span>
-                        <span class="filter-tag" data-filter="committee" data-value="finance">Finance</span>
-                        <span class="filter-tag" data-filter="committee" data-value="health">Health</span>
+                    <div class="filter-options committee-filter-options" id="committeeFilters">
+                        <!-- Dynamically populated from bill data by populateCommitteeFilters() -->
                     </div>
                 </div>
             </div>

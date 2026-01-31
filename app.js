@@ -353,6 +353,10 @@ async function loadBillsData() {
             const data = await response.json();
             APP_STATE.bills = (data.bills || []).map(bill => ({
                 ...bill,
+                committee: bill.committee ||
+                    (bill.hearings && bill.hearings.length > 0
+                        ? bill.hearings[bill.hearings.length - 1].committee
+                        : ''),
                 _searchText: [bill.number, bill.title, bill.description, bill.sponsor].join(' ').toLowerCase()
             }));
             APP_STATE.lastSync = data.lastSync || new Date().toISOString();
@@ -374,6 +378,10 @@ async function loadBillsData() {
             const data = JSON.parse(cachedData);
             APP_STATE.bills = (data.bills || []).map(bill => ({
                 ...bill,
+                committee: bill.committee ||
+                    (bill.hearings && bill.hearings.length > 0
+                        ? bill.hearings[bill.hearings.length - 1].committee
+                        : ''),
                 _searchText: [bill.number, bill.title, bill.description, bill.sponsor].join(' ').toLowerCase()
             }));
             APP_STATE.lastSync = data.lastSync || null;
@@ -386,6 +394,82 @@ async function loadBillsData() {
     }
     
     updateSyncStatus();
+    populateCommitteeFilters();
+}
+
+// Dynamically generate committee filter tags from loaded bill data
+function populateCommitteeFilters() {
+    const container = document.getElementById('committeeFilters');
+    if (!container) return;
+
+    const committees = new Set();
+    APP_STATE.bills.forEach(bill => {
+        if (bill.committee) committees.add(bill.committee);
+    });
+
+    if (committees.size === 0) {
+        container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.8rem;">No committee data available</span>';
+        return;
+    }
+
+    const sorted = [...committees].sort();
+    const house = sorted.filter(c => c.startsWith('House'));
+    const senate = sorted.filter(c => c.startsWith('Senate'));
+
+    let html = '';
+
+    if (house.length > 0) {
+        html += '<span class="filter-group-label">House</span>';
+        house.forEach(c => {
+            const value = c.toLowerCase();
+            const label = c.replace('House ', '');
+            html += '<span class="filter-tag" data-filter="committee" data-value="' + value + '">' + label + '</span>';
+        });
+    }
+    if (senate.length > 0) {
+        html += '<span class="filter-group-label">Senate</span>';
+        senate.forEach(c => {
+            const value = c.toLowerCase();
+            const label = c.replace('Senate ', '');
+            html += '<span class="filter-tag" data-filter="committee" data-value="' + value + '">' + label + '</span>';
+        });
+    }
+
+    container.innerHTML = html;
+
+    // Attach click listeners to the dynamically generated filter tags
+    container.querySelectorAll('.filter-tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+            const filterType = tag.dataset.filter;
+            const value = tag.dataset.value;
+
+            if (tag.classList.contains('active')) {
+                tag.classList.remove('active');
+                APP_STATE.filters[filterType] = APP_STATE.filters[filterType].filter(v => v !== value);
+            } else {
+                tag.classList.add('active');
+                if (!Array.isArray(APP_STATE.filters[filterType])) {
+                    APP_STATE.filters[filterType] = [];
+                }
+                APP_STATE.filters[filterType].push(value);
+            }
+
+            APP_STATE.pagination.page = 1;
+            APP_STATE._dirty = true;
+            updateUI();
+            StorageManager.save();
+            APP_STATE._dirty = false;
+        });
+    });
+
+    // Restore active state from saved filters
+    if (APP_STATE.filters.committee && APP_STATE.filters.committee.length > 0) {
+        container.querySelectorAll('.filter-tag').forEach(tag => {
+            if (APP_STATE.filters.committee.includes(tag.dataset.value)) {
+                tag.classList.add('active');
+            }
+        });
+    }
 }
 
 // Render Functions
@@ -690,7 +774,7 @@ function filterBills() {
 
     if (APP_STATE.filters.committee && APP_STATE.filters.committee.length > 0) {
         filtered = filtered.filter(bill =>
-            APP_STATE.filters.committee.some(c => bill.committee.toLowerCase().includes(c))
+            bill.committee && APP_STATE.filters.committee.some(c => bill.committee.toLowerCase() === c)
         );
     }
 
