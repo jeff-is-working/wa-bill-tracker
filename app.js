@@ -562,7 +562,7 @@ function buildProgressTracker(bill) {
                 cls = stage.idx === 8 ? 'enacted' : 'active';
             }
 
-            html += `<div class="bill-progress-step ${cls}">`;
+            html += `<div class="bill-progress-step ${cls}" title="${stage.label}">`;
             html += `<div class="bill-progress-dot"></div>`;
             html += `<span class="bill-progress-label">${stage.label}</span>`;
             html += `</div>`;

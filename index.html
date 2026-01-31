@@ -46,6 +46,7 @@
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Background Animation */
@@ -1136,6 +1137,19 @@
             .header-content {
                 flex-direction: column;
                 text-align: center;
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.35rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                padding: 0.75rem 1rem 0;
             }
 
             .bill-type-nav {
@@ -1148,6 +1162,11 @@
 
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
             }
 
             .user-panel {
@@ -1230,6 +1249,41 @@
             .filter-btn {
                 padding: 0.75rem 1.25rem;
                 font-size: 0.9rem;
+            }
+
+            .bill-progress-tracker {
+                padding: 0.5rem 0.75rem 0.4rem;
+            }
+
+            .bill-progress-section-label {
+                font-size: 0.5rem;
+                width: 2.5rem;
+            }
+
+            .bill-progress-label {
+                display: none;
+            }
+
+            .bill-progress-dot {
+                width: 8px;
+                height: 8px;
+            }
+
+            .bill-progress-line {
+                margin-top: 5px;
+            }
+
+            .bill-header {
+                padding: 1rem;
+            }
+
+            .bill-body {
+                padding: 1rem;
+            }
+
+            .bill-actions {
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
             }
 
             .action-btn {
@@ -1452,7 +1506,8 @@
             <strong>WA Legislative Tracker 2026</strong><br>
             Open source bill tracking for Washington State<br>
             <a href="https://github.com/jeff-is-working/wa-bill-tracker" target="_blank" rel="noopener">GitHub Repository</a> |
-            <a href="https://app.leg.wa.gov/" target="_blank" rel="noopener">Official WA Legislature Site</a><br>
+            <a href="https://app.leg.wa.gov/" target="_blank" rel="noopener">Official WA Legislature Site</a> |
+            <a href="https://github.com/jeff-is-working/wa-bill-tracker/issues" target="_blank" rel="noopener">Report an Issue</a><br>
             <small>Data updated automatically via GitHub Actions</small>
         </p>
     </footer>
