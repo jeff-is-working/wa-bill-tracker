@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-31T02:00:38.286737",
+  "generated": "2026-01-31T14:36:16.650120",
   "totalBills": 3588,
   "byStatus": {
     "prefiled": 1987,
@@ -45,9 +45,9 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3424,
-    "high": 124,
-    "low": 40
+    "medium": 3380,
+    "high": 164,
+    "low": 44
   },
   "byTopic": {
     "General Government": 2150,
