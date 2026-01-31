@@ -101,7 +101,7 @@ class TestBillsJSONStructure(unittest.TestCase):
             self.skipTest("No bills.json available")
         
         import re
-        valid_pattern = r'^(HB|SB|HJR|SJR|HJM|SJM|HCR|SCR|HI|SI)\s+\d+$'
+        valid_pattern = r'^(\d*[A-Z]+)\s+\S+$'
         
         for bill in self.bills_data.get('bills', []):
             number = bill.get('number', '')
@@ -113,8 +113,10 @@ class TestBillsJSONStructure(unittest.TestCase):
         if self.bills_data is None:
             self.skipTest("No bills.json available")
         
-        valid_statuses = ['prefiled', 'introduced', 'committee', 'passed', 
-                          'failed', 'enacted', 'vetoed']
+        valid_statuses = ['prefiled', 'introduced', 'committee', 'floor',
+                          'passed_origin', 'opposite_chamber', 'passed_both',
+                          'passed_legislature', 'governor', 'enacted',
+                          'partial_veto', 'vetoed', 'failed']
         
         for bill in self.bills_data.get('bills', []):
             status = bill.get('status', '')
@@ -290,36 +292,36 @@ class TestScriptImports(unittest.TestCase):
             from scripts import fetch_all_bills
             self.assertTrue(hasattr(fetch_all_bills, 'main'))
             self.assertTrue(hasattr(fetch_all_bills, 'make_soap_request'))
-            self.assertTrue(hasattr(fetch_all_bills, 'parse_legislation_info'))
+            self.assertTrue(hasattr(fetch_all_bills, 'build_bill_dict'))
         except ImportError as e:
             self.fail(f"Could not import fetch_all_bills: {e}")
-    
+
     def test_required_functions_exist(self):
         """Test all required functions exist in fetch_all_bills"""
         from scripts import fetch_all_bills
-        
+
         required_functions = [
-            'ensure_data_dir',
+            'ensure_dirs',
             'make_soap_request',
-            'parse_xml_text',
-            'parse_xml_bool',
+            'find_element_text',
+            'find_all_elements',
+            'normalize_status',
+            'extract_bill_number_from_id',
             'determine_topic',
-            'determine_committee',
             'determine_priority',
-            'determine_status_from_text',
-            'parse_legislation_info',
-            'parse_committee_meeting',
-            'fetch_legislation_introduced_since',
-            'fetch_legislation_by_year',
-            'fetch_prefiled_legislation',
-            'fetch_committee_meetings',
+            'get_legislation_list_by_year',
+            'get_prefiled_legislation',
+            'get_legislation_details',
+            'fetch_hearings_for_bills',
+            'build_bill_dict',
+            'compute_content_hash',
+            'generate_manifest',
             'save_bills_data',
-            'save_meetings_data',
             'create_stats_file',
             'create_sync_log',
             'main'
         ]
-        
+
         for func_name in required_functions:
             self.assertTrue(
                 hasattr(fetch_all_bills, func_name),

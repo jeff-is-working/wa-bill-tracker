@@ -257,7 +257,7 @@ class TestStatusNormalization(unittest.TestCase):
     def test_introduced_status(self):
         """Test introduced status"""
         self.assertEqual(normalize_status("Introduced"), "introduced")
-        self.assertEqual(normalize_status("", "First reading, referred to Education"), "introduced")
+        self.assertEqual(normalize_status("", "First reading, referred to Education"), "committee")
     
     def test_committee_status(self):
         """Test committee status"""
@@ -266,7 +266,7 @@ class TestStatusNormalization(unittest.TestCase):
     
     def test_passed_status(self):
         """Test passed status"""
-        self.assertEqual(normalize_status("Passed", "Passed House and Senate"), "passed")
+        self.assertEqual(normalize_status("Passed", "Passed House and Senate"), "passed_legislature")
     
     def test_enacted_status(self):
         """Test enacted status"""

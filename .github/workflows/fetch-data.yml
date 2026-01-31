@@ -1,0 +1,89 @@
+name: Fetch Bill Data
+
+on:
+  schedule:
+    # Incremental: 6 AM and 6 PM Pacific (14:00 and 02:00 UTC)
+    - cron: '0 14,2 * * *'
+    # Full refresh: Sundays at 10:00 UTC (2 AM Pacific)
+    - cron: '0 10 * * 0'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Fetch mode'
+        required: true
+        default: 'incremental'
+        type: choice
+        options:
+          - incremental
+          - full
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-bills:
+    name: Fetch Legislative Bills
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Create directories
+        run: |
+          mkdir -p data
+          mkdir -p debug
+
+      - name: Determine fetch mode
+        id: mode
+        run: |
+          # Manual dispatch: use the selected mode
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+          # Sunday full-refresh cron
+          elif [ "$(date -u +%u)" = "7" ] && [ "${{ github.event.schedule }}" = "0 10 * * 0" ]; then
+            echo "mode=full" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=incremental" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch bills (incremental)
+        if: steps.mode.outputs.mode == 'incremental'
+        run: python scripts/fetch_bills_incremental.py
+        env:
+          PYTHONUNBUFFERED: "1"
+
+      - name: Fetch bills (full)
+        if: steps.mode.outputs.mode == 'full'
+        run: python scripts/fetch_bills_incremental.py --full
+        env:
+          PYTHONUNBUFFERED: "1"
+
+      - name: Validate JSON output
+        run: python scripts/validate_bills_json.py
+
+      - name: Upload debug artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: debug-files
+          path: debug/
+          retention-days: 7
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "Update bill data - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push

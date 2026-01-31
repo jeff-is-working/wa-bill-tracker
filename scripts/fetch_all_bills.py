@@ -9,6 +9,7 @@ This script uses a two-step process:
 2. GetLegislation for each bill to get full details (title, sponsor, description)
 """
 
+import hashlib
 import json
 import requests
 import xml.etree.ElementTree as ET
@@ -525,6 +526,62 @@ def get_leg_url(bill_number: int, bill_type: str = "") -> str:
     return f"https://app.leg.wa.gov/billsummary?BillNumber={bill_number}&Year={YEAR}"
 
 
+def compute_content_hash(status: str, history_line: str, action_date: str, sponsor: str) -> str:
+    """Compute a short hash of bill content fields for change detection.
+
+    Used by the incremental fetcher to determine if a bill's data has changed
+    since the last fetch without doing a full deep comparison.
+    """
+    content = f"{status}|{history_line}|{action_date}|{sponsor}"
+    return hashlib.md5(content.encode()).hexdigest()[:8]
+
+
+def build_bill_dict(details: Dict, original_agency: str) -> Dict:
+    """Build a standardized bill dictionary from API details.
+
+    Extracts and normalizes fields from the raw API response into
+    the format used by bills.json. Shared by both the full fetcher
+    and the incremental fetcher.
+
+    Args:
+        details: Raw bill details from get_legislation_details()
+        original_agency: 'House' or 'Senate' based on bill prefix
+
+    Returns:
+        A bill dict ready for inclusion in bills.json
+    """
+    bill_id = details["bill_id"]
+    prefix, num = extract_bill_number_from_id(bill_id)
+
+    title = details.get("short_description") or details.get("long_description") or "No title available"
+    sponsor = details.get("sponsor") or "Unknown"
+    status = normalize_status(
+        details.get("status", ""),
+        details.get("history_line", ""),
+        original_agency
+    )
+
+    return {
+        "id": bill_id.replace(" ", ""),
+        "number": format_bill_number(bill_id),
+        "title": title,
+        "sponsor": sponsor,
+        "description": details.get("long_description") or f"A bill relating to {title.lower()}",
+        "status": status,
+        "committee": "",  # Populated from hearing data
+        "priority": determine_priority(title, details.get("requested_by_governor", False)),
+        "topic": determine_topic(title),
+        "introducedDate": details.get("introduced_date", "")[:10] if details.get("introduced_date") else "",
+        "lastUpdated": datetime.now().isoformat(),
+        "legUrl": get_leg_url(num, prefix),
+        "hearings": [],
+        "active": True,
+        "biennium": BIENNIUM,
+        "originalAgency": original_agency,
+        "historyLine": details.get("history_line", "")
+    }
+
+
 def get_committee_meetings(begin_date: str, end_date: str) -> List[Dict]:
     """
     Fetch committee meetings within a date range using CommitteeMeetingService.
@@ -755,34 +812,7 @@ def fetch_all_bills() -> List[Dict]:
             else:
                 original_agency = prefix
 
-            title = details.get("short_description") or details.get("long_description") or "No title available"
-            sponsor = details.get("sponsor") or "Unknown"
-            status = normalize_status(
-                details.get("status", ""),
-                details.get("history_line", ""),
-                original_agency
-            )
-            
-            bill = {
-                "id": bill_id.replace(" ", ""),
-                "number": format_bill_number(bill_id),
-                "title": title,
-                "sponsor": sponsor,
-                "description": details.get("long_description") or f"A bill relating to {title.lower()}",
-                "status": status,
-                "committee": "",  # Populated from hearing data in Step 5 below
-                "priority": determine_priority(title, details.get("requested_by_governor", False)),
-                "topic": determine_topic(title),
-                "introducedDate": details.get("introduced_date", "")[:10] if details.get("introduced_date") else "",
-                "lastUpdated": datetime.now().isoformat(),
-                "legUrl": get_leg_url(num, prefix),
-                "hearings": [],
-                "active": True,
-                "biennium": BIENNIUM,
-                "originalAgency": original_agency,
-                "historyLine": details.get("history_line", "")
-            }
-            
+            bill = build_bill_dict(details, original_agency)
             final_bills.append(bill)
             processed += 1
         else:
@@ -923,6 +953,41 @@ def create_stats_file(bills: List[Dict]):
     logger.info(f"  - {len(stats['bySponsor'])} unique sponsors")
 
 
+def generate_manifest(bills: List[Dict]):
+    """Generate data/manifest.json from the current bill dataset.
+
+    The manifest records per-bill state (status, history, sponsor hash)
+    so the incremental fetcher can detect which bills have changed.
+    """
+    now = datetime.now().isoformat()
+    manifest = {
+        "lastFullSync": now,
+        "lastIncrementalSync": now,
+        "billCount": len(bills),
+        "bills": {}
+    }
+
+    for bill in bills:
+        bill_id = bill.get("id", "")
+        content_hash = compute_content_hash(
+            bill.get("status", ""),
+            bill.get("historyLine", ""),
+            bill.get("introducedDate", ""),
+            bill.get("sponsor", "")
+        )
+        manifest["bills"][bill_id] = {
+            "status": bill.get("status", ""),
+            "contentHash": content_hash,
+            "lastFetched": now
+        }
+
+    manifest_file = DATA_DIR / "manifest.json"
+    with open(manifest_file, 'w') as f:
+        json.dump(manifest, f, indent=2)
+
+    logger.info(f"Manifest saved to {manifest_file} ({len(manifest['bills'])} bills)")
+
+
 def create_sync_log(bills_count: int, status: str = "success"):
     """Create sync log entry"""
     log = {
@@ -969,7 +1034,10 @@ def main():
         
         # Create statistics
         create_stats_file(bills)
-        
+
+        # Generate manifest for incremental fetch support
+        generate_manifest(bills)
+
         # Create sync log
         create_sync_log(len(bills), "success")
         
