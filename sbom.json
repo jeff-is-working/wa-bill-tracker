@@ -1,0 +1,297 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:wa-bill-tracker-sbom-2026-01-31",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-01-31T00:00:00Z",
+    "tools": [
+      {
+        "vendor": "Anthropic",
+        "name": "Claude Code",
+        "version": "opus-4.5"
+      }
+    ],
+    "authors": [
+      {
+        "name": "Jeff Records"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "wa-bill-tracker",
+      "name": "WA Bill Tracker",
+      "version": "1.0.0",
+      "description": "Washington State legislative bill tracking application for the 2025-26 biennium. Single-page web app with a Python data pipeline fetching from the WA Legislature SOAP API.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://wa-bill-tracker.org"
+        },
+        {
+          "type": "vcs",
+          "url": "https://github.com/jeff-is-working/wa-bill-tracker"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/requests@2.32.5",
+      "name": "requests",
+      "version": "2.32.5",
+      "description": "Python HTTP library used for SOAP API calls to WA Legislature web services",
+      "scope": "required",
+      "purl": "pkg:pypi/requests@2.32.5",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://pypi.org/project/requests/"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "bom-ref": "pkg:pypi/pytest@9.0.2",
+      "name": "pytest",
+      "version": "9.0.2",
+      "description": "Python testing framework",
+      "scope": "optional",
+      "purl": "pkg:pypi/pytest@9.0.2",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://pypi.org/project/pytest/"
+        }
+      ]
+    },
+    {
+      "type": "platform",
+      "bom-ref": "runtime:python@3.11",
+      "name": "Python",
+      "version": "3.11",
+      "description": "Python runtime for backend data pipeline scripts (version pinned in GitHub Actions)",
+      "scope": "required",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://www.python.org/"
+        }
+      ]
+    },
+    {
+      "type": "platform",
+      "bom-ref": "platform:github-pages",
+      "name": "GitHub Pages",
+      "description": "Static site hosting platform for the frontend application",
+      "scope": "required",
+      "externalReferences": [
+        {
+          "type": "website",
+          "url": "https://pages.github.com/"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "action:actions/checkout@v4",
+      "name": "actions/checkout",
+      "version": "v4",
+      "description": "GitHub Action to check out repository code",
+      "scope": "optional",
+      "purl": "pkg:github/actions/checkout@v4",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/checkout"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "action:actions/setup-python@v5",
+      "name": "actions/setup-python",
+      "version": "v5",
+      "description": "GitHub Action to set up Python environment",
+      "scope": "optional",
+      "purl": "pkg:github/actions/setup-python@v5",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/setup-python"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "action:actions/configure-pages@v4",
+      "name": "actions/configure-pages",
+      "version": "v4",
+      "description": "GitHub Action to configure GitHub Pages",
+      "scope": "optional",
+      "purl": "pkg:github/actions/configure-pages@v4",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/configure-pages"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "action:actions/upload-pages-artifact@v3",
+      "name": "actions/upload-pages-artifact",
+      "version": "v3",
+      "description": "GitHub Action to upload GitHub Pages artifact",
+      "scope": "optional",
+      "purl": "pkg:github/actions/upload-pages-artifact@v3",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/upload-pages-artifact"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "action:actions/deploy-pages@v4",
+      "name": "actions/deploy-pages",
+      "version": "v4",
+      "description": "GitHub Action to deploy to GitHub Pages",
+      "scope": "optional",
+      "purl": "pkg:github/actions/deploy-pages@v4",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/deploy-pages"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "action:actions/upload-artifact@v4",
+      "name": "actions/upload-artifact",
+      "version": "v4",
+      "description": "GitHub Action to upload build artifacts",
+      "scope": "optional",
+      "purl": "pkg:github/actions/upload-artifact@v4",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/actions/upload-artifact"
+        }
+      ]
+    },
+    {
+      "type": "data",
+      "bom-ref": "font:google-fonts-inter",
+      "name": "Google Fonts - Inter",
+      "description": "Variable-weight sans-serif typeface loaded via CDN (weights 400, 500, 600, 700)",
+      "scope": "required",
+      "licenses": [
+        {
+          "license": {
+            "id": "OFL-1.1"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        }
+      ]
+    },
+    {
+      "type": "data",
+      "bom-ref": "font:google-fonts-jetbrains-mono",
+      "name": "Google Fonts - JetBrains Mono",
+      "description": "Variable-weight monospace typeface loaded via CDN (weights 400, 600)",
+      "scope": "optional",
+      "licenses": [
+        {
+          "license": {
+            "id": "OFL-1.1"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=optional"
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "bom-ref": "service:wa-legislature-api",
+      "name": "Washington State Legislature Web Services",
+      "description": "SOAP 1.1 XML API providing legislative bill data, committee meetings, and hearing schedules. Public API with no authentication required.",
+      "endpoints": [
+        "https://wslwebservices.leg.wa.gov/LegislationService.asmx",
+        "https://wslwebservices.leg.wa.gov/CommitteeMeetingService.asmx"
+      ],
+      "authenticated": false,
+      "data": [
+        {
+          "name": "Legislative bill data",
+          "classification": "public"
+        }
+      ]
+    },
+    {
+      "bom-ref": "service:google-fonts",
+      "name": "Google Fonts CDN",
+      "description": "Font delivery network for Inter and JetBrains Mono typefaces",
+      "endpoints": [
+        "https://fonts.googleapis.com",
+        "https://fonts.gstatic.com"
+      ],
+      "authenticated": false
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "wa-bill-tracker",
+      "dependsOn": [
+        "pkg:pypi/requests@2.32.5",
+        "runtime:python@3.11",
+        "platform:github-pages",
+        "service:wa-legislature-api",
+        "font:google-fonts-inter",
+        "font:google-fonts-jetbrains-mono"
+      ]
+    },
+    {
+      "ref": "pkg:pypi/requests@2.32.5",
+      "dependsOn": []
+    },
+    {
+      "ref": "pkg:pypi/pytest@9.0.2",
+      "dependsOn": []
+    }
+  ]
+}

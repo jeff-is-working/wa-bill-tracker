@@ -13,7 +13,7 @@ function debounce(fn, delay) {
 // Application Configuration
 const APP_CONFIG = {
     siteName: 'WA Bill Tracker',
-    siteUrl: 'https://jeff-is-working.github.io/wa-bill-tracker',
+    siteUrl: 'https://wa-bill-tracker.org',
     cookieDuration: 90, // days
     autoSaveInterval: 30000, // 30 seconds
     dataRefreshInterval: 3600000, // 1 hour
@@ -105,6 +105,79 @@ const CookieManager = {
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;`;
     }
 };
+
+// Domain Migration — transfer user data from old github.io domain to new custom domain
+const DomainMigration = {
+    OLD_DOMAIN: 'jeff-is-working.github.io',
+    NEW_DOMAIN: 'wa-bill-tracker.org',
+    COOKIE_KEYS: ['wa_tracker_tracked', 'wa_tracker_notes', 'wa_tracker_user',
+                  'wa_tracker_filters', 'wa_tracker_bill_type', 'wa_tracker_user_id',
+                  'wa_tracker_user_name', 'wa_tracker_panel_collapsed'],
+
+    // On old domain: collect all user data and redirect to new domain with data in hash
+    exportAndRedirect() {
+        if (location.hostname !== this.OLD_DOMAIN) return false;
+
+        // Collect data from cookies and localStorage
+        const data = {};
+        let hasData = false;
+        for (const key of this.COOKIE_KEYS) {
+            const val = CookieManager.get(key);
+            if (val !== null && val !== undefined) {
+                data[key] = val;
+                hasData = true;
+            }
+        }
+        // Also grab localStorage backup
+        const lsState = localStorage.getItem('wa_tracker_state');
+        if (lsState) {
+            data._ls_state = lsState;
+            hasData = true;
+        }
+
+        if (hasData) {
+            const encoded = encodeURIComponent(JSON.stringify(data));
+            location.replace(`https://${this.NEW_DOMAIN}/#migrate=${encoded}`);
+            return true;
+        }
+        // No data to migrate — don't redirect, let them use the old domain until CNAME is set
+        return false;
+    },
+
+    // On new domain: check for migration data in URL hash and import it
+    importFromHash() {
+        if (!location.hash.startsWith('#migrate=')) return false;
+
+        try {
+            const encoded = location.hash.substring('#migrate='.length);
+            const data = JSON.parse(decodeURIComponent(encoded));
+
+            // Restore cookies
+            for (const key of this.COOKIE_KEYS) {
+                if (data[key] !== undefined) {
+                    CookieManager.set(key, data[key], key.includes('panel') || key.includes('user_id') ? 365 : APP_CONFIG.cookieDuration);
+                }
+            }
+            // Restore localStorage backup
+            if (data._ls_state) {
+                localStorage.setItem('wa_tracker_state', data._ls_state);
+            }
+
+            // Clean URL hash
+            history.replaceState(null, '', location.pathname + location.search);
+            console.log('Migration complete — user data imported from previous domain');
+            return true;
+        } catch (e) {
+            console.error('Migration import failed:', e);
+            history.replaceState(null, '', location.pathname + location.search);
+            return false;
+        }
+    }
+};
+
+// Run migration checks immediately
+DomainMigration.exportAndRedirect();  // On old domain: redirects with data in hash, page unloads
+DomainMigration.importFromHash();     // On new domain: imports data from hash if present
 
 // LocalStorage Backup for Additional Persistence
 const StorageManager = {

@@ -2,7 +2,7 @@
 
 A free, open-source bill tracking application for the Washington State Legislature 2025-26 biennium session. Built for citizens, researchers, lobbyists, and civic organizations who need to monitor legislative activity.
 
-**[Live Demo](https://jeff-is-working.github.io/wa-bill-tracker)** | **[Official WA Legislature](https://app.leg.wa.gov/)**
+**[Live Demo](https://wa-bill-tracker.org)** | **[Official WA Legislature](https://app.leg.wa.gov/)**
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Session](https://img.shields.io/badge/session-2025--26-purple.svg)
@@ -62,7 +62,7 @@ A free, open-source bill tracking application for the Washington State Legislatu
 
 ### Option 1: Use the Live Site
 
-Visit [https://jeff-is-working.github.io/wa-bill-tracker](https://jeff-is-working.github.io/wa-bill-tracker)
+Visit [https://wa-bill-tracker.org](https://wa-bill-tracker.org)
 
 ### Option 2: Deploy Your Own Instance
 
@@ -151,7 +151,7 @@ WA Legislature API --> fetch_all_bills.py --> data/bills.json --> app.js --> Bro
 ```javascript
 const APP_CONFIG = {
     siteName: 'WA Bill Tracker',
-    siteUrl: 'https://jeff-is-working.github.io/wa-bill-tracker',
+    siteUrl: 'https://wa-bill-tracker.org',
     cookieDuration: 90,           // Days to persist user data
     autoSaveInterval: 30000,      // Auto-save interval (ms)
     dataRefreshInterval: 3600000, // Data refresh check (ms)
