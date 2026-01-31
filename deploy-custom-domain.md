@@ -149,6 +149,71 @@ This is not needed in DNS-only mode since GitHub Pages handles the redirect.
 
 ---
 
+## Saturday Feb 7th Evening — Migration Runbook
+
+**Target time:** Saturday, February 7, 2026, evening (after peak usage)
+
+### Pre-Migration (already done)
+
+- [x] Domain registered and added to Cloudflare
+- [x] Cloudflare DNS records configured (CNAME/A records pointing to GitHub Pages)
+- [x] Cloudflare SSL/TLS set to Full, Always Use HTTPS enabled
+- [x] URLs updated in codebase (README.md, app.js, index.html, sbom.json)
+- [x] Migration banner live on old domain since Jan 31
+- [x] DomainMigration code deployed — auto-transfers cookies/localStorage on redirect
+
+### Migration Steps (Saturday evening)
+
+Run these steps in order:
+
+**1. Push the CNAME file**
+```bash
+# In the wa-bill-tracker repo
+echo "wa-bill-tracker.org" > CNAME
+git add CNAME
+git commit -m "Add CNAME for wa-bill-tracker.org custom domain"
+git push origin main
+```
+
+**2. Enable custom domain in GitHub Pages**
+- Go to https://github.com/jeff-is-working/wa-bill-tracker/settings/pages
+- Under **Custom domain**, enter: `wa-bill-tracker.org`
+- Click **Save**
+- Wait for DNS check to pass (green checkmark)
+- Check **Enforce HTTPS**
+
+**3. Verify the site**
+- [ ] `https://wa-bill-tracker.org` loads the bill tracker
+- [ ] `https://www.wa-bill-tracker.org` redirects to `https://wa-bill-tracker.org`
+- [ ] `https://jeff-is-working.github.io/wa-bill-tracker` redirects to `https://wa-bill-tracker.org`
+- [ ] HTTPS certificate is valid (padlock icon, no warnings)
+- [ ] Bill data loads correctly
+- [ ] Open a bill card — Contact and Follow links work
+- [ ] Check browser console for errors
+
+**4. Test cookie migration**
+- Open a private/incognito window
+- Visit `https://jeff-is-working.github.io/wa-bill-tracker`
+- Confirm it redirects to `https://wa-bill-tracker.org`
+- If you had tracked bills on the old domain, confirm they appear
+
+**5. Post-migration cleanup (can be done the next day)**
+```bash
+# Remove the migration banner from index.html
+# Remove DomainMigration.exportAndRedirect() from app.js (keep importFromHash as safety net)
+git add index.html app.js
+git commit -m "Remove domain migration banner and export redirect — migration complete"
+git push origin main
+```
+
+### Rollback (if something goes wrong)
+- Go to GitHub repo → Settings → Pages → Custom domain → clear it → Save
+- Delete the CNAME file and push
+- The old `github.io` URL will resume serving immediately
+- Investigate and retry later
+
+---
+
 ## Notes
 
 - **DNS propagation**: Can take up to 48 hours globally, but typically completes within minutes to a few hours
