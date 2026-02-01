@@ -72,6 +72,13 @@ const APP_STATE = {
     _dirty: false
 };
 
+// HTML Sanitization — escape user-controlled strings before inserting into innerHTML
+function escapeHTML(str) {
+    if (typeof str !== 'string') return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 // Cookie Management with Long-term Persistence
 const CookieManager = {
     // Set a cookie with proper SameSite and long expiration
@@ -79,7 +86,7 @@ const CookieManager = {
         const expires = new Date();
         expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
         const cookieValue = typeof value === 'object' ? JSON.stringify(value) : value;
-        document.cookie = `${name}=${encodeURIComponent(cookieValue)};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+        document.cookie = `${name}=${encodeURIComponent(cookieValue)};expires=${expires.toUTCString()};path=/;SameSite=Lax;Secure`;
     },
 
     // Get a cookie value
@@ -811,7 +818,7 @@ function createBillCard(bill) {
     let latestNote = '';
     if (hasNotes) {
         const notes = APP_STATE.userNotes[bill.id];
-        latestNote = notes[notes.length - 1].text;
+        latestNote = escapeHTML(notes[notes.length - 1].text);
         if (latestNote.length > 100) {
             latestNote = latestNote.substring(0, 100) + '...';
         }
@@ -821,7 +828,7 @@ function createBillCard(bill) {
         <div class="bill-card ${isTracked ? 'tracked' : ''} ${isInactive ? 'inactive-bill' : ''}" data-bill-id="${bill.id}">
             <div class="bill-header">
                 <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ').pop()}&Year=2026"
-                   target="_blank" class="bill-number">${bill.number}</a>
+                   target="_blank" rel="noopener noreferrer" class="bill-number">${bill.number}</a>
                 <div class="bill-title">${bill.title}</div>
             </div>
 
@@ -858,11 +865,11 @@ function createBillCard(bill) {
                     🔗 Share
                 </button>
                 <a href="https://app.leg.wa.gov/pbc/bill/${bill.number.split(' ').pop()}"
-                   target="_blank" rel="noopener" class="action-btn" title="Contact your legislator about this bill">
+                   target="_blank" rel="noopener noreferrer" class="action-btn" title="Contact your legislator about this bill">
                     ✉ Contact
                 </a>
                 <a href="https://app.leg.wa.gov/billsummary/Home/GetEmailNotifications?billTitle=${encodeURIComponent(bill.number.replace(' ', ' ') + '-' + bill.biennium)}&billNumber=${bill.number.split(' ').pop()}&year=${bill.biennium.split('-')[0]}&agency=${bill.originalAgency}&initiative=False"
-                   target="_blank" rel="noopener" class="action-btn" title="Follow this bill by email on leg.wa.gov">
+                   target="_blank" rel="noopener noreferrer" class="action-btn" title="Follow this bill by email on leg.wa.gov">
                     📧 Follow
                 </a>
             </div>
@@ -1189,7 +1196,7 @@ function renderTrackedBillsStats() {
         <h2>Your Tracked Bills: ${trackedBills.length}</h2>
         <div class="stats-list">
             ${trackedBills.map(bill => `
-                <div class="stats-item" onclick="highlightBill('${bill.id}')" style="cursor: pointer;">
+                <div class="stats-item" data-highlight-bill="${bill.id}" style="cursor: pointer;">
                     <span class="stats-item-label">${bill.number}: ${bill.title}</span>
                     <span class="stats-item-value">${bill.status}</span>
                 </div>
@@ -1210,7 +1217,7 @@ function renderTodayStats() {
         <h2>Updated Today: ${todayBills.length}</h2>
         <div class="stats-list">
             ${todayBills.map(bill => `
-                <div class="stats-item" onclick="highlightBill('${bill.id}')" style="cursor: pointer;">
+                <div class="stats-item" data-highlight-bill="${bill.id}" style="cursor: pointer;">
                     <span class="stats-item-label">${bill.number}: ${bill.title}</span>
                     <span class="stats-item-value">${formatTime(bill.lastUpdated)}</span>
                 </div>
@@ -1246,7 +1253,7 @@ function renderHearingsStats() {
         <h2>Hearings This Week: ${hearingBills.length}</h2>
         <div class="stats-list">
             ${hearingBills.map(item => `
-                <div class="stats-item" onclick="highlightBill('${item.bill.id}')" style="cursor: pointer;">
+                <div class="stats-item" data-highlight-bill="${item.bill.id}" style="cursor: pointer;">
                     <span class="stats-item-label">
                         ${item.hearing.date} ${item.hearing.time}<br>
                         ${item.bill.number}: ${item.bill.title}
@@ -1402,10 +1409,10 @@ function updateUserNotesList() {
     } else {
         notesList.innerHTML = recentNotes.map(note => `
             <div class="user-note-item">
-                <div class="user-note-bill" onclick="highlightBill('${note.billId}')" style="cursor: pointer;">
-                    ${note.billNumber}: ${note.billTitle}
+                <div class="user-note-bill" data-highlight-bill="${escapeHTML(note.billId)}" style="cursor: pointer;">
+                    ${escapeHTML(note.billNumber)}: ${escapeHTML(note.billTitle)}
                 </div>
-                <div class="user-note-text">${note.text.substring(0, 100)}${note.text.length > 100 ? '...' : ''}</div>
+                <div class="user-note-text">${escapeHTML(note.text.substring(0, 100))}${note.text.length > 100 ? '...' : ''}</div>
                 <div class="user-note-date">${formatDate(note.date)}</div>
             </div>
         `).join('');
@@ -1559,6 +1566,56 @@ function setupEventListeners() {
         if (window.innerWidth > 768) return;
         if (!panel.contains(e.target)) {
             panel.classList.remove('mobile-expanded');
+        }
+    });
+
+    // --- Delegated handlers replacing inline onclick attributes ---
+
+    // Migration banner dismiss
+    const dismissBtn = document.getElementById('dismissMigrationBanner');
+    if (dismissBtn) {
+        dismissBtn.addEventListener('click', () => {
+            document.getElementById('migrationBanner').style.display = 'none';
+        });
+    }
+
+    // Stats cards
+    document.querySelectorAll('.stat-card[data-stat]').forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            showStatsDetail(card.dataset.stat);
+        });
+    });
+
+    // Filter toggle, tracked toggle, refresh
+    document.getElementById('filterToggle').addEventListener('click', toggleFilters);
+    document.getElementById('trackedToggle').addEventListener('click', toggleTrackedOnly);
+    document.getElementById('refreshBtn').addEventListener('click', refreshData);
+
+    // Back to main view
+    document.getElementById('backToMainBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        showMainView();
+    });
+
+    // User panel expand
+    document.getElementById('expandBtn').addEventListener('click', toggleUserPanel);
+
+    // Notes export buttons
+    document.getElementById('copyNotesBtn').addEventListener('click', copyAllNotes);
+    document.getElementById('emailNotesBtn').addEventListener('click', emailAllNotes);
+
+    // Note modal buttons
+    document.getElementById('noteModalClose').addEventListener('click', closeNoteModal);
+    document.getElementById('noteModalCancel').addEventListener('click', closeNoteModal);
+    document.getElementById('noteModalSave').addEventListener('click', saveNote);
+
+    // Delegated handler for highlight-bill links (stats detail, user notes)
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest('[data-highlight-bill]');
+        if (el) {
+            e.preventDefault();
+            highlightBill(el.dataset.highlightBill);
         }
     });
 }

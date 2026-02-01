@@ -12,11 +12,18 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://wa-bill-tracker.org">
     
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://raw.githubusercontent.com; frame-ancestors 'none'; base-uri 'self'; form-action 'none';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=optional" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=optional" rel="stylesheet" crossorigin>
     
     <style>
         :root {
@@ -1456,7 +1463,7 @@
         <strong>New address coming Saturday, Feb 7th:</strong>
         This site is moving to <a href="https://wa-bill-tracker.org" style="color: #bfdbfe; font-weight: 600; text-decoration: underline;">wa-bill-tracker.org</a>.
         Your tracked bills and notes will transfer automatically — no action needed.
-        <button onclick="document.getElementById('migrationBanner').style.display='none'" style="background: none; border: none; color: #bfdbfe; cursor: pointer; font-size: 1.2rem; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); padding: 4px;" aria-label="Dismiss">&times;</button>
+        <button id="dismissMigrationBanner" style="background: none; border: none; color: #bfdbfe; cursor: pointer; font-size: 1.2rem; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); padding: 4px;" aria-label="Dismiss">&times;</button>
     </div>
 
     <!-- Header -->
@@ -1496,23 +1503,23 @@
         <div id="mainView" class="view-container active">
             <!-- Stats Grid - Clickable -->
             <div class="stats-grid">
-                <a href="#" class="stat-card" onclick="showStatsDetail('total'); return false;">
+                <a href="#" class="stat-card" data-stat="total">
                     <div class="stat-value" id="totalBills">0</div>
                     <div class="stat-label">Total Bills</div>
                 </a>
-                <a href="#" class="stat-card" onclick="showStatsDetail('tracked'); return false;">
+                <a href="#" class="stat-card" data-stat="tracked">
                     <div class="stat-value" id="trackedBills">0</div>
                     <div class="stat-label">Tracked Bills</div>
                 </a>
-                <a href="#" class="stat-card" onclick="showStatsDetail('today'); return false;">
+                <a href="#" class="stat-card" data-stat="today">
                     <div class="stat-value" id="newToday">0</div>
                     <div class="stat-label">Updated Today</div>
                 </a>
-                <a href="#" class="stat-card" onclick="showStatsDetail('hearings'); return false;">
+                <a href="#" class="stat-card" data-stat="hearings">
                     <div class="stat-value" id="hearingsWeek">0</div>
                     <div class="stat-label">Hearings This Week</div>
                 </a>
-                <a href="#" class="stat-card" onclick="showStatsDetail('remaining'); return false;">
+                <a href="#" class="stat-card" data-stat="remaining">
                     <div class="stat-value" id="daysLeft">60</div>
                     <div class="stat-label">Days Remaining</div>
                 </a>
@@ -1527,16 +1534,16 @@
                     <span class="search-icon">🔍</span>
                     <input type="text" class="search-input" id="searchInput" placeholder="Search bills by number, title, or sponsor...">
                 </div>
-                <button class="filter-btn" id="filterToggle" onclick="toggleFilters()">
+                <button class="filter-btn" id="filterToggle">
                     🎯 Filters
                 </button>
-                <button class="filter-btn" id="trackedToggle" onclick="toggleTrackedOnly()">
+                <button class="filter-btn" id="trackedToggle">
                     ⭐ My Tracked
                 </button>
                 <label class="inactive-toggle" title="Show bills from 2025 session and bills that missed cutoff deadlines">
                     <input type="checkbox" id="showInactiveBills"> Show inactive bills
                 </label>
-                <button class="btn-primary" onclick="refreshData()">
+                <button class="btn-primary" id="refreshBtn">
                     🔄 Refresh
                 </button>
             </div>
@@ -1600,7 +1607,7 @@
 
         <!-- Stats Detail View -->
         <div id="statsView" class="view-container">
-            <a href="#" class="back-btn" onclick="showMainView(); return false;">
+            <a href="#" class="back-btn" id="backToMainBtn">
                 ← Back to Bills
             </a>
             <div class="stats-detail" id="statsDetail">
@@ -1619,7 +1626,7 @@
                     <div class="user-role">Session Tracker</div>
                 </div>
             </div>
-            <button class="expand-btn" id="expandBtn" onclick="toggleUserPanel()">▼</button>
+            <button class="expand-btn" id="expandBtn">▼</button>
         </div>
         <div class="user-stats">
             <div>📊 <span id="userTrackedCount">0</span> bills tracked</div>
@@ -1630,8 +1637,8 @@
             <div class="notes-section-header">
                 <h4>Your Recent Notes</h4>
                 <div class="notes-export-btns">
-                    <button class="notes-export-btn" onclick="copyAllNotes()" title="Copy all notes to clipboard">📋 Copy</button>
-                    <button class="notes-export-btn" onclick="emailAllNotes()" title="Email all notes">✉ Email</button>
+                    <button class="notes-export-btn" id="copyNotesBtn" title="Copy all notes to clipboard">📋 Copy</button>
+                    <button class="notes-export-btn" id="emailNotesBtn" title="Email all notes">✉ Email</button>
                 </div>
             </div>
             <div id="userNotesList">
@@ -1645,12 +1652,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="noteModalTitle">Add Note</h3>
-                <button class="modal-close" onclick="closeNoteModal()">×</button>
+                <button class="modal-close" id="noteModalClose">×</button>
             </div>
             <textarea class="note-textarea" id="noteTextarea" placeholder="Enter your notes about this bill..."></textarea>
             <div class="modal-actions">
-                <button class="filter-btn" onclick="closeNoteModal()">Cancel</button>
-                <button class="btn-primary" onclick="saveNote()">Save Note</button>
+                <button class="filter-btn" id="noteModalCancel">Cancel</button>
+                <button class="btn-primary" id="noteModalSave">Save Note</button>
             </div>
         </div>
     </div>
@@ -1660,9 +1667,9 @@
         <p>
             <strong>WA Legislative Tracker 2026</strong><br>
             Open source bill tracking for Washington State<br>
-            <a href="https://github.com/jeff-is-working/wa-bill-tracker" target="_blank" rel="noopener">GitHub Repository</a> |
-            <a href="https://app.leg.wa.gov/" target="_blank" rel="noopener">Official WA Legislature Site</a> |
-            <a href="https://github.com/jeff-is-working/wa-bill-tracker/issues" target="_blank" rel="noopener">Report an Issue</a><br>
+            <a href="https://github.com/jeff-is-working/wa-bill-tracker" target="_blank" rel="noopener noreferrer">GitHub Repository</a> |
+            <a href="https://app.leg.wa.gov/" target="_blank" rel="noopener noreferrer">Official WA Legislature Site</a> |
+            <a href="https://github.com/jeff-is-working/wa-bill-tracker/issues" target="_blank" rel="noopener noreferrer">Report an Issue</a><br>
             <small>Data updated automatically via GitHub Actions</small>
         </p>
     </footer>
