@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-01T04:38:11.634955",
+  "generated": "2026-02-01T10:47:49.040104",
   "totalBills": 3588,
   "byStatus": {
     "prefiled": 1987,
@@ -45,9 +45,9 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3380,
-    "high": 164,
-    "low": 44
+    "medium": 3237,
+    "high": 264,
+    "low": 87
   },
   "byTopic": {
     "General Government": 2150,
@@ -71,7 +71,7 @@
     "(Low)": 26,
     "(Jacobsen)": 10,
     "(Taylor)": 15,
-    "(Schmidt)": 17,
+    "(Schmidt)": 16,
     "LG(Duerr)": 8,
     "(Shavers)": 22,
     "HOUS(Connors)": 2,
@@ -87,7 +87,7 @@
     "(Doglio)": 18,
     "(Wylie)": 9,
     "FIN(Wylie)": 2,
-    "(Bronoske)": 15,
+    "(Bronoske)": 14,
     "(Dent)": 23,
     "AGNR(Dent)": 2,
     "(Farivar)": 20,
@@ -252,7 +252,7 @@
     "APP(Barnard)": 1,
     "APP(Fitzgibbon)": 4,
     "ED(Connors)": 1,
-    "(Macri)": 16,
+    "(Macri)": 15,
     "TR(Timmons)": 1,
     "ENVI(Reeves)": 1,
     "TR(Donaghy)": 4,
@@ -290,7 +290,7 @@
     "LG(Griffey)": 1,
     "HCW(Bronoske)": 2,
     "FIN(Stearns)": 2,
-    "LAWS(Schmidt)": 4,
+    "LAWS(Schmidt)": 5,
     "CPB(Santos)": 1,
     "AGNR(Reeves)": 2,
     "(Timmons)": 16,
@@ -395,7 +395,7 @@
     "LG(Hill)": 1,
     "CB(Zahn)": 1,
     "APP(Burnett)": 1,
-    "HCW(Macri)": 2,
+    "HCW(Macri)": 3,
     "TR(Zahn)": 1,
     "APP(Abbarno)": 1,
     "FIN(Farivar)": 1,
@@ -441,6 +441,7 @@
     "SGOV(Taylor)": 1,
     "ENVI(Hall)": 1,
     "ELHS(Callan)": 1,
+    "LAWS(Bronoske)": 1,
     "CPB(Dufault)": 1,
     "LAWS(Nance)": 1,
     "HCW(Eslick)": 1,
@@ -725,7 +726,7 @@
     "SGA": 321
   },
   "recentlyUpdated": 3588,
-  "updatedToday": 852,
+  "updatedToday": 3588,
   "topSponsors": [
     [
       "()",
