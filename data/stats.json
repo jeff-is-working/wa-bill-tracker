@@ -1,5 +1,5 @@
 {
-  "generated": "2026-01-31T14:36:16.650120",
+  "generated": "2026-02-01T04:38:11.634955",
   "totalBills": 3588,
   "byStatus": {
     "prefiled": 1987,
@@ -10,11 +10,11 @@
     "introduced": 3
   },
   "byCommittee": {
-    "Unassigned": 3214,
+    "Unassigned": 3198,
+    "House Appropriations": 24,
     "House Community Safety": 14,
     "House Education": 13,
     "House Transportation": 6,
-    "House Appropriations": 8,
     "House Agriculture & Natural Resources": 13,
     "House Local Government": 7,
     "House Consumer Protection & Business": 11,
@@ -725,7 +725,7 @@
     "SGA": 321
   },
   "recentlyUpdated": 3588,
-  "updatedToday": 3588,
+  "updatedToday": 852,
   "topSponsors": [
     [
       "()",
