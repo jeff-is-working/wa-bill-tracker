@@ -1,20 +1,20 @@
 {
-  "generated": "2026-02-02T04:32:24.206092",
-  "totalBills": 3588,
+  "generated": "2026-02-02T14:57:03.110532",
+  "totalBills": 3597,
   "byStatus": {
     "prefiled": 1987,
     "floor": 116,
     "enacted": 285,
-    "committee": 1188,
-    "passed_origin": 9,
+    "committee": 1201,
+    "passed_origin": 5,
     "introduced": 3
   },
   "byCommittee": {
-    "Unassigned": 3198,
+    "Unassigned": 3206,
     "House Appropriations": 24,
     "House Community Safety": 14,
     "House Education": 13,
-    "House Transportation": 6,
+    "House Transportation": 7,
     "House Agriculture & Natural Resources": 13,
     "House Local Government": 7,
     "House Consumer Protection & Business": 11,
@@ -45,23 +45,23 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3237,
-    "high": 264,
-    "low": 87
+    "medium": 3244,
+    "high": 265,
+    "low": 88
   },
   "byTopic": {
-    "General Government": 2150,
+    "General Government": 2152,
     "Public Safety": 129,
     "Housing": 111,
-    "Tax & Revenue": 265,
-    "Transportation": 118,
+    "Tax & Revenue": 268,
+    "Transportation": 119,
     "Healthcare": 189,
-    "Education": 251,
-    "Social Services": 104,
+    "Education": 252,
+    "Social Services": 105,
     "Environment": 92,
     "Business": 96,
     "Technology": 51,
-    "Agriculture": 32
+    "Agriculture": 33
   },
   "bySponsor": {
     "(Walsh)": 20,
@@ -94,7 +94,7 @@
     "TEDV(Barnard)": 3,
     "(Barkis)": 16,
     "(Alvarado)": 17,
-    "(Santos)": 13,
+    "(Santos)": 14,
     "TR(Low)": 4,
     "CPB(Reeves)": 4,
     "(Fosse)": 10,
@@ -132,7 +132,7 @@
     "HCW(Stonier)": 3,
     "CRJ(Farivar)": 2,
     "CS(Leavitt)": 1,
-    "(Bergquist)": 9,
+    "(Bergquist)": 10,
     "PEW(Leavitt)": 3,
     "CS(Peterson)": 1,
     "(Peterson)": 20,
@@ -161,7 +161,7 @@
     "HCW(Parshley)": 4,
     "HCW(Ryu)": 1,
     "(Dye)": 9,
-    "(Marshall)": 13,
+    "(Marshall)": 15,
     "CS(Simmons)": 1,
     "(Ormsby)": 12,
     "APP(Ormsby)": 5,
@@ -177,7 +177,7 @@
     "(Thai)": 29,
     "APP(Farivar)": 1,
     "(Stearns)": 13,
-    "(Fey)": 12,
+    "(Fey)": 13,
     "TR(Fey)": 6,
     "(Hackney)": 12,
     "(McEntire)": 5,
@@ -241,7 +241,7 @@
     "APP(Stonier)": 3,
     "(Gregerson)": 16,
     "TEDV(Ryu)": 3,
-    "(Orcutt)": 18,
+    "(Orcutt)": 19,
     "TR(Orcutt)": 2,
     "SGOV(Shavers)": 1,
     "ELHS(Goodman)": 1,
@@ -265,7 +265,7 @@
     "TEDV(Walen)": 1,
     "TR(Bernbaum)": 2,
     "TR(Goodman)": 1,
-    "(Parshley)": 29,
+    "(Parshley)": 30,
     "CPB(Kloba)": 1,
     "ED(Santos)": 2,
     "CB(Duerr)": 1,
@@ -508,7 +508,7 @@
     "SGTE(Trudeau)": 1,
     "(Kauffman)": 14,
     "HLTC(Bateman)": 2,
-    "(Christian)": 22,
+    "(Christian)": 23,
     "HLTC(Valdez)": 1,
     "(Nobles)": 34,
     "HLTC(Frame)": 1,
@@ -570,7 +570,7 @@
     "LAW(Muzzall)": 2,
     "HLTC(Slatter)": 4,
     "ENET(Liias)": 3,
-    "(Orwall)": 14,
+    "(Orwall)": 15,
     "SGTE(Krishnadasan)": 3,
     "HSG(Wilson, J.)": 2,
     "HLTC(Orwall)": 2,
@@ -706,10 +706,10 @@
     "()": 321
   },
   "byType": {
-    "HB": 1710,
-    "SB": 1343,
+    "HB": 1716,
+    "SB": 1345,
     "6-": 2,
-    "JM": 31,
+    "JM": 32,
     "JR": 24,
     "CR": 17,
     "HR": 72,
@@ -717,16 +717,16 @@
     "GA": 321
   },
   "byAgency": {
-    "House": 1746,
-    "Senate": 1379,
+    "House": 1753,
+    "Senate": 1381,
     "SI IL26-": 2,
     "HR": 71,
     "EHR": 1,
     "SR": 68,
     "SGA": 321
   },
-  "recentlyUpdated": 3588,
-  "updatedToday": 855,
+  "recentlyUpdated": 3597,
+  "updatedToday": 864,
   "topSponsors": [
     [
       "()",
@@ -777,6 +777,10 @@
       31
     ],
     [
+      "(Parshley)",
+      30
+    ],
+    [
       "(Dufault)",
       30
     ],
@@ -790,10 +794,6 @@
     ],
     [
       "(Thai)",
-      29
-    ],
-    [
-      "(Parshley)",
       29
     ],
     [
