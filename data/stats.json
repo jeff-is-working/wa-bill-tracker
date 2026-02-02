@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-01T14:40:13.976932",
+  "generated": "2026-02-02T04:32:24.206092",
   "totalBills": 3588,
   "byStatus": {
     "prefiled": 1987,
@@ -726,7 +726,7 @@
     "SGA": 321
   },
   "recentlyUpdated": 3588,
-  "updatedToday": 3588,
+  "updatedToday": 855,
   "topSponsors": [
     [
       "()",
