@@ -16,6 +16,7 @@ A free, open-source bill tracking application for the Washington State Legislatu
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [Architecture](#architecture)
+- [Documentation](#documentation)
 - [Configuration](#configuration)
 - [Deployment](#deployment)
 - [Adapting for Other States](#adapting-for-other-states)
@@ -141,6 +142,27 @@ wa-bill-tracker/
 WA Legislature API --> fetch_all_bills.py --> data/bills.json --> app.js --> Browser
      (SOAP/XML)           (Python)              (JSON)         (JavaScript)
 ```
+
+---
+
+## Documentation
+
+Comprehensive enterprise documentation is available in the [`docs/`](docs/) folder:
+
+| Document | Description |
+|----------|-------------|
+| [Documentation Index](docs/README.md) | Start here - navigation hub for all docs |
+| [Architecture](docs/ARCHITECTURE.md) | System design with diagrams |
+| [Data Flow](docs/DATA_FLOW.md) | Complete data pipeline documentation |
+| [API Integration](docs/API_INTEGRATION.md) | WA Legislature SOAP API guide |
+| [Frontend](docs/FRONTEND.md) | Client-side architecture |
+| [Deployment](docs/DEPLOYMENT.md) | GitHub Pages + CI/CD setup |
+| [Developer Guide](docs/DEVELOPER_GUIDE.md) | Development environment and contribution guide |
+| [Testing](docs/TESTING.md) | Test suite documentation |
+| [Security](docs/SECURITY.md) | Security model and practices |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | Common issues and solutions |
+| [Runbooks](docs/RUNBOOKS.md) | Operational procedures |
+| [Lessons Learned](docs/LESSONS_LEARNED.md) | Project insights and standards |
 
 ---
 
