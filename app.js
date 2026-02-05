@@ -1571,14 +1571,6 @@ function setupEventListeners() {
 
     // --- Delegated handlers replacing inline onclick attributes ---
 
-    // Migration banner dismiss
-    const dismissBtn = document.getElementById('dismissMigrationBanner');
-    if (dismissBtn) {
-        dismissBtn.addEventListener('click', () => {
-            document.getElementById('migrationBanner').style.display = 'none';
-        });
-    }
-
     // Stats cards
     document.querySelectorAll('.stat-card[data-stat]').forEach(card => {
         card.addEventListener('click', (e) => {
