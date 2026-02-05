@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-05T04:23:47.899249",
-  "totalBills": 3631,
+  "generated": "2026-02-05T14:57:57.180324",
+  "totalBills": 3634,
   "byStatus": {
-    "prefiled": 1930,
+    "prefiled": 1925,
     "floor": 123,
     "enacted": 285,
-    "committee": 1275,
+    "committee": 1283,
     "passed_origin": 12,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3163,
+    "Unassigned": 3166,
     "House Appropriations": 43,
     "House Community Safety": 14,
     "House Education": 14,
@@ -45,15 +45,15 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3272,
+    "medium": 3275,
     "high": 268,
     "low": 91
   },
   "byTopic": {
-    "General Government": 2167,
+    "General Government": 2169,
     "Public Safety": 129,
     "Housing": 112,
-    "Tax & Revenue": 275,
+    "Tax & Revenue": 276,
     "Transportation": 123,
     "Healthcare": 191,
     "Education": 256,
@@ -100,7 +100,7 @@
     "(Fosse)": 10,
     "LAWS(Davis)": 1,
     "ENVI(Fey)": 2,
-    "(Walen)": 19,
+    "(Walen)": 20,
     "HCW(Walen)": 1,
     "CPB(Walen)": 3,
     "ED(Ortiz-Self)": 3,
@@ -220,7 +220,7 @@
     "LAWS(Scott)": 3,
     "(Callan)": 11,
     "APP(Hackney)": 1,
-    "(Street)": 14,
+    "(Street)": 15,
     "SGOV(Mena)": 3,
     "AGNR(Goodman)": 1,
     "(Schmick)": 7,
@@ -233,7 +233,7 @@
     "APP(Gregerson)": 7,
     "(Manjarrez)": 9,
     "ELHS(Barnard)": 1,
-    "(Griffey)": 11,
+    "(Griffey)": 12,
     "ELHS(Bernbaum)": 3,
     "(Bernbaum)": 15,
     "LG(Ramel)": 1,
@@ -707,7 +707,7 @@
     "()": 321
   },
   "byType": {
-    "HB": 1732,
+    "HB": 1735,
     "SB": 1354,
     "6-": 2,
     "JM": 33,
@@ -718,7 +718,7 @@
     "GA": 321
   },
   "byAgency": {
-    "House": 1769,
+    "House": 1772,
     "Senate": 1392,
     "SI IL26-": 2,
     "HR": 74,
@@ -726,8 +726,8 @@
     "SR": 72,
     "SGA": 321
   },
-  "recentlyUpdated": 3631,
-  "updatedToday": 856,
+  "recentlyUpdated": 3634,
+  "updatedToday": 859,
   "topSponsors": [
     [
       "()",
