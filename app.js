@@ -746,25 +746,35 @@ function updateCutoffBanner() {
     updateCutoffExplainerVisibility();
 }
 
-// Show cutoff explainer banner only after first cutoff has passed
+// Show cutoff explainer banner on cutoff day or after
 function updateCutoffExplainerVisibility() {
     const explainerBanner = document.getElementById('cutoffExplainerBanner');
     if (!explainerBanner) return;
 
-    // Check if any cutoff date has passed
+    // Check if today is a cutoff day OR any cutoff has already passed
     const now = new Date();
-    const firstCutoffPassed = APP_CONFIG.cutoffDates.some(cutoff => {
-        return now > endOfDayLocal(cutoff.date);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const isCutoffDayOrAfter = APP_CONFIG.cutoffDates.some(cutoff => {
+        const cutoffDate = new Date(cutoff.date + 'T00:00:00');
+        const cutoffDay = new Date(cutoffDate.getFullYear(), cutoffDate.getMonth(), cutoffDate.getDate());
+        return today >= cutoffDay;
     });
 
-    // Also check if there are any bills that missed cutoff
-    const hasCutoffFailedBills = APP_STATE.bills.some(bill => {
+    // Also check if there are any bills that would miss cutoff (status still in failing state)
+    const hasBillsAtRisk = APP_STATE.bills.some(bill => {
         if (bill.session === '2025') return false;
-        return getBillCutoffStatus(bill) !== null;
+        // Check if bill status is in a "failing" category for any passed/current cutoff
+        const status = bill.status;
+        return APP_CONFIG.cutoffDates.some(cutoff => {
+            const cutoffDate = new Date(cutoff.date + 'T00:00:00');
+            const cutoffDay = new Date(cutoffDate.getFullYear(), cutoffDate.getMonth(), cutoffDate.getDate());
+            return today >= cutoffDay && cutoff.failsBefore.includes(status);
+        });
     });
 
-    // Show banner only if cutoff passed AND there are failed bills
-    if (firstCutoffPassed && hasCutoffFailedBills) {
+    // Show banner on cutoff day or after if there are bills at risk or already failed
+    if (isCutoffDayOrAfter && hasBillsAtRisk) {
         // Don't override if already dismissed
         if (!explainerBanner.classList.contains('dismissed')) {
             explainerBanner.style.display = 'block';
