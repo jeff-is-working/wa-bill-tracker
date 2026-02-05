@@ -852,6 +852,9 @@
         .skeleton-long { height: 0.875rem; width: 90%; }
         .skeleton-medium { height: 0.875rem; width: 60%; margin-bottom: 0; }
 
+        /* Scroll sentinel for infinite scroll detection */
+        .scroll-sentinel { height: 1px; }
+
         @keyframes skeleton-shimmer {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
@@ -1952,7 +1955,7 @@
                     <div class="skeleton-line skeleton-medium"></div>
                 </div>
             </div>
-            <div id="scrollSentinel" style="height: 1px;"></div>
+            <div id="scrollSentinel" class="scroll-sentinel"></div>
             <div id="paginationControls" class="pagination-controls"></div>
 
             <!-- Cutoff Failed Bills Section -->
