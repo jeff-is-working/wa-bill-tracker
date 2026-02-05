@@ -429,6 +429,258 @@
             font-size: 0.7rem;
         }
 
+        /* Cutoff Failed Bills Section */
+        .cutoff-failed-section {
+            margin-top: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .cutoff-failed-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(220, 53, 69, 0.1);
+            border: none;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .cutoff-failed-header:hover {
+            background: rgba(220, 53, 69, 0.15);
+        }
+
+        .cutoff-failed-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .cutoff-failed-icon {
+            font-size: 1.25rem;
+        }
+
+        .cutoff-failed-count {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .cutoff-failed-chevron {
+            font-size: 0.875rem;
+            transition: transform 0.3s;
+            color: var(--text-muted);
+        }
+
+        .cutoff-failed-section.expanded .cutoff-failed-chevron {
+            transform: rotate(180deg);
+        }
+
+        .cutoff-failed-content {
+            display: none;
+            padding: 1.5rem;
+        }
+
+        .cutoff-failed-section.expanded .cutoff-failed-content {
+            display: block;
+        }
+
+        .cutoff-failed-explanation {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(220, 53, 69, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--danger);
+        }
+
+        .cutoff-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .cutoff-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .cutoff-group-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--primary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .cutoff-group-label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text);
+        }
+
+        .cutoff-group-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .cutoff-group-count {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .cutoff-failed-bills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+        }
+
+        .cutoff-failed-bills-grid .bill-card {
+            opacity: 0.85;
+        }
+
+        .cutoff-failed-bills-grid .bill-card:hover {
+            opacity: 1;
+        }
+
+        /* Cutoff Explainer Banner */
+        .cutoff-explainer-banner {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(220, 53, 69, 0.1) 100%);
+            border: 1px solid var(--warning);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .cutoff-explainer-banner.dismissed {
+            display: none;
+        }
+
+        .cutoff-explainer-main {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .cutoff-explainer-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .cutoff-explainer-headline {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text);
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .cutoff-explainer-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .cutoff-explainer-toggle:hover {
+            background: var(--secondary);
+            border-color: var(--accent);
+        }
+
+        .cutoff-explainer-arrow {
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+        }
+
+        .cutoff-explainer-banner.expanded .cutoff-explainer-arrow {
+            transform: rotate(180deg);
+        }
+
+        .cutoff-explainer-dismiss {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .cutoff-explainer-dismiss:hover {
+            color: var(--text);
+        }
+
+        .cutoff-explainer-flyout {
+            display: none;
+            padding: 1.25rem 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--border);
+        }
+
+        .cutoff-explainer-banner.expanded .cutoff-explainer-flyout {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .cutoff-explainer-flyout h4 {
+            color: var(--text);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .cutoff-explainer-flyout h4:not(:first-child) {
+            margin-top: 1.25rem;
+        }
+
+        .cutoff-explainer-flyout p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.65;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .cutoff-explainer-flyout ul {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.65;
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .cutoff-explainer-flyout li {
+            margin-bottom: 0.35rem;
+        }
+
+        .cutoff-explainer-flyout strong {
+            color: var(--text);
+        }
+
         .btn-primary {
             padding: 0.75rem 1.5rem;
             background: var(--accent);
@@ -1397,6 +1649,74 @@
                 font-size: 0.9rem;
             }
 
+            .cutoff-failed-section {
+                margin-top: 1.5rem;
+            }
+
+            .cutoff-failed-header {
+                padding: 0.75rem 1rem;
+            }
+
+            .cutoff-failed-title {
+                font-size: 0.875rem;
+            }
+
+            .cutoff-failed-content {
+                padding: 1rem;
+            }
+
+            .cutoff-failed-bills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cutoff-group-header {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .cutoff-group-count {
+                margin-left: 0;
+            }
+
+            .cutoff-explainer-main {
+                padding: 0.75rem 1rem;
+                gap: 0.5rem;
+            }
+
+            .cutoff-explainer-headline {
+                font-size: 0.85rem;
+                min-width: 100%;
+                order: 2;
+            }
+
+            .cutoff-explainer-icon {
+                order: 1;
+            }
+
+            .cutoff-explainer-dismiss {
+                order: 1;
+                margin-left: auto;
+            }
+
+            .cutoff-explainer-toggle {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .cutoff-explainer-flyout {
+                padding: 1rem;
+            }
+
+            .cutoff-explainer-flyout h4 {
+                font-size: 0.9rem;
+            }
+
+            .cutoff-explainer-flyout p,
+            .cutoff-explainer-flyout ul {
+                font-size: 0.8rem;
+            }
+
             .bill-progress-tracker {
                 padding: 0.5rem 0.75rem 0.4rem;
             }
@@ -1520,6 +1840,45 @@
             <!-- Cutoff Banner -->
             <div class="cutoff-banner" id="cutoffBanner"></div>
 
+            <!-- Policy Cutoff Explanation Banner -->
+            <div class="cutoff-explainer-banner" id="cutoffExplainerBanner">
+                <div class="cutoff-explainer-main">
+                    <span class="cutoff-explainer-icon">⚠️</span>
+                    <span class="cutoff-explainer-headline">Policy Committee Cutoff Has Passed — Some Bills Are No Longer Active</span>
+                    <button type="button" class="cutoff-explainer-toggle" id="cutoffExplainerToggle" aria-expanded="false">
+                        More Info <span class="cutoff-explainer-arrow">▼</span>
+                    </button>
+                    <button type="button" class="cutoff-explainer-dismiss" id="cutoffExplainerDismiss" aria-label="Dismiss banner">×</button>
+                </div>
+                <div class="cutoff-explainer-flyout" id="cutoffExplainerFlyout">
+                    <h4>What is a legislative cutoff?</h4>
+                    <p>
+                        The Washington State Legislature has deadlines called "cutoffs" during each session.
+                        These deadlines decide when bills must reach certain stages to stay alive.
+                    </p>
+
+                    <h4>What happened on February 4th?</h4>
+                    <p>
+                        The first major cutoff was the <strong>Policy Committee Cutoff</strong>.
+                        Bills that were still waiting to be reviewed by a policy committee in their starting chamber (House or Senate)
+                        missed this deadline. These bills can no longer move forward this year.
+                    </p>
+
+                    <h4>What does this mean?</h4>
+                    <ul>
+                        <li><strong>Active bills</strong> have passed their policy committee and are still being considered.</li>
+                        <li><strong>Inactive bills</strong> missed the cutoff and won't become law this session.</li>
+                        <li>Scroll down to see which bills missed the cutoff and are no longer active.</li>
+                    </ul>
+
+                    <h4>More cutoffs are coming</h4>
+                    <p>
+                        There are more cutoff dates ahead. Bills must keep moving through the process,
+                        or they will miss future deadlines too. Check the cutoff banner above for the next deadline.
+                    </p>
+                </div>
+            </div>
+
             <!-- Controls -->
             <div class="controls">
                 <div class="search-box">
@@ -1595,6 +1954,25 @@
             </div>
             <div id="scrollSentinel" style="height: 1px;"></div>
             <div id="paginationControls" class="pagination-controls"></div>
+
+            <!-- Cutoff Failed Bills Section -->
+            <div id="cutoffFailedSection" class="cutoff-failed-section">
+                <button type="button" class="cutoff-failed-header" id="cutoffFailedToggle" aria-expanded="false">
+                    <span class="cutoff-failed-title">
+                        <span class="cutoff-failed-icon">📋</span>
+                        Bills That Missed Cutoff Deadlines
+                        <span class="cutoff-failed-count" id="cutoffFailedCount">(0)</span>
+                    </span>
+                    <span class="cutoff-failed-chevron">▼</span>
+                </button>
+                <div class="cutoff-failed-content" id="cutoffFailedContent">
+                    <p class="cutoff-failed-explanation">
+                        These bills did not advance past required stages before legislative deadlines and are no longer active for the 2026 session.
+                        While procedural revival is theoretically possible until Sine Die, these bills are effectively dead.
+                    </p>
+                    <div id="cutoffFailedBills"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Stats Detail View -->

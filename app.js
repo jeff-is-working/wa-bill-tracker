@@ -570,6 +570,7 @@ function updateUI() {
         renderBills(filtered);
         updateStats(filtered);
         updateCutoffBanner();
+        renderCutoffFailedBills();
     }
     updateUserPanel();
 }
@@ -654,6 +655,75 @@ function updatePageInfo(displayed, total) {
     container.innerHTML = '<span class="page-info">Showing ' + displayed + ' of ' + total + ' bills</span>';
 }
 
+// Render cutoff-failed bills in their own section
+function renderCutoffFailedBills() {
+    const section = document.getElementById('cutoffFailedSection');
+    const countEl = document.getElementById('cutoffFailedCount');
+    const container = document.getElementById('cutoffFailedBills');
+
+    if (!section || !container) return;
+
+    // Get all 2026 session bills that missed a cutoff
+    const cutoffFailedBills = APP_STATE.bills.filter(bill => {
+        if (bill.session === '2025') return false;
+        return getBillCutoffStatus(bill) !== null;
+    });
+
+    // Update count display
+    countEl.textContent = `(${cutoffFailedBills.length})`;
+
+    // Hide section if no cutoff-failed bills
+    if (cutoffFailedBills.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+    section.style.display = 'block';
+
+    // Group bills by which cutoff they missed
+    const groupedBills = {};
+    cutoffFailedBills.forEach(bill => {
+        const cutoffLabel = getBillCutoffStatus(bill);
+        if (!groupedBills[cutoffLabel]) {
+            groupedBills[cutoffLabel] = [];
+        }
+        groupedBills[cutoffLabel].push(bill);
+    });
+
+    // Build grouped HTML
+    let html = '';
+
+    // Sort groups by cutoff date order (use config order)
+    const cutoffOrder = APP_CONFIG.cutoffDates.map(c => c.label);
+    const sortedGroups = Object.keys(groupedBills).sort((a, b) => {
+        return cutoffOrder.indexOf(a) - cutoffOrder.indexOf(b);
+    });
+
+    sortedGroups.forEach(cutoffLabel => {
+        const bills = groupedBills[cutoffLabel];
+        const cutoffInfo = APP_CONFIG.cutoffDates.find(c => c.label === cutoffLabel);
+        const dateStr = cutoffInfo ? new Date(cutoffInfo.date + 'T00:00:00').toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        }) : '';
+
+        html += `
+            <div class="cutoff-group">
+                <div class="cutoff-group-header">
+                    <span class="cutoff-group-label">${escapeHTML(cutoffLabel)}</span>
+                    <span class="cutoff-group-date">${dateStr}</span>
+                    <span class="cutoff-group-count">${bills.length} bill${bills.length !== 1 ? 's' : ''}</span>
+                </div>
+                <div class="cutoff-failed-bills-grid">
+                    ${bills.map(bill => createBillCard(bill)).join('')}
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
 function updateCutoffBanner() {
     const banner = document.getElementById('cutoffBanner');
     if (!banner) return;
@@ -671,6 +741,37 @@ function updateCutoffBanner() {
         '<span>📅</span>' +
         '<span class="cutoff-label">Next cutoff: ' + next.label + ' — ' + dateStr + '</span>' +
         '<span class="cutoff-days">' + daysText + '</span>';
+
+    // Show/hide the cutoff explainer banner based on whether any cutoff has passed
+    updateCutoffExplainerVisibility();
+}
+
+// Show cutoff explainer banner only after first cutoff has passed
+function updateCutoffExplainerVisibility() {
+    const explainerBanner = document.getElementById('cutoffExplainerBanner');
+    if (!explainerBanner) return;
+
+    // Check if any cutoff date has passed
+    const now = new Date();
+    const firstCutoffPassed = APP_CONFIG.cutoffDates.some(cutoff => {
+        return now > endOfDayLocal(cutoff.date);
+    });
+
+    // Also check if there are any bills that missed cutoff
+    const hasCutoffFailedBills = APP_STATE.bills.some(bill => {
+        if (bill.session === '2025') return false;
+        return getBillCutoffStatus(bill) !== null;
+    });
+
+    // Show banner only if cutoff passed AND there are failed bills
+    if (firstCutoffPassed && hasCutoffFailedBills) {
+        // Don't override if already dismissed
+        if (!explainerBanner.classList.contains('dismissed')) {
+            explainerBanner.style.display = 'block';
+        }
+    } else {
+        explainerBanner.style.display = 'none';
+    }
 }
 
 function goToPage(page) {
@@ -1610,6 +1711,56 @@ function setupEventListeners() {
             highlightBill(el.dataset.highlightBill);
         }
     });
+
+    // Cutoff failed section toggle
+    const cutoffToggle = document.getElementById('cutoffFailedToggle');
+    if (cutoffToggle) {
+        cutoffToggle.addEventListener('click', () => {
+            const section = document.getElementById('cutoffFailedSection');
+            const isExpanded = section.classList.toggle('expanded');
+            cutoffToggle.setAttribute('aria-expanded', isExpanded);
+        });
+    }
+
+    // Cutoff explainer banner toggle and dismiss
+    const explainerToggle = document.getElementById('cutoffExplainerToggle');
+    const explainerDismiss = document.getElementById('cutoffExplainerDismiss');
+    const explainerBanner = document.getElementById('cutoffExplainerBanner');
+
+    if (explainerToggle && explainerBanner) {
+        explainerToggle.addEventListener('click', () => {
+            const isExpanded = explainerBanner.classList.toggle('expanded');
+            explainerToggle.setAttribute('aria-expanded', isExpanded);
+        });
+    }
+
+    if (explainerDismiss && explainerBanner) {
+        explainerDismiss.addEventListener('click', () => {
+            explainerBanner.classList.add('dismissed');
+            CookieManager.set('wa_tracker_cutoff_banner_dismissed', '1', 7); // Dismiss for 7 days
+        });
+
+        // Check if banner was previously dismissed
+        if (CookieManager.get('wa_tracker_cutoff_banner_dismissed') === '1') {
+            explainerBanner.classList.add('dismissed');
+        }
+    }
+
+    // Delegated handler for bill actions in cutoff-failed section
+    const cutoffContainer = document.getElementById('cutoffFailedBills');
+    if (cutoffContainer) {
+        cutoffContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-action]');
+            if (!btn) return;
+
+            const billId = btn.dataset.billId;
+            switch (btn.dataset.action) {
+                case 'track': toggleTrack(billId); break;
+                case 'note': openNoteModal(billId); break;
+                case 'share': shareBill(billId); break;
+            }
+        });
+    }
 }
 
 // Auto-save functionality
