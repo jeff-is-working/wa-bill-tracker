@@ -1,23 +1,23 @@
 {
-  "generated": "2026-02-05T14:57:57.180324",
-  "totalBills": 3634,
+  "generated": "2026-02-06T04:23:46.335563",
+  "totalBills": 3636,
   "byStatus": {
-    "prefiled": 1925,
-    "floor": 123,
+    "prefiled": 1928,
+    "floor": 116,
     "enacted": 285,
     "committee": 1283,
-    "passed_origin": 12,
+    "passed_origin": 18,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3166,
-    "House Appropriations": 43,
+    "Unassigned": 3196,
+    "House Appropriations": 28,
     "House Community Safety": 14,
     "House Education": 14,
-    "House Transportation": 17,
+    "House Transportation": 21,
     "House Agriculture & Natural Resources": 13,
     "House Consumer Protection & Business": 13,
-    "House Finance": 26,
+    "House Finance": 25,
     "House Local Government": 7,
     "House Civil Rights & Judiciary": 12,
     "House Health Care & Wellness": 9,
@@ -29,8 +29,8 @@
     "House Capital Budget": 6,
     "House Postsecondary Education & Workforce": 15,
     "House Technology, Economic Development, & Veterans": 5,
+    "Senate Ways & Means": 40,
     "Senate State Government, Tribal Affairs & Elections": 14,
-    "Senate Ways & Means": 56,
     "Senate Transportation": 18,
     "Senate Early Learning & K-12 Education": 19,
     "Senate Labor & Commerce": 21,
@@ -45,12 +45,12 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3275,
+    "medium": 3277,
     "high": 268,
     "low": 91
   },
   "byTopic": {
-    "General Government": 2169,
+    "General Government": 2171,
     "Public Safety": 129,
     "Housing": 112,
     "Tax & Revenue": 276,
@@ -67,7 +67,7 @@
     "(Walsh)": 20,
     "(Abbarno)": 17,
     "(Leavitt)": 26,
-    "(Ryu)": 13,
+    "(Ryu)": 14,
     "(Low)": 26,
     "(Jacobsen)": 10,
     "(Taylor)": 16,
@@ -460,7 +460,7 @@
     "(Lovick)": 31,
     "SGTE(Nobles)": 2,
     "HLTC(Chapman)": 2,
-    "(Wagoner)": 29,
+    "(Wagoner)": 30,
     "LC(Salda\u00f1a)": 8,
     "(Warnick)": 16,
     "EDU(Lovick)": 1,
@@ -713,21 +713,21 @@
     "JM": 33,
     "JR": 25,
     "CR": 17,
-    "HR": 75,
-    "SR": 72,
+    "HR": 76,
+    "SR": 73,
     "GA": 321
   },
   "byAgency": {
     "House": 1772,
     "Senate": 1392,
     "SI IL26-": 2,
-    "HR": 74,
+    "HR": 75,
     "EHR": 1,
-    "SR": 72,
+    "SR": 73,
     "SGA": 321
   },
-  "recentlyUpdated": 3634,
-  "updatedToday": 859,
+  "recentlyUpdated": 3636,
+  "updatedToday": 858,
   "topSponsors": [
     [
       "()",
@@ -794,15 +794,15 @@
       30
     ],
     [
+      "(Wagoner)",
+      30
+    ],
+    [
       "(Thai)",
       29
     ],
     [
       "(Cortes)",
-      29
-    ],
-    [
-      "(Wagoner)",
       29
     ],
     [
