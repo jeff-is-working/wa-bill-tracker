@@ -1,23 +1,23 @@
 {
-  "generated": "2026-02-06T14:53:40.714752",
-  "totalBills": 3639,
+  "generated": "2026-02-07T04:16:58.202606",
+  "totalBills": 3651,
   "byStatus": {
-    "prefiled": 1928,
-    "floor": 116,
+    "prefiled": 1933,
+    "floor": 146,
     "enacted": 285,
-    "committee": 1291,
-    "passed_origin": 13,
+    "committee": 1267,
+    "passed_origin": 14,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3199,
-    "House Appropriations": 28,
+    "Unassigned": 3223,
+    "House Appropriations": 22,
     "House Community Safety": 14,
     "House Education": 14,
-    "House Transportation": 21,
+    "House Transportation": 20,
     "House Agriculture & Natural Resources": 13,
     "House Consumer Protection & Business": 13,
-    "House Finance": 25,
+    "House Finance": 23,
     "House Local Government": 7,
     "House Civil Rights & Judiciary": 12,
     "House Health Care & Wellness": 9,
@@ -26,10 +26,9 @@
     "House Early Learning & Human Services": 3,
     "House Environment & Energy": 11,
     "House Housing": 2,
-    "House Capital Budget": 6,
+    "House Capital Budget": 5,
     "House Postsecondary Education & Workforce": 15,
     "House Technology, Economic Development, & Veterans": 5,
-    "Senate Ways & Means": 40,
     "Senate State Government, Tribal Affairs & Elections": 14,
     "Senate Transportation": 18,
     "Senate Early Learning & K-12 Education": 19,
@@ -37,6 +36,7 @@
     "Senate Housing": 10,
     "Senate Environment, Energy & Technology": 13,
     "Senate Local Government": 10,
+    "Senate Ways & Means": 38,
     "Senate Agriculture & Natural Resources": 12,
     "Senate Health & Long-Term Care": 16,
     "Senate Law & Justice": 11,
@@ -45,12 +45,12 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3280,
+    "medium": 3292,
     "high": 268,
     "low": 91
   },
   "byTopic": {
-    "General Government": 2173,
+    "General Government": 2185,
     "Public Safety": 129,
     "Housing": 112,
     "Tax & Revenue": 276,
@@ -323,7 +323,7 @@
     "(Springer)": 13,
     "TEDV(Stuebe)": 1,
     "ED(Thai)": 1,
-    "(Zahn)": 21,
+    "(Zahn)": 22,
     "ENVI(Abbarno)": 2,
     "ENVI(Hunt)": 1,
     "TEDV(Kloba)": 1,
@@ -388,7 +388,7 @@
     "SGOV(Doglio)": 1,
     "(Mendoza)": 5,
     "AGNR(Hunt)": 1,
-    "TR(Nance)": 1,
+    "TR(Nance)": 2,
     "PEW(Timmons)": 1,
     "HOUS(Hill)": 2,
     "CPB(Morgan)": 1,
@@ -396,6 +396,7 @@
     "CB(Zahn)": 1,
     "APP(Burnett)": 1,
     "HCW(Macri)": 3,
+    "FIN(Hill)": 1,
     "TR(Zahn)": 1,
     "APP(Abbarno)": 1,
     "FIN(Farivar)": 1,
@@ -452,7 +453,7 @@
     "(Torres)": 30,
     "EDU(Torres)": 1,
     "HS(Salda\u00f1a)": 2,
-    "(Pedersen)": 8,
+    "(Pedersen)": 9,
     "(Braun)": 37,
     "EDU(Braun)": 1,
     "SGTE(Boehnke)": 1,
@@ -704,34 +705,34 @@
     "(Corry)": 1,
     "TRAN(Torres)": 1,
     "LAW(Salda\u00f1a)": 1,
-    "()": 321
+    "()": 329
   },
   "byType": {
-    "HB": 1738,
+    "HB": 1740,
     "SB": 1354,
     "6-": 2,
     "JM": 33,
     "JR": 25,
     "CR": 17,
-    "HR": 76,
-    "SR": 73,
-    "GA": 321
+    "HR": 77,
+    "SR": 74,
+    "GA": 329
   },
   "byAgency": {
-    "House": 1775,
+    "House": 1777,
     "Senate": 1392,
     "SI IL26-": 2,
-    "HR": 75,
+    "HR": 76,
     "EHR": 1,
-    "SR": 73,
-    "SGA": 321
+    "SR": 74,
+    "SGA": 329
   },
-  "recentlyUpdated": 3639,
-  "updatedToday": 861,
+  "recentlyUpdated": 3651,
+  "updatedToday": 866,
   "topSponsors": [
     [
       "()",
-      321
+      329
     ],
     [
       "(Fortunato)",
