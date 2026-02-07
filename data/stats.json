@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-07T04:16:58.202606",
+  "generated": "2026-02-07T14:39:35.081928",
   "totalBills": 3651,
   "byStatus": {
     "prefiled": 1933,
@@ -10,8 +10,8 @@
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3223,
-    "House Appropriations": 22,
+    "Unassigned": 3222,
+    "House Appropriations": 23,
     "House Community Safety": 14,
     "House Education": 14,
     "House Transportation": 20,
