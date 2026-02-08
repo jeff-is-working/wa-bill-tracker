@@ -1,8 +1,8 @@
 {
-  "generated": "2026-02-07T14:39:35.081928",
-  "totalBills": 3651,
+  "generated": "2026-02-08T04:40:09.987877",
+  "totalBills": 3657,
   "byStatus": {
-    "prefiled": 1933,
+    "prefiled": 1939,
     "floor": 146,
     "enacted": 285,
     "committee": 1267,
@@ -10,8 +10,8 @@
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3222,
-    "House Appropriations": 23,
+    "Unassigned": 3200,
+    "House Appropriations": 18,
     "House Community Safety": 14,
     "House Education": 14,
     "House Transportation": 20,
@@ -29,6 +29,7 @@
     "House Capital Budget": 5,
     "House Postsecondary Education & Workforce": 15,
     "House Technology, Economic Development, & Veterans": 5,
+    "Senate Ways & Means": 71,
     "Senate State Government, Tribal Affairs & Elections": 14,
     "Senate Transportation": 18,
     "Senate Early Learning & K-12 Education": 19,
@@ -36,7 +37,6 @@
     "Senate Housing": 10,
     "Senate Environment, Energy & Technology": 13,
     "Senate Local Government": 10,
-    "Senate Ways & Means": 38,
     "Senate Agriculture & Natural Resources": 12,
     "Senate Health & Long-Term Care": 16,
     "Senate Law & Justice": 11,
@@ -45,20 +45,20 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3292,
+    "medium": 3298,
     "high": 268,
     "low": 91
   },
   "byTopic": {
-    "General Government": 2185,
-    "Public Safety": 129,
+    "General Government": 2189,
+    "Public Safety": 130,
     "Housing": 112,
     "Tax & Revenue": 276,
     "Transportation": 123,
     "Healthcare": 191,
     "Education": 257,
     "Social Services": 105,
-    "Environment": 92,
+    "Environment": 93,
     "Business": 97,
     "Technology": 51,
     "Agriculture": 33
@@ -120,12 +120,12 @@
     "CS(Ortiz-Self)": 1,
     "CS(Farivar)": 3,
     "(Tharinger)": 8,
-    "APP(Mena)": 4,
+    "APP(Mena)": 5,
     "(Simmons)": 19,
     "APP(Goodman)": 4,
     "LAWS(McClintock)": 1,
     "(McClintock)": 12,
-    "APP(Macri)": 5,
+    "APP(Macri)": 6,
     "APP(Simmons)": 3,
     "FIN(Walen)": 1,
     "LAWS(Fosse)": 4,
@@ -138,11 +138,11 @@
     "(Peterson)": 20,
     "LAWS(Ortiz-Self)": 3,
     "PEW(Macri)": 1,
-    "APP(Lekanoff)": 3,
+    "APP(Lekanoff)": 4,
     "SGOV(Simmons)": 1,
     "SGOV(Farivar)": 2,
     "CS(Hackney)": 2,
-    "APP(Berry)": 3,
+    "APP(Berry)": 4,
     "(Steele)": 10,
     "(Duerr)": 7,
     "APP(Duerr)": 3,
@@ -164,7 +164,7 @@
     "(Marshall)": 16,
     "CS(Simmons)": 1,
     "(Ormsby)": 12,
-    "APP(Ormsby)": 5,
+    "APP(Ormsby)": 6,
     "ELHS(Taylor)": 2,
     "TEDV(Leavitt)": 1,
     "CB(Tharinger)": 2,
@@ -282,7 +282,7 @@
     "APP(Doglio)": 2,
     "CRJ(Reed)": 1,
     "HOUS(Reed)": 1,
-    "APP(Taylor)": 2,
+    "APP(Taylor)": 3,
     "APP(Ramel)": 1,
     "APP(Hill)": 2,
     "ENVI(Dent)": 1,
@@ -708,7 +708,7 @@
     "()": 329
   },
   "byType": {
-    "HB": 1740,
+    "HB": 1746,
     "SB": 1354,
     "6-": 2,
     "JM": 33,
@@ -719,7 +719,7 @@
     "GA": 329
   },
   "byAgency": {
-    "House": 1777,
+    "House": 1783,
     "Senate": 1392,
     "SI IL26-": 2,
     "HR": 76,
@@ -727,8 +727,8 @@
     "SR": 74,
     "SGA": 329
   },
-  "recentlyUpdated": 3651,
-  "updatedToday": 866,
+  "recentlyUpdated": 3657,
+  "updatedToday": 856,
   "topSponsors": [
     [
       "()",
