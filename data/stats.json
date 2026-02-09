@@ -1,8 +1,8 @@
 {
-  "generated": "2026-02-08T14:40:31.137289",
-  "totalBills": 3642,
+  "generated": "2026-02-09T04:36:49.818995",
+  "totalBills": 3648,
   "byStatus": {
-    "prefiled": 1906,
+    "prefiled": 1912,
     "floor": 259,
     "enacted": 285,
     "committee": 1162,
@@ -10,7 +10,7 @@
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3534,
+    "Unassigned": 3540,
     "House Appropriations": 10,
     "House Consumer Protection & Business": 1,
     "House Finance": 8,
@@ -21,20 +21,20 @@
     "Senate Transportation": 7
   },
   "byPriority": {
-    "medium": 3285,
+    "medium": 3291,
     "high": 267,
     "low": 90
   },
   "byTopic": {
-    "General Government": 2181,
-    "Public Safety": 129,
+    "General Government": 2184,
+    "Public Safety": 130,
     "Housing": 111,
     "Tax & Revenue": 277,
     "Transportation": 122,
-    "Healthcare": 190,
+    "Healthcare": 191,
     "Education": 256,
     "Social Services": 104,
-    "Environment": 92,
+    "Environment": 93,
     "Business": 96,
     "Technology": 51,
     "Agriculture": 33
@@ -89,7 +89,7 @@
     "CS(Jacobsen)": 2,
     "APP(Shavers)": 1,
     "CPB(Waters)": 1,
-    "APP(Fosse)": 1,
+    "APP(Fosse)": 2,
     "(Barnard)": 17,
     "(Mena)": 11,
     "APP(Klicker)": 3,
@@ -121,7 +121,7 @@
     "APP(Berry)": 4,
     "(Steele)": 10,
     "(Duerr)": 7,
-    "APP(Duerr)": 3,
+    "APP(Duerr)": 4,
     "LAWS(Berry)": 1,
     "LG(Walen)": 2,
     "PEW(Ryu)": 1,
@@ -174,7 +174,7 @@
     "FIN(Low)": 2,
     "ELHS(Cortes)": 2,
     "APP(Nance)": 1,
-    "APP(Callan)": 3,
+    "APP(Callan)": 4,
     "APP(Paul)": 1,
     "APP(Stearns)": 1,
     "(Scott)": 12,
@@ -222,12 +222,12 @@
     "TR(Orcutt)": 2,
     "SGOV(Shavers)": 1,
     "ELHS(Goodman)": 1,
-    "APP(Cortes)": 1,
+    "APP(Cortes)": 2,
     "PEW(Farivar)": 1,
     "(Paul)": 8,
     "APP(Scott)": 1,
     "APP(Barnard)": 1,
-    "APP(Fitzgibbon)": 4,
+    "APP(Fitzgibbon)": 5,
     "ED(Connors)": 2,
     "(Macri)": 16,
     "TR(Timmons)": 2,
@@ -309,7 +309,7 @@
     "ENVI(Ramel)": 1,
     "(Rude)": 5,
     "LG(Thai)": 1,
-    "APP(Bronoske)": 1,
+    "APP(Bronoske)": 2,
     "LG(Parshley)": 3,
     "LG(Wylie)": 1,
     "LG(Volz)": 1,
@@ -748,7 +748,7 @@
     "()": 329
   },
   "byType": {
-    "HB": 1734,
+    "HB": 1740,
     "SB": 1351,
     "6-": 2,
     "JM": 33,
@@ -759,7 +759,7 @@
     "GA": 329
   },
   "byAgency": {
-    "House": 1771,
+    "House": 1777,
     "Senate": 1389,
     "SI IL26-": 2,
     "HR": 76,
@@ -767,8 +767,8 @@
     "SR": 74,
     "SGA": 329
   },
-  "recentlyUpdated": 3642,
-  "updatedToday": 3642,
+  "recentlyUpdated": 3648,
+  "updatedToday": 1018,
   "topSponsors": [
     [
       "()",
