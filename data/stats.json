@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-09T04:36:49.818995",
-  "totalBills": 3648,
+  "generated": "2026-02-09T15:03:05.113330",
+  "totalBills": 3649,
   "byStatus": {
     "prefiled": 1912,
     "floor": 259,
     "enacted": 285,
-    "committee": 1162,
-    "passed_origin": 24,
+    "committee": 1169,
+    "passed_origin": 18,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3540,
+    "Unassigned": 3541,
     "House Appropriations": 10,
     "House Consumer Protection & Business": 1,
     "House Finance": 8,
@@ -21,7 +21,7 @@
     "Senate Transportation": 7
   },
   "byPriority": {
-    "medium": 3291,
+    "medium": 3292,
     "high": 267,
     "low": 90
   },
@@ -32,7 +32,7 @@
     "Tax & Revenue": 277,
     "Transportation": 122,
     "Healthcare": 191,
-    "Education": 256,
+    "Education": 257,
     "Social Services": 104,
     "Environment": 93,
     "Business": 96,
@@ -247,7 +247,7 @@
     "ED(Santos)": 2,
     "CB(Duerr)": 1,
     "APP(Griffey)": 1,
-    "(Cortes)": 26,
+    "(Cortes)": 27,
     "(Ramel)": 9,
     "TEDV(Gregerson)": 2,
     "(Salahuddin)": 19,
@@ -749,7 +749,7 @@
   },
   "byType": {
     "HB": 1740,
-    "SB": 1351,
+    "SB": 1352,
     "6-": 2,
     "JM": 33,
     "JR": 25,
@@ -760,15 +760,15 @@
   },
   "byAgency": {
     "House": 1777,
-    "Senate": 1389,
+    "Senate": 1390,
     "SI IL26-": 2,
     "HR": 76,
     "EHR": 1,
     "SR": 74,
     "SGA": 329
   },
-  "recentlyUpdated": 3648,
-  "updatedToday": 1018,
+  "recentlyUpdated": 3649,
+  "updatedToday": 1019,
   "topSponsors": [
     [
       "()",
@@ -847,7 +847,7 @@
       28
     ],
     [
-      "(Wilson, J.)",
+      "(Cortes)",
       27
     ]
   ]
