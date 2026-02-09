@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(git -C /Users/jeffrecords/Documents/GitHub/wa-bill-tracker log --oneline -5)"
-    ]
-  }
-}
