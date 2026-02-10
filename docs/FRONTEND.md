@@ -1065,9 +1065,10 @@ window.addEventListener('beforeunload', () => {
 
 ## Related Documentation
 
-- [Architecture](ARCHITECTURE.md) - System overview
-- [Data Flow](DATA_FLOW.md) - Data loading details
+- [Architecture & Data Flow](ARCHITECTURE.md) - System design, data pipeline, API integration
 - [Security](SECURITY.md) - XSS prevention, CSP
+- [Deployment & Operations](DEPLOYMENT.md) - Infrastructure, CI/CD, troubleshooting
+- [Developer Guide](DEVELOPER_GUIDE.md) - Setup, coding standards, testing
 
 ---
 

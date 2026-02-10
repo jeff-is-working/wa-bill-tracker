@@ -414,9 +414,10 @@ These security concerns don't apply to this application:
 
 ## Related Documentation
 
-- [Architecture](ARCHITECTURE.md) - Security architecture context
-- [Deployment](DEPLOYMENT.md) - Secure deployment
+- [Architecture & Data Flow](ARCHITECTURE.md) - Security architecture context
+- [Deployment & Operations](DEPLOYMENT.md) - Secure deployment, infrastructure
 - [Developer Guide](DEVELOPER_GUIDE.md) - Secure coding practices
+- [Frontend](FRONTEND.md) - Client-side security (escapeHTML, CSP)
 
 ---
 
