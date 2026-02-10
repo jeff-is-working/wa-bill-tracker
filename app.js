@@ -1913,14 +1913,18 @@ function setupEventListeners() {
     // User panel expand
     document.getElementById('expandBtn').addEventListener('click', toggleUserPanel);
 
-    // Notes export buttons
-    document.getElementById('copyNotesBtn').addEventListener('click', copyAllNotes);
-    document.getElementById('emailNotesBtn').addEventListener('click', emailAllNotes);
-    document.getElementById('csvNotesBtn').addEventListener('click', exportNotesCSV);
-    document.getElementById('importCsvBtn').addEventListener('click', () => {
+    // Notes export buttons (safe-bind so one missing element doesn't break the rest)
+    const safeBind = (id, event, handler) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener(event, handler);
+    };
+    safeBind('copyNotesBtn', 'click', copyAllNotes);
+    safeBind('emailNotesBtn', 'click', emailAllNotes);
+    safeBind('csvNotesBtn', 'click', exportNotesCSV);
+    safeBind('importCsvBtn', 'click', () => {
         document.getElementById('csvFileInput').click();
     });
-    document.getElementById('csvFileInput').addEventListener('change', importNotesCSV);
+    safeBind('csvFileInput', 'change', importNotesCSV);
 
     // Note modal buttons
     document.getElementById('noteModalClose').addEventListener('click', closeNoteModal);
