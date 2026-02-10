@@ -1603,7 +1603,7 @@ function formatNotesForExport() {
     });
     if (lines.length > 0) {
         lines.push('---');
-        lines.push('Exported from WA Bill Tracker');
+        lines.push('Exported from WA Bill Tracker — https://wa-bill-tracker.org');
     }
     return lines.join('\n');
 }
