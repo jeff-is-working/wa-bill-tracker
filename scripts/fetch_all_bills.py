@@ -735,8 +735,15 @@ def fetch_hearings_for_bills(bills: List[Dict]) -> None:
         logger.info("No upcoming committee meetings found")
         return
 
-    # Build a lookup from bill ID (no spaces) to bill dict
+    # Build lookups: exact ID match + base bill number (e.g., 5124) fallback.
+    # Agenda items may use a different version prefix (ESSB vs SSB) than what
+    # we have stored, so we normalize to the numeric bill number for matching.
     bill_lookup = {b["id"]: b for b in bills}
+    bill_by_number = {}
+    for b in bills:
+        _, num = extract_bill_number_from_id(b["id"])
+        if num:
+            bill_by_number[num] = b
 
     hearings_attached = 0
 
@@ -751,6 +758,9 @@ def fetch_hearings_for_bills(bills: List[Dict]) -> None:
 
         for item in items:
             bill = bill_lookup.get(item["billId"])
+            if bill is None:
+                _, num = extract_bill_number_from_id(item["billId"])
+                bill = bill_by_number.get(num) if num else None
             if bill is not None:
                 bill["hearings"].append({
                     "date": meeting["date"],
