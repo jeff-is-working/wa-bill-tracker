@@ -316,22 +316,48 @@ document.addEventListener('DOMContentLoaded', async () => {
 function initializeUser() {
     // Check for existing user ID
     let userId = CookieManager.get('wa_tracker_user_id');
-    
+
     if (!userId) {
         // Generate unique user ID
         userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         CookieManager.set('wa_tracker_user_id', userId, 365); // 1 year
     }
-    
+
     APP_STATE.userData.id = userId;
-    
+
     // Check for saved user data
     if (!APP_STATE.userData.name || APP_STATE.userData.name === 'Guest User') {
         const savedName = CookieManager.get('wa_tracker_user_name');
         if (savedName) {
-            APP_STATE.userData.name = savedName;
-            APP_STATE.userData.avatar = savedName.charAt(0).toUpperCase();
+            setUserName(savedName);
+        } else {
+            promptUserName();
         }
+    }
+}
+
+function setUserName(name) {
+    APP_STATE.userData.name = name;
+    APP_STATE.userData.avatar = name.charAt(0).toUpperCase();
+    CookieManager.set('wa_tracker_user_name', name, 365);
+    StorageManager.save();
+}
+
+function promptUserName() {
+    const name = prompt('Welcome to WA Bill Tracker! What name would you like to use?', '');
+    if (name && name.trim()) {
+        setUserName(name.trim());
+    } else {
+        setUserName('Guest User');
+    }
+}
+
+function changeUserName() {
+    const current = APP_STATE.userData.name === 'Guest User' ? '' : APP_STATE.userData.name;
+    const name = prompt('Enter your name:', current);
+    if (name !== null) {
+        setUserName(name.trim() || 'Guest User');
+        updateUserPanel();
     }
 }
 
@@ -1237,7 +1263,7 @@ function shareBill(billId) {
     let shareText;
     if (notes && notes.length > 0) {
         const noteText = notes.map(n => `[${formatNoteDateTime(n.date)}] ${n.text}`).join('\n');
-        shareText = `Check out ${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes:\n${noteText}`;
+        shareText = `Check out ${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nNotes by ${APP_STATE.userData.name}:\n${noteText}`;
     } else {
         shareText = `Check out ${bill.number}: ${bill.title} (${statusLabel})`;
     }
@@ -1278,7 +1304,7 @@ function shareNote() {
 
     const shareUrl = `${APP_CONFIG.siteUrl}#bill-${billId}`;
     const statusLabel = STATUS_LABELS[bill.status] || bill.status;
-    const shareText = `${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes:\n${noteLines.join('\n')}`;
+    const shareText = `${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nNotes by ${APP_STATE.userData.name}:\n${noteLines.join('\n')}`;
     const clipboardText = `${shareText}\n\n${shareUrl}`;
 
     if (navigator.share) {
@@ -1656,7 +1682,7 @@ function formatNotesForExport() {
     });
     if (lines.length > 0) {
         lines.push('---');
-        lines.push('Exported from WA Bill Tracker — https://wa-bill-tracker.org');
+        lines.push(`Notes by ${APP_STATE.userData.name} — WA Bill Tracker — https://wa-bill-tracker.org`);
     }
     return lines.join('\n');
 }
@@ -1965,6 +1991,7 @@ function setupEventListeners() {
 
     // User panel expand
     document.getElementById('expandBtn').addEventListener('click', toggleUserPanel);
+    document.getElementById('userName').addEventListener('click', changeUserName);
 
     // Notes export buttons (safe-bind so one missing element doesn't break the rest)
     const safeBind = (id, event, handler) => {
