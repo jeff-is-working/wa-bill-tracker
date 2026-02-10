@@ -79,6 +79,13 @@ function escapeHTML(str) {
               .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+// Input sanitization — strip control chars and limit length for text stored in state
+function sanitizeInput(str, maxLength = 2000) {
+    if (typeof str !== 'string') return '';
+    // Strip null bytes and non-printable control chars (keep newlines/tabs)
+    return str.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '').substring(0, maxLength);
+}
+
 // Cookie Management with Long-term Persistence
 const CookieManager = {
     // Set a cookie with proper SameSite and long expiration
@@ -337,9 +344,10 @@ function initializeUser() {
 }
 
 function setUserName(name) {
-    APP_STATE.userData.name = name;
-    APP_STATE.userData.avatar = name.charAt(0).toUpperCase();
-    CookieManager.set('wa_tracker_user_name', name, 365);
+    const clean = sanitizeInput(name, 50);
+    APP_STATE.userData.name = clean || 'Guest User';
+    APP_STATE.userData.avatar = APP_STATE.userData.name.charAt(0).toUpperCase();
+    CookieManager.set('wa_tracker_user_name', APP_STATE.userData.name, 365);
 }
 
 function promptUserName() {
@@ -961,50 +969,50 @@ function createBillCard(bill) {
     }
 
     return `
-        <div class="bill-card ${isTracked ? 'tracked' : ''} ${isInactive ? 'inactive-bill' : ''}" data-bill-id="${bill.id}">
+        <div class="bill-card ${isTracked ? 'tracked' : ''} ${isInactive ? 'inactive-bill' : ''}" data-bill-id="${escapeHTML(bill.id)}">
             <div class="bill-header">
-                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${bill.number.split(' ').pop()}&Year=2026"
-                   target="_blank" rel="noopener noreferrer" class="bill-number">${bill.number}</a>
-                <div class="bill-title">${bill.title}</div>
+                <a href="https://app.leg.wa.gov/billsummary?BillNumber=${encodeURIComponent(bill.number.split(' ').pop())}&Year=2026"
+                   target="_blank" rel="noopener noreferrer" class="bill-number">${escapeHTML(bill.number)}</a>
+                <div class="bill-title">${escapeHTML(bill.title)}</div>
             </div>
 
             ${buildProgressTracker(bill)}
 
             <div class="bill-body">
                 <div class="bill-meta">
-                    <span class="meta-item">👤 ${bill.sponsor}</span>
-                    <span class="meta-item">🏛️ ${bill.committee}</span>
-                    ${hasHearings ? `<span class="meta-item" style="color: var(--warning);">📅 ${bill.hearings[0].date}</span>` : ''}
+                    <span class="meta-item">👤 ${escapeHTML(bill.sponsor)}</span>
+                    <span class="meta-item">🏛️ ${escapeHTML(bill.committee)}</span>
+                    ${hasHearings ? `<span class="meta-item" style="color: var(--warning);">📅 ${escapeHTML(bill.hearings[0].date)}</span>` : ''}
                 </div>
 
-                <div class="bill-description">${bill.description}</div>
+                <div class="bill-description">${escapeHTML(bill.description)}</div>
 
                 ${hasNotes ? `<div class="bill-notes-preview">📝 "${latestNote}"</div>` : ''}
 
                 <div class="bill-tags">
-                    <span class="tag status-${bill.status}">${STATUS_LABELS[bill.status] || bill.status}</span>
-                    <span class="tag priority-${bill.priority}">${bill.priority} priority</span>
-                    <span class="tag">${bill.topic}</span>
+                    <span class="tag status-${escapeHTML(bill.status)}">${escapeHTML(STATUS_LABELS[bill.status] || bill.status)}</span>
+                    <span class="tag priority-${escapeHTML(bill.priority)}">${escapeHTML(bill.priority)} priority</span>
+                    <span class="tag">${escapeHTML(bill.topic)}</span>
                     ${isFrom2025 ? '<span class="tag session-2025">2025 Session</span>' : ''}
-                    ${cutoffStatus ? '<span class="tag cutoff-failed">Missed: ' + cutoffStatus + '</span>' : ''}
+                    ${cutoffStatus ? '<span class="tag cutoff-failed">Missed: ' + escapeHTML(cutoffStatus) + '</span>' : ''}
                 </div>
             </div>
-            
+
             <div class="bill-actions">
-                <button class="action-btn ${isTracked ? 'active' : ''}" data-action="track" data-bill-id="${bill.id}">
+                <button class="action-btn ${isTracked ? 'active' : ''}" data-action="track" data-bill-id="${escapeHTML(bill.id)}">
                     ${isTracked ? '⭐ Tracked' : '☆ Track'}
                 </button>
-                <button class="action-btn" data-action="note" data-bill-id="${bill.id}">
+                <button class="action-btn" data-action="note" data-bill-id="${escapeHTML(bill.id)}">
                     📝 ${hasNotes ? 'Notes (' + APP_STATE.userNotes[bill.id].length + ')' : 'Add Note'}
                 </button>
-                <button class="action-btn" data-action="share" data-bill-id="${bill.id}">
+                <button class="action-btn" data-action="share" data-bill-id="${escapeHTML(bill.id)}">
                     🔗 Share
                 </button>
-                <a href="https://app.leg.wa.gov/pbc/bill/${bill.number.split(' ').pop()}"
+                <a href="https://app.leg.wa.gov/pbc/bill/${encodeURIComponent(bill.number.split(' ').pop())}"
                    target="_blank" rel="noopener noreferrer" class="action-btn" title="Contact your legislator about this bill">
                     ✉ Contact
                 </a>
-                <a href="https://app.leg.wa.gov/billsummary/Home/GetEmailNotifications?billTitle=${encodeURIComponent(bill.number.replace(' ', ' ') + '-' + bill.biennium)}&billNumber=${bill.number.split(' ').pop()}&year=${bill.biennium.split('-')[0]}&agency=${bill.originalAgency}&initiative=False"
+                <a href="https://app.leg.wa.gov/billsummary/Home/GetEmailNotifications?billTitle=${encodeURIComponent(bill.number.replace(' ', ' ') + '-' + bill.biennium)}&billNumber=${encodeURIComponent(bill.number.split(' ').pop())}&year=${encodeURIComponent(bill.biennium.split('-')[0])}&agency=${encodeURIComponent(bill.originalAgency)}&initiative=False"
                    target="_blank" rel="noopener noreferrer" class="action-btn" title="Follow this bill by email on leg.wa.gov">
                     📧 Follow
                 </a>
@@ -1206,7 +1214,7 @@ function saveNote() {
     // Update existing notes (edited text gets a new timestamp)
     document.querySelectorAll('.existing-note-textarea').forEach(ta => {
         const idx = parseInt(ta.dataset.noteIndex);
-        const newText = ta.value.trim();
+        const newText = sanitizeInput(ta.value.trim());
         if (idx < APP_STATE.userNotes[billId].length) {
             if (!newText) {
                 APP_STATE.userNotes[billId][idx] = null; // mark for removal
@@ -1223,7 +1231,7 @@ function saveNote() {
     APP_STATE.userNotes[billId] = APP_STATE.userNotes[billId].filter(n => n !== null);
 
     // Append new note from bottom textarea
-    const newText = document.getElementById('noteTextarea').value.trim();
+    const newText = sanitizeInput(document.getElementById('noteTextarea').value.trim());
     if (newText) {
         APP_STATE.userNotes[billId].push({
             id: Date.now().toString(),
@@ -1810,9 +1818,9 @@ function importNotesCSV() {
             const fields = parseCSVRow(lines[i]);
             if (fields.length < 5) continue;
 
-            const billNumber = fields[0].trim();
-            const noteText = fields[3].trim();
-            const noteDate = fields[4].trim();
+            const billNumber = sanitizeInput(fields[0].trim(), 50);
+            const noteText = sanitizeInput(fields[3].trim());
+            const noteDate = sanitizeInput(fields[4].trim(), 50);
 
             const bill = APP_STATE.bills.find(b => b.number === billNumber);
             if (!bill) {
@@ -1886,7 +1894,7 @@ function setupEventListeners() {
     }, 250);
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
-        APP_STATE.filters.search = e.target.value;
+        APP_STATE.filters.search = sanitizeInput(e.target.value, 200);
         APP_STATE.pagination.page = 1;
         debouncedSearch();
     });
