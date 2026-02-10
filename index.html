@@ -1541,6 +1541,45 @@
             border-color: var(--accent);
         }
 
+        .existing-note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .note-delete-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.75rem;
+            padding: 0.15rem 0.4rem;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .note-delete-btn:hover {
+            color: var(--error, #ef4444);
+            border-color: var(--error, #ef4444);
+        }
+
+        .note-delete-all-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .note-delete-all-btn:hover {
+            color: var(--error, #ef4444);
+            border-color: var(--error, #ef4444);
+        }
+
         .existing-note-date {
             color: var(--text-muted);
             font-size: 0.75rem;
@@ -2126,6 +2165,7 @@
             <div id="existingNotes" class="existing-notes"></div>
             <textarea class="note-textarea" id="noteTextarea" placeholder="Add a new note about this bill..."></textarea>
             <div class="modal-actions">
+                <button class="note-delete-all-btn" id="noteModalDeleteAll" style="display: none;">Delete All Notes</button>
                 <button class="filter-btn" id="noteModalCancel">Cancel</button>
                 <button class="filter-btn" id="noteModalShare">Share</button>
                 <button class="btn-primary" id="noteModalSave">Save Note</button>

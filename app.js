@@ -1184,15 +1184,25 @@ function openNoteModal(billId) {
     const container = document.getElementById('existingNotes');
     if (existingNotes.length > 0) {
         container.innerHTML = existingNotes.map((note, i) => `
-            <div class="existing-note-item">
+            <div class="existing-note-item" data-note-index="${i}">
+                <div class="existing-note-header">
+                    <div class="existing-note-date">${formatNoteDateTime(note.date)}</div>
+                    <button class="note-delete-btn" data-delete-index="${i}" title="Delete this note">✕</button>
+                </div>
                 <textarea class="existing-note-textarea" data-note-index="${i}">${escapeHTML(note.text)}</textarea>
-                <div class="existing-note-date">${formatNoteDateTime(note.date)}</div>
             </div>
         `).join('');
+        // Wire per-note delete buttons
+        container.querySelectorAll('.note-delete-btn').forEach(btn => {
+            btn.addEventListener('click', () => deleteOneNote(parseInt(btn.dataset.deleteIndex)));
+        });
     } else {
         container.innerHTML = '';
     }
     document.getElementById('noteTextarea').value = '';
+
+    // Show/hide Delete All button
+    document.getElementById('noteModalDeleteAll').style.display = existingNotes.length > 0 ? '' : 'none';
 
     document.getElementById('noteModal').classList.add('active');
 }
@@ -1200,6 +1210,42 @@ function openNoteModal(billId) {
 function closeNoteModal() {
     document.getElementById('noteModal').classList.remove('active');
     APP_STATE.currentNoteBillId = null;
+}
+
+function deleteOneNote(index) {
+    const billId = APP_STATE.currentNoteBillId;
+    const notes = APP_STATE.userNotes[billId];
+    if (!notes || index >= notes.length) return;
+
+    if (!confirm('Delete this note?')) return;
+
+    notes.splice(index, 1);
+    if (notes.length === 0) {
+        delete APP_STATE.userNotes[billId];
+    }
+    APP_STATE._dirty = true;
+    StorageManager.save();
+    APP_STATE._dirty = false;
+    updateUI();
+    // Re-open modal to refresh the notes list
+    openNoteModal(billId);
+    showToast('Note deleted');
+}
+
+function deleteAllNotes() {
+    const billId = APP_STATE.currentNoteBillId;
+    const notes = APP_STATE.userNotes[billId];
+    if (!notes || notes.length === 0) return;
+
+    if (!confirm(`Delete all ${notes.length} note${notes.length !== 1 ? 's' : ''} on this bill?`)) return;
+
+    delete APP_STATE.userNotes[billId];
+    APP_STATE._dirty = true;
+    StorageManager.save();
+    APP_STATE._dirty = false;
+    updateUI();
+    openNoteModal(billId);
+    showToast('All notes deleted');
 }
 
 function saveNote() {
@@ -2018,6 +2064,7 @@ function setupEventListeners() {
     document.getElementById('noteModalCancel').addEventListener('click', closeNoteModal);
     document.getElementById('noteModalShare').addEventListener('click', shareNote);
     document.getElementById('noteModalSave').addEventListener('click', saveNote);
+    document.getElementById('noteModalDeleteAll').addEventListener('click', deleteAllNotes);
 
     // Delegated handler for highlight-bill links (stats detail, user notes)
     document.addEventListener('click', (e) => {
