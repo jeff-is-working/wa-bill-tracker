@@ -1182,20 +1182,64 @@ function saveNote() {
 function shareBill(billId) {
     const bill = APP_STATE.bills.find(b => b.id === billId);
     const shareUrl = `${APP_CONFIG.siteUrl}#bill-${billId}`;
-    const shareText = `Check out ${bill.number}: ${bill.title}`;
-    
+    const statusLabel = STATUS_LABELS[bill.status] || bill.status;
+    const notes = APP_STATE.userNotes[billId];
+
+    let shareText;
+    if (notes && notes.length > 0) {
+        const noteText = notes.map(n => n.text).join('\n');
+        shareText = `Check out ${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes: ${noteText}`;
+    } else {
+        shareText = `Check out ${bill.number}: ${bill.title} (${statusLabel})`;
+    }
+
+    const clipboardText = `${shareText}\n\n${shareUrl}`;
+
     if (navigator.share) {
         navigator.share({
             title: `${bill.number} - WA Bill Tracker`,
             text: shareText,
             url: shareUrl
         }).catch(err => {
-            navigator.clipboard.writeText(shareUrl);
+            navigator.clipboard.writeText(clipboardText);
             showToast('🔗 Link copied to clipboard');
         });
     } else {
-        navigator.clipboard.writeText(shareUrl);
+        navigator.clipboard.writeText(clipboardText);
         showToast('🔗 Link copied to clipboard');
+    }
+}
+
+// Share Note from modal
+function shareNote() {
+    const billId = APP_STATE.currentNoteBillId;
+    if (!billId) return;
+    const bill = APP_STATE.bills.find(b => b.id === billId);
+    if (!bill) return;
+
+    const noteText = document.getElementById('noteTextarea').value.trim();
+    if (!noteText) {
+        showToast('No note to share');
+        return;
+    }
+
+    const shareUrl = `${APP_CONFIG.siteUrl}#bill-${billId}`;
+    const statusLabel = STATUS_LABELS[bill.status] || bill.status;
+    const shareText = `${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes: ${noteText}`;
+    const clipboardText = `${shareText}\n\n${shareUrl}`;
+
+    if (navigator.share) {
+        navigator.share({
+            title: `${bill.number} - WA Bill Tracker`,
+            text: shareText,
+            url: shareUrl
+        }).catch(err => {
+            navigator.clipboard.writeText(clipboardText);
+            showToast('🔗 Note link copied to clipboard');
+        });
+    } else {
+        navigator.clipboard.writeText(clipboardText);
+        showToast('🔗 Note link copied to clipboard');
     }
 }
 
@@ -1535,8 +1579,10 @@ function formatNotesForExport() {
     Object.entries(APP_STATE.userNotes).forEach(([billId, notes]) => {
         const bill = APP_STATE.bills.find(b => b.id === billId);
         const billLabel = bill ? `${bill.number} — ${bill.title}` : billId;
+        const statusLabel = bill ? (STATUS_LABELS[bill.status] || bill.status) : 'Unknown';
         notes.forEach(note => {
             lines.push(`Bill: ${billLabel}`);
+            lines.push(`Status: ${statusLabel}`);
             lines.push(`Note: ${note.text}`);
             lines.push(`Date: ${new Date(note.date).toLocaleDateString()}`);
             lines.push('');
@@ -1711,6 +1757,7 @@ function setupEventListeners() {
     // Note modal buttons
     document.getElementById('noteModalClose').addEventListener('click', closeNoteModal);
     document.getElementById('noteModalCancel').addEventListener('click', closeNoteModal);
+    document.getElementById('noteModalShare').addEventListener('click', shareNote);
     document.getElementById('noteModalSave').addEventListener('click', saveNote);
 
     // Delegated handler for highlight-bill links (stats detail, user notes)
