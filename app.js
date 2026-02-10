@@ -1343,19 +1343,32 @@ function renderTotalBillsStats() {
 }
 
 function renderTrackedBillsStats() {
-    const trackedBills = APP_STATE.bills.filter(bill => 
+    const trackedBills = APP_STATE.bills.filter(bill =>
         APP_STATE.trackedBills.has(bill.id)
     );
-    
+
     return `
         <h2>Your Tracked Bills: ${trackedBills.length}</h2>
         <div class="stats-list">
-            ${trackedBills.map(bill => `
-                <div class="stats-item" data-highlight-bill="${bill.id}" style="cursor: pointer;">
-                    <span class="stats-item-label">${bill.number}: ${bill.title}</span>
-                    <span class="stats-item-value">${bill.status}</span>
-                </div>
-            `).join('')}
+            ${trackedBills.map(bill => {
+                const statusLabel = STATUS_LABELS[bill.status] || bill.status;
+                const hasHearings = bill.hearings && bill.hearings.length > 0;
+                const billNum = bill.number.split(' ').pop();
+                return `
+                <div class="tracked-bill-card" data-highlight-bill="${bill.id}">
+                    <div class="tracked-bill-header">
+                        <a href="https://app.leg.wa.gov/billsummary?BillNumber=${billNum}&Year=2026"
+                           target="_blank" rel="noopener noreferrer" class="bill-number"
+                           onclick="event.stopPropagation();">${escapeHTML(bill.number)}</a>
+                        <span class="tracked-bill-title">${escapeHTML(bill.title)}</span>
+                    </div>
+                    <div class="tracked-bill-meta">
+                        <span class="meta-item">👤 ${escapeHTML(bill.sponsor)}</span>
+                        <span class="tag status-${bill.status}">${escapeHTML(statusLabel)}</span>
+                        ${hasHearings ? `<span class="meta-item" style="color: var(--warning);">📅 ${escapeHTML(bill.hearings[0].date)}${bill.hearings[0].committee ? ' — ' + escapeHTML(bill.hearings[0].committee) : ''}</span>` : ''}
+                    </div>
+                </div>`;
+            }).join('')}
             ${trackedBills.length === 0 ? '<p style="text-align: center; color: var(--text-muted);">No bills tracked yet</p>' : ''}
         </div>
     `;
@@ -1619,6 +1632,156 @@ function emailAllNotes() {
     window.open(`mailto:?subject=${subject}&body=${body}`);
 }
 
+function exportNotesCSV() {
+    const entries = Object.entries(APP_STATE.userNotes);
+    if (entries.length === 0) { showToast('No notes to export'); return; }
+
+    function csvEscape(val) {
+        const str = String(val);
+        return '"' + str.replace(/"/g, '""') + '"';
+    }
+
+    const rows = ['Bill Number,Bill Title,Status,Note,Date'];
+    entries.forEach(([billId, notes]) => {
+        const bill = APP_STATE.bills.find(b => b.id === billId);
+        const billNumber = bill ? bill.number : billId;
+        const billTitle = bill ? bill.title : '';
+        const status = bill ? (STATUS_LABELS[bill.status] || bill.status) : 'Unknown';
+        notes.forEach(note => {
+            rows.push([
+                csvEscape(billNumber),
+                csvEscape(billTitle),
+                csvEscape(status),
+                csvEscape(note.text),
+                csvEscape(new Date(note.date).toLocaleDateString())
+            ].join(','));
+        });
+    });
+
+    const csv = rows.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'wa-bill-tracker-notes.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Notes exported to CSV');
+}
+
+function parseCSVRow(row) {
+    const fields = [];
+    let i = 0;
+    while (i < row.length) {
+        if (row[i] === '"') {
+            let val = '';
+            i++; // skip opening quote
+            while (i < row.length) {
+                if (row[i] === '"') {
+                    if (i + 1 < row.length && row[i + 1] === '"') {
+                        val += '"';
+                        i += 2;
+                    } else {
+                        i++; // skip closing quote
+                        break;
+                    }
+                } else {
+                    val += row[i];
+                    i++;
+                }
+            }
+            fields.push(val);
+            if (i < row.length && row[i] === ',') i++; // skip comma
+        } else {
+            let val = '';
+            while (i < row.length && row[i] !== ',') {
+                val += row[i];
+                i++;
+            }
+            fields.push(val);
+            if (i < row.length) i++; // skip comma
+        }
+    }
+    return fields;
+}
+
+function importNotesCSV() {
+    const fileInput = document.getElementById('csvFileInput');
+    const file = fileInput.files[0];
+    if (!file) return;
+    fileInput.value = ''; // reset so same file can be re-selected
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result;
+        const lines = text.split(/\r?\n/).filter(line => line.trim());
+
+        if (lines.length < 2) {
+            showToast('CSV file is empty or has no data rows');
+            return;
+        }
+
+        // Skip header row
+        let importedBills = 0;
+        let importedNotes = 0;
+        let notFound = 0;
+
+        for (let i = 1; i < lines.length; i++) {
+            const fields = parseCSVRow(lines[i]);
+            if (fields.length < 5) continue;
+
+            const billNumber = fields[0].trim();
+            const noteText = fields[3].trim();
+            const noteDate = fields[4].trim();
+
+            const bill = APP_STATE.bills.find(b => b.number === billNumber);
+            if (!bill) {
+                notFound++;
+                continue;
+            }
+
+            // Track the bill
+            const wasTracked = APP_STATE.trackedBills.has(bill.id);
+            APP_STATE.trackedBills.add(bill.id);
+            if (!wasTracked) importedBills++;
+
+            // Import note if non-empty
+            if (noteText) {
+                if (!APP_STATE.userNotes[bill.id]) {
+                    APP_STATE.userNotes[bill.id] = [];
+                }
+                // Check for duplicate note (same text on same bill)
+                const isDuplicate = APP_STATE.userNotes[bill.id].some(n => n.text === noteText);
+                if (!isDuplicate) {
+                    APP_STATE.userNotes[bill.id].push({
+                        text: noteText,
+                        date: noteDate ? new Date(noteDate).toISOString() : new Date().toISOString()
+                    });
+                    importedNotes++;
+                }
+            }
+        }
+
+        APP_STATE._dirty = true;
+        StorageManager.save();
+        updateUI();
+
+        const parts = [];
+        if (importedBills > 0) parts.push(`${importedBills} bill${importedBills !== 1 ? 's' : ''} tracked`);
+        if (importedNotes > 0) parts.push(`${importedNotes} note${importedNotes !== 1 ? 's' : ''} added`);
+        if (notFound > 0) parts.push(`${notFound} bill${notFound !== 1 ? 's' : ''} not found`);
+        showToast(parts.length > 0 ? 'Imported: ' + parts.join(', ') : 'No new data to import');
+    };
+
+    reader.onerror = function() {
+        showToast('Error reading CSV file');
+    };
+
+    reader.readAsText(file);
+}
+
 function updateSyncStatus() {
     const syncText = document.getElementById('syncText');
     if (APP_STATE.lastSync) {
@@ -1753,6 +1916,11 @@ function setupEventListeners() {
     // Notes export buttons
     document.getElementById('copyNotesBtn').addEventListener('click', copyAllNotes);
     document.getElementById('emailNotesBtn').addEventListener('click', emailAllNotes);
+    document.getElementById('csvNotesBtn').addEventListener('click', exportNotesCSV);
+    document.getElementById('importCsvBtn').addEventListener('click', () => {
+        document.getElementById('csvFileInput').click();
+    });
+    document.getElementById('csvFileInput').addEventListener('change', importNotesCSV);
 
     // Note modal buttons
     document.getElementById('noteModalClose').addEventListener('click', closeNoteModal);

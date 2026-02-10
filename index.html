@@ -1378,6 +1378,57 @@
             color: var(--accent);
         }
 
+        /* Tracked Bill Cards */
+        .tracked-bill-card {
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .tracked-bill-card:hover {
+            border-color: var(--accent);
+            background: var(--secondary);
+        }
+
+        .tracked-bill-header {
+            display: flex;
+            align-items: baseline;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tracked-bill-header .bill-number {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tracked-bill-title {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .tracked-bill-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            .tracked-bill-header {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            .tracked-bill-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
         /* Back Button */
         .back-btn {
             display: inline-flex;
@@ -2012,7 +2063,10 @@
                 <div class="notes-export-btns">
                     <button class="notes-export-btn" id="copyNotesBtn" title="Copy all notes to clipboard">📋 Copy</button>
                     <button class="notes-export-btn" id="emailNotesBtn" title="Email all notes">✉ Email</button>
+                    <button class="notes-export-btn" id="csvNotesBtn" title="Download notes as CSV">📥 CSV</button>
+                    <button class="notes-export-btn" id="importCsvBtn" title="Import bills and notes from CSV">📤 Import</button>
                 </div>
+                <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
             </div>
             <div id="userNotesList">
                 <!-- User notes will be displayed here -->
