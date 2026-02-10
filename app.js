@@ -286,8 +286,8 @@ function syncFilterTagUI() {
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('App initializing...');
-    initializeUser();
     StorageManager.load();
+    initializeUser();
     await loadBillsData();
     setupEventListeners();
     syncFilterTagUI(); // Restore active state on filter tags from saved filters
@@ -340,7 +340,6 @@ function setUserName(name) {
     APP_STATE.userData.name = name;
     APP_STATE.userData.avatar = name.charAt(0).toUpperCase();
     CookieManager.set('wa_tracker_user_name', name, 365);
-    StorageManager.save();
 }
 
 function promptUserName() {
