@@ -1523,10 +1523,22 @@
             margin-bottom: 0.5rem;
         }
 
-        .existing-note-text {
+        .existing-note-textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.5rem;
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
             color: var(--text);
+            font-family: inherit;
             font-size: 0.9rem;
-            white-space: pre-wrap;
+            resize: vertical;
+        }
+
+        .existing-note-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
         }
 
         .existing-note-date {

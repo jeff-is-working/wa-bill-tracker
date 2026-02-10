@@ -1150,9 +1150,9 @@ function openNoteModal(billId) {
     const existingNotes = APP_STATE.userNotes[billId] || [];
     const container = document.getElementById('existingNotes');
     if (existingNotes.length > 0) {
-        container.innerHTML = existingNotes.map(note => `
+        container.innerHTML = existingNotes.map((note, i) => `
             <div class="existing-note-item">
-                <div class="existing-note-text">${escapeHTML(note.text)}</div>
+                <textarea class="existing-note-textarea" data-note-index="${i}">${escapeHTML(note.text)}</textarea>
                 <div class="existing-note-date">${formatNoteDateTime(note.date)}</div>
             </div>
         `).join('');
@@ -1171,24 +1171,54 @@ function closeNoteModal() {
 
 function saveNote() {
     const billId = APP_STATE.currentNoteBillId;
-    const noteText = document.getElementById('noteTextarea').value.trim();
-
-    if (!noteText) {
-        closeNoteModal();
-        return;
-    }
-
     if (!APP_STATE.userNotes[billId]) {
         APP_STATE.userNotes[billId] = [];
     }
 
-    APP_STATE.userNotes[billId].push({
-        id: Date.now().toString(),
-        text: noteText,
-        date: new Date().toISOString(),
-        user: APP_STATE.userData.name
+    const now = new Date().toISOString();
+    let changed = false;
+
+    // Update existing notes (edited text gets a new timestamp)
+    document.querySelectorAll('.existing-note-textarea').forEach(ta => {
+        const idx = parseInt(ta.dataset.noteIndex);
+        const newText = ta.value.trim();
+        if (idx < APP_STATE.userNotes[billId].length) {
+            if (!newText) {
+                APP_STATE.userNotes[billId][idx] = null; // mark for removal
+                changed = true;
+            } else if (newText !== APP_STATE.userNotes[billId][idx].text) {
+                APP_STATE.userNotes[billId][idx].text = newText;
+                APP_STATE.userNotes[billId][idx].date = now;
+                changed = true;
+            }
+        }
     });
-    
+
+    // Remove deleted notes
+    APP_STATE.userNotes[billId] = APP_STATE.userNotes[billId].filter(n => n !== null);
+
+    // Append new note from bottom textarea
+    const newText = document.getElementById('noteTextarea').value.trim();
+    if (newText) {
+        APP_STATE.userNotes[billId].push({
+            id: Date.now().toString(),
+            text: newText,
+            date: now,
+            user: APP_STATE.userData.name
+        });
+        changed = true;
+    }
+
+    // Clean up empty arrays
+    if (APP_STATE.userNotes[billId].length === 0) {
+        delete APP_STATE.userNotes[billId];
+    }
+
+    if (!changed && !newText) {
+        closeNoteModal();
+        return;
+    }
+
     APP_STATE._dirty = true;
     StorageManager.save();
     APP_STATE._dirty = false;
