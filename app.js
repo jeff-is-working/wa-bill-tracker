@@ -1133,16 +1133,34 @@ function toggleTrack(billId) {
 }
 
 // Note Management
+function formatNoteDateTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric',
+        hour: 'numeric', minute: '2-digit'
+    });
+}
+
 function openNoteModal(billId) {
     APP_STATE.currentNoteBillId = billId;
     const bill = APP_STATE.bills.find(b => b.id === billId);
-    
+
     document.getElementById('noteModalTitle').textContent = `Notes for ${bill.number}`;
-    
+
     const existingNotes = APP_STATE.userNotes[billId] || [];
-    let notesText = existingNotes.map(note => note.text).join('\n\n---\n\n');
-    document.getElementById('noteTextarea').value = notesText;
-    
+    const container = document.getElementById('existingNotes');
+    if (existingNotes.length > 0) {
+        container.innerHTML = existingNotes.map(note => `
+            <div class="existing-note-item">
+                <div class="existing-note-text">${escapeHTML(note.text)}</div>
+                <div class="existing-note-date">${formatNoteDateTime(note.date)}</div>
+            </div>
+        `).join('');
+    } else {
+        container.innerHTML = '';
+    }
+    document.getElementById('noteTextarea').value = '';
+
     document.getElementById('noteModal').classList.add('active');
 }
 
@@ -1154,21 +1172,22 @@ function closeNoteModal() {
 function saveNote() {
     const billId = APP_STATE.currentNoteBillId;
     const noteText = document.getElementById('noteTextarea').value.trim();
-    
+
     if (!noteText) {
-        delete APP_STATE.userNotes[billId];
-    } else {
-        if (!APP_STATE.userNotes[billId]) {
-            APP_STATE.userNotes[billId] = [];
-        }
-        
-        APP_STATE.userNotes[billId] = [{
-            id: Date.now().toString(),
-            text: noteText,
-            date: new Date().toISOString(),
-            user: APP_STATE.userData.name
-        }];
+        closeNoteModal();
+        return;
     }
+
+    if (!APP_STATE.userNotes[billId]) {
+        APP_STATE.userNotes[billId] = [];
+    }
+
+    APP_STATE.userNotes[billId].push({
+        id: Date.now().toString(),
+        text: noteText,
+        date: new Date().toISOString(),
+        user: APP_STATE.userData.name
+    });
     
     APP_STATE._dirty = true;
     StorageManager.save();
@@ -1187,8 +1206,8 @@ function shareBill(billId) {
 
     let shareText;
     if (notes && notes.length > 0) {
-        const noteText = notes.map(n => n.text).join('\n');
-        shareText = `Check out ${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes: ${noteText}`;
+        const noteText = notes.map(n => `[${formatNoteDateTime(n.date)}] ${n.text}`).join('\n');
+        shareText = `Check out ${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes:\n${noteText}`;
     } else {
         shareText = `Check out ${bill.number}: ${bill.title} (${statusLabel})`;
     }
@@ -1217,15 +1236,19 @@ function shareNote() {
     const bill = APP_STATE.bills.find(b => b.id === billId);
     if (!bill) return;
 
-    const noteText = document.getElementById('noteTextarea').value.trim();
-    if (!noteText) {
-        showToast('No note to share');
+    const existingNotes = APP_STATE.userNotes[billId] || [];
+    const currentText = document.getElementById('noteTextarea').value.trim();
+    if (existingNotes.length === 0 && !currentText) {
+        showToast('No notes to share');
         return;
     }
 
+    const noteLines = existingNotes.map(n => `[${formatNoteDateTime(n.date)}] ${n.text}`);
+    if (currentText) noteLines.push(`[Draft] ${currentText}`);
+
     const shareUrl = `${APP_CONFIG.siteUrl}#bill-${billId}`;
     const statusLabel = STATUS_LABELS[bill.status] || bill.status;
-    const shareText = `${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes: ${noteText}`;
+    const shareText = `${bill.number}: ${bill.title}\nStatus: ${statusLabel}\n---\nMy notes:\n${noteLines.join('\n')}`;
     const clipboardText = `${shareText}\n\n${shareUrl}`;
 
     if (navigator.share) {
@@ -1597,7 +1620,7 @@ function formatNotesForExport() {
             lines.push(`Bill: ${billLabel}`);
             lines.push(`Status: ${statusLabel}`);
             lines.push(`Note: ${note.text}`);
-            lines.push(`Date: ${new Date(note.date).toLocaleDateString()}`);
+            lines.push(`Date: ${formatNoteDateTime(note.date)}`);
             lines.push('');
         });
     });
@@ -1653,7 +1676,7 @@ function exportNotesCSV() {
                 csvEscape(billTitle),
                 csvEscape(status),
                 csvEscape(note.text),
-                csvEscape(new Date(note.date).toLocaleDateString())
+                csvEscape(formatNoteDateTime(note.date))
             ].join(','));
         });
     });

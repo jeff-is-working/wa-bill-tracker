@@ -1505,6 +1505,36 @@
             color: var(--text);
         }
 
+        .existing-notes {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 0.75rem;
+        }
+
+        .existing-notes:empty {
+            display: none;
+        }
+
+        .existing-note-item {
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .existing-note-text {
+            color: var(--text);
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+
+        .existing-note-date {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
         .note-textarea {
             width: 100%;
             min-height: 150px;
@@ -2081,7 +2111,8 @@
                 <h3 class="modal-title" id="noteModalTitle">Add Note</h3>
                 <button class="modal-close" id="noteModalClose">×</button>
             </div>
-            <textarea class="note-textarea" id="noteTextarea" placeholder="Enter your notes about this bill..."></textarea>
+            <div id="existingNotes" class="existing-notes"></div>
+            <textarea class="note-textarea" id="noteTextarea" placeholder="Add a new note about this bill..."></textarea>
             <div class="modal-actions">
                 <button class="filter-btn" id="noteModalCancel">Cancel</button>
                 <button class="filter-btn" id="noteModalShare">Share</button>
