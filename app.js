@@ -471,11 +471,20 @@ function navigateToBillType(type) {
 // Load Bills Data
 async function loadBillsData() {
     try {
-        const response = await fetch(APP_CONFIG.githubDataUrl);
-        
+        // Cache-bust to avoid stale CDN/browser cache responses
+        const cacheBuster = `?_=${Date.now()}`;
+        const response = await fetch(APP_CONFIG.githubDataUrl + cacheBuster);
+
         if (response.ok) {
             const data = await response.json();
-            APP_STATE.bills = (data.bills || []).map(bill => ({
+            const bills = data.bills || [];
+
+            // Validate fetched data before using it
+            if (bills.length === 0) {
+                throw new Error('Fetched data contains no bills');
+            }
+
+            APP_STATE.bills = bills.map(bill => ({
                 ...bill,
                 committee: bill.committee ||
                     (bill.hearings && bill.hearings.length > 0
@@ -485,38 +494,48 @@ async function loadBillsData() {
             }));
             APP_STATE.lastSync = data.lastSync || new Date().toISOString();
 
-            // Cache in localStorage
+            // Cache validated data in localStorage
             localStorage.setItem('billsData', JSON.stringify(data));
             localStorage.setItem('lastDataFetch', new Date().toISOString());
-            
+
             showToast(`✅ Loaded ${APP_STATE.bills.length} bills`);
         } else {
             throw new Error('Failed to fetch from GitHub');
         }
     } catch (error) {
         console.error('Error loading from GitHub:', error);
-        
+
         // Fall back to cached data
         const cachedData = localStorage.getItem('billsData');
         if (cachedData) {
             const data = JSON.parse(cachedData);
-            APP_STATE.bills = (data.bills || []).map(bill => ({
-                ...bill,
-                committee: bill.committee ||
-                    (bill.hearings && bill.hearings.length > 0
-                        ? bill.hearings[bill.hearings.length - 1].committee
-                        : ''),
-                _searchText: [bill.number, bill.title, bill.description, bill.sponsor].join(' ').toLowerCase()
-            }));
-            APP_STATE.lastSync = data.lastSync || null;
-            showToast('📦 Using cached data');
+            const cachedBills = data.bills || [];
+
+            if (cachedBills.length > 0) {
+                APP_STATE.bills = cachedBills.map(bill => ({
+                    ...bill,
+                    committee: bill.committee ||
+                        (bill.hearings && bill.hearings.length > 0
+                            ? bill.hearings[bill.hearings.length - 1].committee
+                            : ''),
+                    _searchText: [bill.number, bill.title, bill.description, bill.sponsor].join(' ').toLowerCase()
+                }));
+                APP_STATE.lastSync = data.lastSync || null;
+                showToast('📦 Using cached data');
+            } else {
+                // Cached data is corrupted/empty — clear it and retry
+                localStorage.removeItem('billsData');
+                localStorage.removeItem('lastDataFetch');
+                APP_STATE.bills = [];
+                showToast('⚠️ No bill data available — please refresh');
+            }
         } else {
             // No data available
             APP_STATE.bills = [];
             showToast('⚠️ No bill data available');
         }
     }
-    
+
     updateSyncStatus();
     populateCommitteeFilters();
 }
