@@ -1,22 +1,22 @@
-# Frontend Architecture
-
-> Client-side application architecture and components
-
+---
+title: Frontend Architecture
+scope: Client-side application architecture and components
+last_updated: 2026-02
 ---
 
-## Table of Contents
+# Frontend Architecture
 
-1. [Overview](#overview)
-2. [Application Structure](#application-structure)
-3. [Configuration (APP_CONFIG)](#configuration-app_config)
-4. [State Management (APP_STATE)](#state-management-app_state)
-5. [UI Components](#ui-components)
-6. [Navigation & Routing](#navigation--routing)
-7. [Data Loading](#data-loading)
-8. [Filtering System](#filtering-system)
-9. [User Features](#user-features)
-10. [Rendering Pipeline](#rendering-pipeline)
-11. [Browser APIs](#browser-apis)
+**Contents:**
+[Overview](#overview) ·
+[Application Structure](#application-structure) ·
+[Configuration](#configuration-app_config) ·
+[State Management](#state-management-app_state) ·
+[UI Components](#ui-components) ·
+[Navigation & Routing](#navigation--routing) ·
+[Data Loading](#data-loading) ·
+[Filtering System](#filtering-system) ·
+[User Features](#user-features) ·
+[Rendering & Persistence](#rendering-pipeline)
 
 ---
 
@@ -55,12 +55,12 @@ The WA Bill Tracker frontend is a **vanilla JavaScript single-page application (
 ```mermaid
 flowchart TB
     subgraph HTML["index.html"]
-        HEAD["Head<br/>Meta, CSP, Styles"]
-        HEADER["Header<br/>Logo, Sync Status, Nav"]
-        STATS["Stats Grid<br/>5 Metric Cards"]
-        CONTROLS["Controls<br/>Search, Filters"]
-        GRID["Bills Grid<br/>Bill Cards"]
-        PANEL["User Panel<br/>Tracked, Notes"]
+        HEAD["Head\nMeta, CSP, Styles"]
+        HEADER["Header\nLogo, Sync Status, Nav"]
+        STATS["Stats Grid\n5 Metric Cards"]
+        CONTROLS["Controls\nSearch, Filters"]
+        GRID["Bills Grid\nBill Cards"]
+        PANEL["User Panel\nTracked, Notes"]
         MODAL["Note Modal"]
     end
 
@@ -83,11 +83,31 @@ flowchart TB
     HANDLERS --> STATE
 ```
 
+### CSS Design System
+
+All styles are embedded in `index.html` using CSS custom properties for theming:
+
+```css
+:root {
+    --color-primary: #0f172a;
+    --color-accent: #3b82f6;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --font-primary: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --spacing-md: 1rem;
+    --transition-normal: 0.25s ease;
+}
+```
+
+The layout uses CSS Grid with responsive breakpoints: single column on mobile (`<768px`), auto-fill grid on desktop (`min-width: 768px`).
+
 ---
 
 ## Configuration (APP_CONFIG)
 
-The `APP_CONFIG` object contains all application constants.
+The `APP_CONFIG` object in [`app.js`](../app.js) contains all application constants.
 
 ### Core Settings
 
@@ -97,7 +117,7 @@ const APP_CONFIG = {
     siteUrl: 'https://wa-bill-tracker.org',
 
     // Data source
-    billsDataUrl: 'https://raw.githubusercontent.com/jeff-is-working/wa-bill-tracker/main/data/bills.json',
+    githubDataUrl: 'https://raw.githubusercontent.com/jeff-is-working/wa-bill-tracker/main/data/bills.json',
 
     // Session information
     sessionStart: '2026-01-12',
@@ -117,23 +137,23 @@ const APP_CONFIG = {
 APP_CONFIG.cutoffDates = [
     {
         date: '2026-02-04',
-        name: 'Policy Committee (Origin)',
+        label: 'Policy Committee (Origin)',
         description: 'Bills must pass policy committee in house of origin',
-        failsStatuses: ['prefiled', 'introduced']
+        failsBefore: ['prefiled', 'introduced']
     },
     {
         date: '2026-02-09',
-        name: 'Fiscal Committee (Origin)',
+        label: 'Fiscal Committee (Origin)',
         description: 'Bills must pass fiscal committee in house of origin',
-        failsStatuses: ['prefiled', 'introduced', 'committee']
+        failsBefore: ['prefiled', 'introduced', 'committee']
     },
     {
         date: '2026-02-17',
-        name: 'House of Origin',
+        label: 'House of Origin',
         description: 'Bills must pass house of origin',
-        failsStatuses: ['prefiled', 'introduced', 'committee', 'floor']
+        failsBefore: ['prefiled', 'introduced', 'committee', 'floor']
     },
-    // ... additional cutoffs
+    // ... additional cutoffs through sine die
 ];
 ```
 
@@ -157,7 +177,7 @@ APP_CONFIG.billTypes = {
 
 ## State Management (APP_STATE)
 
-The `APP_STATE` object holds all runtime application state.
+The `APP_STATE` object holds all runtime application state. For the full structure, see [`app.js`](../app.js).
 
 ```mermaid
 flowchart TB
@@ -189,88 +209,22 @@ flowchart TB
     end
 ```
 
-### State Structure
+Key state properties:
 
-```javascript
-const APP_STATE = {
-    // Bill data
-    bills: [],                    // All bills from API
-    currentFilteredBills: [],     // After filtering
-
-    // User data (persisted)
-    trackedBills: new Set(),      // Tracked bill IDs
-    userNotes: {},                // { billId: [{ id, text, date, user }] }
-    userData: {
-        name: 'Guest User',
-        avatar: '?',
-        id: 'user_xxx_xxx'
-    },
-
-    // Filter state (persisted)
-    filters: {
-        search: '',
-        status: [],               // Multi-select
-        priority: [],             // Multi-select
-        committee: [],            // Multi-select
-        type: '',
-        trackedOnly: false,
-        showInactiveBills: false
-    },
-
-    // UI state
-    currentBillType: 'all',
-    currentView: 'main',          // 'main' or 'stats'
-    pagination: {
-        page: 1,
-        pageSize: 25
-    },
-
-    // Sync metadata
-    lastSync: null,
-
-    // Dirty flag for auto-save
-    _dirty: false
-};
-```
+| Property | Type | Persisted | Description |
+|----------|------|-----------|-------------|
+| `bills` | `Array<Bill>` | No | All bills from API |
+| `currentFilteredBills` | `Array` | No | After filtering |
+| `trackedBills` | `Set<string>` | Yes | Tracked bill IDs |
+| `userNotes` | `Object` | Yes | `{ billId: [{ id, text, date, user }] }` |
+| `filters` | `Object` | Yes | Search, status, priority, committee, etc. |
+| `currentBillType` | `string` | No | Active bill type tab |
+| `pagination` | `Object` | No | `{ page: 1, pageSize: 25 }` |
+| `_dirty` | `boolean` | No | Triggers auto-save when `true` |
 
 ---
 
 ## UI Components
-
-### Component Hierarchy
-
-```mermaid
-flowchart TB
-    ROOT["Document"]
-
-    subgraph Header["header.site-header"]
-        LOGO["Logo & Title"]
-        SYNC["Sync Status"]
-        NAV["Navigation Tabs"]
-    end
-
-    subgraph Main["main.main-content"]
-        STATS["Stats Grid"]
-        CONTROLS["Controls Section"]
-        FILTERS["Filters Panel"]
-        GRID["Bills Grid"]
-        SENTINEL["Scroll Sentinel"]
-    end
-
-    subgraph UserPanel["User Panel"]
-        AVATAR["User Avatar"]
-        TRACKED_LIST["Tracked Bills"]
-        NOTES_LIST["Recent Notes"]
-        EXPORT["Export Buttons"]
-    end
-
-    MODAL["Note Modal"]
-
-    ROOT --> Header
-    ROOT --> Main
-    ROOT --> UserPanel
-    ROOT --> MODAL
-```
 
 ### Header Component
 
@@ -312,18 +266,7 @@ flowchart TB
 
 ### Bill Card Structure
 
-```mermaid
-flowchart TB
-    subgraph Card["bill-card"]
-        HEADER["Card Header<br/>Bill Number (link), Title"]
-        PROGRESS["Progress Tracker<br/>Status Visualization"]
-        META["Metadata<br/>Sponsor, Committee, Hearing"]
-        DESC["Description"]
-        TAGS["Tags<br/>Status, Priority, Topic"]
-        NOTE["Note Preview"]
-        ACTIONS["Action Buttons<br/>Track, Note, Share, Contact"]
-    end
-```
+Each bill card contains a header (number + title), progress tracker, metadata (sponsor, committee, hearing), description, tags (status, priority, topic), optional note preview, and action buttons (track, note, share).
 
 ```html
 <div class="bill-card" data-bill-id="HB1001">
@@ -332,9 +275,7 @@ flowchart TB
         <h3 class="bill-title">Fire protection projects</h3>
     </div>
 
-    <div class="progress-tracker">
-        <!-- Visual status indicator -->
-    </div>
+    <div class="progress-tracker"><!-- Visual status indicator --></div>
 
     <div class="bill-meta">
         <span class="sponsor">(Abbarno)</span>
@@ -351,15 +292,9 @@ flowchart TB
     </div>
 
     <div class="card-actions">
-        <button class="action-btn track-btn" data-action="track">
-            Track
-        </button>
-        <button class="action-btn note-btn" data-action="note">
-            Note
-        </button>
-        <button class="action-btn share-btn" data-action="share">
-            Share
-        </button>
+        <button class="action-btn track-btn" data-action="track">Track</button>
+        <button class="action-btn note-btn" data-action="note">Note</button>
+        <button class="action-btn share-btn" data-action="share">Share</button>
     </div>
 </div>
 ```
@@ -369,6 +304,8 @@ flowchart TB
 ## Navigation & Routing
 
 ### Hash-Based Routing
+
+The app uses `window.location.hash` for client-side routing. Tab clicks update the hash, triggering `hashchange` events that filter and re-render bills.
 
 ```mermaid
 sequenceDiagram
@@ -397,60 +334,7 @@ sequenceDiagram
 | `#scr`, `#hcr` | Concurrent Resolutions |
 | `#bill-HB1001` | Navigate to specific bill |
 
-### Navigation Code
-
-```javascript
-function setupNavigationListeners() {
-    // Tab click handler
-    document.getElementById('billTypeNav').addEventListener('click', (e) => {
-        const tab = e.target.closest('.nav-tab');
-        if (tab) {
-            const type = tab.dataset.type;
-            navigateToBillType(type);
-        }
-    });
-
-    // Hash change handler
-    window.addEventListener('hashchange', handleHashChange);
-}
-
-function navigateToBillType(type) {
-    // Update state
-    APP_STATE.currentBillType = type;
-    APP_STATE.pagination.page = 1;
-
-    // Update URL
-    window.location.hash = type.toLowerCase();
-
-    // Update UI
-    updateActiveTab(type);
-    updateUI();
-}
-
-function handleHashChange() {
-    const hash = window.location.hash.slice(1).toLowerCase();
-
-    // Check for bill link
-    if (hash.startsWith('bill-')) {
-        const billId = hash.replace('bill-', '').toUpperCase();
-        scrollToBill(billId);
-        return;
-    }
-
-    // Map hash to bill type
-    const typeMap = {
-        'all': 'all', 'sb': 'SB', 'hb': 'HB',
-        'sjr': 'SJR', 'hjr': 'HJR',
-        'sjm': 'SJM', 'hjm': 'HJM',
-        'scr': 'SCR', 'hcr': 'HCR'
-    };
-
-    const type = typeMap[hash] || 'all';
-    if (type !== APP_STATE.currentBillType) {
-        navigateToBillType(type);
-    }
-}
-```
+The `navigateToBillType()` function updates `APP_STATE.currentBillType`, resets pagination, updates the URL hash, highlights the active tab, and calls `updateUI()`. The `handleHashChange()` function maps hash fragments to bill types and delegates to `navigateToBillType()`. See [`app.js`](../app.js) for the implementation.
 
 ---
 
@@ -461,7 +345,7 @@ function handleHashChange() {
 ```mermaid
 flowchart TB
     START["App Initialize"]
-    CACHE{"Check<br/>localStorage cache"}
+    CACHE{"Check\nlocalStorage cache"}
     FRESH{"Cache < 1 hour?"}
     USE_CACHE["Use cached data"]
     FETCH["Fetch from GitHub"]
@@ -479,70 +363,9 @@ flowchart TB
     USE_CACHE --> RENDER
 ```
 
-### Data Loading Code
+The `loadBillsData()` function in [`app.js`](../app.js) first checks for a cached copy in `localStorage` (keyed as `wa_bills_cache` with a `wa_bills_cache_time` timestamp). If the cache is fresh (less than 1 hour old per `APP_CONFIG.dataRefreshInterval`), it uses the cached data. Otherwise, it fetches from `APP_CONFIG.githubDataUrl`, caches the response, and processes it. On network failure, it falls back to stale cache data if available.
 
-```javascript
-async function loadBillsData() {
-    showLoadingState();
-
-    try {
-        // Check cache
-        const cached = localStorage.getItem('wa_bills_cache');
-        const cacheTime = localStorage.getItem('wa_bills_cache_time');
-
-        if (cached && cacheTime) {
-            const age = Date.now() - parseInt(cacheTime);
-            if (age < APP_CONFIG.dataRefreshInterval) {
-                const data = JSON.parse(cached);
-                processBillsData(data);
-                showToast('Loaded from cache');
-                return;
-            }
-        }
-
-        // Fetch fresh data
-        const response = await fetch(APP_CONFIG.billsDataUrl);
-        if (!response.ok) throw new Error('Failed to fetch bills');
-
-        const data = await response.json();
-
-        // Cache the response
-        localStorage.setItem('wa_bills_cache', JSON.stringify(data));
-        localStorage.setItem('wa_bills_cache_time', Date.now().toString());
-
-        processBillsData(data);
-        showToast('Data updated');
-
-    } catch (error) {
-        console.error('Load error:', error);
-
-        // Fallback to cache even if stale
-        const cached = localStorage.getItem('wa_bills_cache');
-        if (cached) {
-            processBillsData(JSON.parse(cached));
-            showToast('Using cached data (offline)', 'warning');
-        } else {
-            showToast('Failed to load data', 'error');
-        }
-    }
-}
-
-function processBillsData(data) {
-    // Enrich bills with search index
-    APP_STATE.bills = data.bills.map(bill => ({
-        ...bill,
-        _searchText: [
-            bill.number,
-            bill.title,
-            bill.description,
-            bill.sponsor
-        ].join(' ').toLowerCase()
-    }));
-
-    APP_STATE.lastSync = data.lastSync;
-    updateUI();
-}
-```
+The `processBillsData()` function enriches each bill with a `_searchText` field (concatenation of number, title, description, and sponsor in lowercase) for efficient client-side search.
 
 ---
 
@@ -552,7 +375,7 @@ function processBillsData(data) {
 
 ```mermaid
 flowchart LR
-    ALL["All Bills<br/>(3,628)"]
+    ALL["All Bills\n(3,628)"]
     F1["Inactive Filter"]
     F2["Type Filter"]
     F3["Search Filter"]
@@ -565,107 +388,19 @@ flowchart LR
     ALL --> F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7 --> RESULT
 ```
 
-### Filter Implementation
+The `filterBills()` function in [`app.js`](../app.js) applies these filters in sequence:
 
-```javascript
-function filterBills() {
-    let filtered = [...APP_STATE.bills];
-
-    // 1. Inactive bills filter
-    if (!APP_STATE.filters.showInactiveBills) {
-        filtered = filtered.filter(bill => {
-            // Exclude 2025 session bills
-            if (bill.session === '2025') return false;
-
-            // Exclude cutoff-failed bills
-            if (getBillCutoffStatus(bill)) return false;
-
-            return true;
-        });
-    }
-
-    // 2. Bill type filter
-    if (APP_STATE.currentBillType !== 'all') {
-        filtered = filtered.filter(bill =>
-            bill.id.startsWith(APP_STATE.currentBillType)
-        );
-    }
-
-    // 3. Search filter
-    if (APP_STATE.filters.search) {
-        const searchTerm = APP_STATE.filters.search.toLowerCase();
-        filtered = filtered.filter(bill =>
-            bill._searchText.includes(searchTerm)
-        );
-    }
-
-    // 4. Status filter (multi-select)
-    if (APP_STATE.filters.status.length > 0) {
-        const statusAliases = {
-            'committee': ['committee', 'opposite_committee'],
-            'floor': ['floor', 'opposite_floor'],
-            'passed_origin': ['passed_origin', 'passed', 'passed_legislature']
-        };
-
-        filtered = filtered.filter(bill => {
-            return APP_STATE.filters.status.some(status => {
-                const aliases = statusAliases[status] || [status];
-                return aliases.includes(bill.status);
-            });
-        });
-    }
-
-    // 5. Priority filter (multi-select)
-    if (APP_STATE.filters.priority.length > 0) {
-        filtered = filtered.filter(bill =>
-            APP_STATE.filters.priority.includes(bill.priority)
-        );
-    }
-
-    // 6. Committee filter (multi-select)
-    if (APP_STATE.filters.committee.length > 0) {
-        filtered = filtered.filter(bill =>
-            APP_STATE.filters.committee.some(comm =>
-                bill.committee?.toLowerCase().includes(comm.toLowerCase())
-            )
-        );
-    }
-
-    // 7. Tracked only filter
-    if (APP_STATE.filters.trackedOnly) {
-        filtered = filtered.filter(bill =>
-            APP_STATE.trackedBills.has(bill.id)
-        );
-    }
-
-    APP_STATE.currentFilteredBills = filtered;
-    return filtered;
-}
-```
+1. **Inactive filter** -- Excludes 2025 session bills and bills that failed a cutoff date (unless `showInactiveBills` is enabled)
+2. **Type filter** -- Matches `bill.id` prefix against `currentBillType` (e.g., `SB`, `HB`)
+3. **Search filter** -- Matches `APP_STATE.filters.search` against the pre-computed `_searchText` field
+4. **Status filter** -- Multi-select with aliases (e.g., "committee" matches both `committee` and `opposite_committee`)
+5. **Priority filter** -- Multi-select (`high`, `medium`, `low`)
+6. **Committee filter** -- Multi-select, case-insensitive partial match
+7. **Tracked filter** -- When `trackedOnly` is enabled, shows only bills in `APP_STATE.trackedBills`
 
 ### Search Debouncing
 
-```javascript
-function debounce(func, delay) {
-    let timeoutId;
-    return function(...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func.apply(this, args), delay);
-    };
-}
-
-const debouncedSearch = debounce((searchTerm) => {
-    APP_STATE.filters.search = searchTerm;
-    APP_STATE.pagination.page = 1;
-    APP_STATE._dirty = true;
-    updateUI();
-}, 250);
-
-// Event listener
-document.getElementById('searchInput').addEventListener('input', (e) => {
-    debouncedSearch(e.target.value);
-});
-```
+Search input uses a 250ms debounce to prevent excessive re-renders. The debounced handler updates `APP_STATE.filters.search`, resets pagination to page 1, sets the dirty flag, and calls `updateUI()`.
 
 ---
 
@@ -691,95 +426,19 @@ sequenceDiagram
     P->>P: Save to cookies + localStorage
 ```
 
-```javascript
-function toggleTrack(billId) {
-    if (APP_STATE.trackedBills.has(billId)) {
-        APP_STATE.trackedBills.delete(billId);
-        showToast('Bill untracked');
-    } else {
-        APP_STATE.trackedBills.add(billId);
-        showToast('Bill tracked');
-    }
-
-    APP_STATE._dirty = true;
-    updateBillCard(billId);
-    updateStats();
-    updateUserPanel();
-}
-```
+The `toggleTrack()` function adds or removes a bill ID from `APP_STATE.trackedBills`, sets `_dirty = true`, and updates the bill card, stats display, and user panel.
 
 ### Notes Management
 
-```javascript
-function openNoteModal(billId) {
-    const bill = APP_STATE.bills.find(b => b.id === billId);
-    const existingNote = APP_STATE.userNotes[billId]?.[0];
-
-    document.getElementById('noteModalTitle').textContent = bill.number;
-    document.getElementById('noteTextarea').value = existingNote?.text || '';
-    document.getElementById('noteModal').dataset.billId = billId;
-    document.getElementById('noteModal').classList.add('active');
-}
-
-function saveNote() {
-    const billId = document.getElementById('noteModal').dataset.billId;
-    const text = document.getElementById('noteTextarea').value.trim();
-
-    if (text) {
-        APP_STATE.userNotes[billId] = [{
-            id: Date.now().toString(),
-            text: text,
-            date: new Date().toISOString(),
-            user: APP_STATE.userData.name
-        }];
-    } else {
-        delete APP_STATE.userNotes[billId];
-    }
-
-    APP_STATE._dirty = true;
-    closeNoteModal();
-    updateBillCard(billId);
-    updateUserPanel();
-    showToast('Note saved');
-}
-```
+Users can add timestamped notes to any bill via a modal dialog. Notes are stored as `APP_STATE.userNotes[billId] = [{ id, text, date, user }]`. The `openNoteModal()` function populates the modal with any existing note, and `saveNote()` persists the update. See [`app.js`](../app.js) for the implementation.
 
 ### Bill Sharing
 
-```javascript
-async function shareBill(billId) {
-    const bill = APP_STATE.bills.find(b => b.id === billId);
-    const shareUrl = `${APP_CONFIG.siteUrl}#bill-${billId}`;
-
-    const shareData = {
-        title: `${bill.number}: ${bill.title}`,
-        text: bill.description,
-        url: shareUrl
-    };
-
-    // Try native share API
-    if (navigator.share) {
-        try {
-            await navigator.share(shareData);
-            return;
-        } catch (e) {
-            // User cancelled or error
-        }
-    }
-
-    // Fallback to clipboard
-    try {
-        await navigator.clipboard.writeText(shareUrl);
-        showToast('Link copied to clipboard');
-    } catch (e) {
-        showToast('Unable to share', 'error');
-    }
-}
-```
+The `shareBill()` function generates a shareable URL (`https://wa-bill-tracker.org#bill-{billId}`) and attempts to use the Web Share API (`navigator.share`). If unavailable, it falls back to the Clipboard API (`navigator.clipboard.writeText`).
 
 ---
 
-## Rendering Pipeline
+## Rendering & Persistence
 
 ### Main Render Flow
 
@@ -801,275 +460,24 @@ flowchart TB
     FILTER --> FAILED
 ```
 
-### Bill Card Rendering
-
-```javascript
-function renderBills() {
-    const bills = filterBills();
-    const { page, pageSize } = APP_STATE.pagination;
-    const paginated = bills.slice(0, page * pageSize);
-
-    const grid = document.getElementById('billsGrid');
-
-    if (paginated.length === 0) {
-        grid.innerHTML = '<div class="no-results">No bills match your filters</div>';
-        return;
-    }
-
-    grid.innerHTML = paginated.map(bill => createBillCard(bill)).join('');
-    setupInfiniteScroll();
-}
-
-function createBillCard(bill) {
-    const isTracked = APP_STATE.trackedBills.has(bill.id);
-    const note = APP_STATE.userNotes[bill.id]?.[0];
-    const cutoffStatus = getBillCutoffStatus(bill);
-
-    return `
-        <div class="bill-card ${isTracked ? 'tracked' : ''}"
-             data-bill-id="${bill.id}">
-            <div class="card-header">
-                <a href="${escapeHTML(bill.legUrl)}"
-                   class="bill-number"
-                   target="_blank"
-                   rel="noopener">
-                    ${escapeHTML(bill.number)}
-                </a>
-                <h3 class="bill-title">${escapeHTML(bill.title)}</h3>
-            </div>
-
-            ${buildProgressTracker(bill)}
-
-            <div class="bill-meta">
-                <span class="sponsor">${escapeHTML(bill.sponsor)}</span>
-                ${bill.committee ? `<span class="committee">${escapeHTML(bill.committee)}</span>` : ''}
-                ${formatNextHearing(bill)}
-            </div>
-
-            <p class="bill-description">${escapeHTML(bill.description)}</p>
-
-            ${note ? `<div class="note-preview">${escapeHTML(note.text)}</div>` : ''}
-
-            <div class="bill-tags">
-                <span class="tag status-tag ${bill.status}">${formatStatus(bill.status)}</span>
-                <span class="tag priority-tag ${bill.priority}">${bill.priority}</span>
-                <span class="tag topic-tag">${escapeHTML(bill.topic)}</span>
-                ${cutoffStatus ? `<span class="tag cutoff-tag">${cutoffStatus}</span>` : ''}
-            </div>
-
-            <div class="card-actions">
-                <button class="action-btn track-btn" data-action="track">
-                    ${isTracked ? '★ Tracked' : '☆ Track'}
-                </button>
-                <button class="action-btn note-btn" data-action="note">
-                    ${note ? '📝 Edit' : '📝 Note'}
-                </button>
-                <button class="action-btn share-btn" data-action="share">
-                    Share
-                </button>
-            </div>
-        </div>
-    `;
-}
-```
+When state changes, `filterBills()` runs the filter pipeline and stores the result in `APP_STATE.currentFilteredBills`. Then `renderBills()` paginates the results (25 per page via `APP_STATE.pagination`) and generates bill card HTML using `createBillCard()`, which builds each card from template literals with all dynamic content escaped via `escapeHTML()`. The HTML is inserted into the `#billsGrid` element.
 
 ### Infinite Scroll
 
-```javascript
-function setupInfiniteScroll() {
-    const sentinel = document.getElementById('scrollSentinel');
+An `IntersectionObserver` watches a sentinel element at the bottom of the grid. When the sentinel enters the viewport (with a 300px margin), `loadMoreBills()` increments the page counter and appends the next batch of bill cards using `insertAdjacentHTML('beforeend', ...)`.
 
-    if (!sentinel) return;
+### StorageManager
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                loadMoreBills();
-            }
-        });
-    }, {
-        rootMargin: '300px'
-    });
+The `StorageManager` object in [`app.js`](../app.js) handles dual persistence to cookies (primary) and localStorage (backup).
 
-    observer.observe(sentinel);
-}
+**Save** writes tracked bills, user notes, and filter preferences to both `CookieManager.set()` and `localStorage.setItem()`, then clears the `_dirty` flag.
 
-function loadMoreBills() {
-    const { page, pageSize } = APP_STATE.pagination;
-    const totalFiltered = APP_STATE.currentFilteredBills.length;
-    const loaded = page * pageSize;
+**Load** reads from cookies first, falling back to localStorage if cookies are unavailable. It restores `trackedBills` as a `Set`, `userNotes` as an object, and merges saved `filters` into `APP_STATE.filters`.
 
-    if (loaded >= totalFiltered) return;
+### Auto-Save
 
-    APP_STATE.pagination.page++;
-
-    // Append new cards
-    const newBills = APP_STATE.currentFilteredBills.slice(loaded, loaded + pageSize);
-    const grid = document.getElementById('billsGrid');
-    newBills.forEach(bill => {
-        grid.insertAdjacentHTML('beforeend', createBillCard(bill));
-    });
-
-    updatePageInfo();
-}
-```
+A `setInterval` timer checks `APP_STATE._dirty` every 30 seconds and calls `StorageManager.save()` if set. A `beforeunload` event listener also triggers a save to prevent data loss on page close.
 
 ---
 
-## Browser APIs
-
-### APIs Used
-
-```mermaid
-mindmap
-    root((Browser APIs))
-        DOM
-            querySelector
-            addEventListener
-            insertAdjacentHTML
-            classList
-        Storage
-            localStorage
-            document.cookie
-        Network
-            fetch
-        Observers
-            IntersectionObserver
-        Sharing
-            navigator.share
-            navigator.clipboard
-        History
-            window.location.hash
-            hashchange event
-```
-
-### Storage Manager
-
-```javascript
-const StorageManager = {
-    save() {
-        const data = {
-            trackedBills: Array.from(APP_STATE.trackedBills),
-            userNotes: APP_STATE.userNotes,
-            filters: APP_STATE.filters,
-            userData: APP_STATE.userData
-        };
-
-        // Primary: Cookies
-        CookieManager.set('wa_tracked_bills', data.trackedBills);
-        CookieManager.set('wa_user_notes', data.userNotes);
-        CookieManager.set('wa_filters', data.filters);
-
-        // Backup: localStorage
-        localStorage.setItem('wa_tracked_bills', JSON.stringify(data.trackedBills));
-        localStorage.setItem('wa_user_notes', JSON.stringify(data.userNotes));
-        localStorage.setItem('wa_filters', JSON.stringify(data.filters));
-
-        APP_STATE._dirty = false;
-    },
-
-    load() {
-        // Try cookies first
-        let tracked = CookieManager.get('wa_tracked_bills');
-        let notes = CookieManager.get('wa_user_notes');
-        let filters = CookieManager.get('wa_filters');
-
-        // Fallback to localStorage
-        if (!tracked) {
-            tracked = JSON.parse(localStorage.getItem('wa_tracked_bills') || '[]');
-        }
-        if (!notes) {
-            notes = JSON.parse(localStorage.getItem('wa_user_notes') || '{}');
-        }
-        if (!filters) {
-            filters = JSON.parse(localStorage.getItem('wa_filters') || '{}');
-        }
-
-        APP_STATE.trackedBills = new Set(tracked);
-        APP_STATE.userNotes = notes;
-        Object.assign(APP_STATE.filters, filters);
-    }
-};
-```
-
-### Auto-Save Mechanism
-
-```javascript
-// Auto-save every 30 seconds if dirty
-setInterval(() => {
-    if (APP_STATE._dirty) {
-        StorageManager.save();
-        console.log('Auto-saved user data');
-    }
-}, APP_CONFIG.autoSaveInterval);
-
-// Save on page unload
-window.addEventListener('beforeunload', () => {
-    if (APP_STATE._dirty) {
-        StorageManager.save();
-    }
-});
-```
-
----
-
-## CSS Architecture
-
-### Design System Variables
-
-```css
-:root {
-    /* Colors */
-    --color-primary: #0f172a;
-    --color-secondary: #1e293b;
-    --color-accent: #3b82f6;
-    --color-success: #10b981;
-    --color-warning: #f59e0b;
-    --color-danger: #ef4444;
-
-    /* Typography */
-    --font-primary: 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-
-    /* Spacing */
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
-
-    /* Transitions */
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.25s ease;
-}
-```
-
-### Responsive Breakpoints
-
-```css
-/* Mobile: < 768px */
-@media (max-width: 768px) {
-    .bills-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .user-panel {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-    }
-}
-```
-
----
-
-## Related Documentation
-
-- [Architecture & Data Flow](ARCHITECTURE.md) - System design, data pipeline, API integration
-- [Security](SECURITY.md) - XSS prevention, CSP
-- [Deployment & Operations](DEPLOYMENT.md) - Infrastructure, CI/CD, troubleshooting
-- [Developer Guide](DEVELOPER_GUIDE.md) - Setup, coding standards, testing
-
----
-
-*Last updated: February 2026*
+**See also:** [Architecture & Data Flow](ARCHITECTURE.md) · [Security](SECURITY.md) · [Deployment & Operations](DEPLOYMENT.md) · [Developer Guide](DEVELOPER_GUIDE.md)

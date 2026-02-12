@@ -1,18 +1,21 @@
-# Security Documentation
-
-> Security model, practices, and considerations
-
+---
+title: Security Documentation
+scope: Security model, practices, and considerations
+last_updated: 2026-02
 ---
 
-## Table of Contents
+# Security Documentation
 
-1. [Security Overview](#security-overview)
-2. [Content Security Policy](#content-security-policy)
-3. [Input Sanitization](#input-sanitization)
-4. [Data Privacy](#data-privacy)
-5. [API Security](#api-security)
-6. [Deployment Security](#deployment-security)
-7. [Security Checklist](#security-checklist)
+**Contents:**
+[Security Overview](#security-overview) ·
+[Security Headers](#security-headers) ·
+[Input Sanitization](#input-sanitization) ·
+[Data Privacy](#data-privacy) ·
+[API Security](#api-security) ·
+[Deployment Security](#deployment-security) ·
+[Security Checklist](#security-checklist) ·
+[Incident Response](#incident-response) ·
+[Security Limitations](#security-limitations)
 
 ---
 
@@ -33,35 +36,46 @@ The WA Bill Tracker implements a defense-in-depth security model appropriate for
 ### Threat Model
 
 ```mermaid
-flowchart TB
-    subgraph Threats["Potential Threats"]
-        XSS["Cross-Site Scripting"]
-        INJECT["Injection Attacks"]
-        CSRF["Cross-Site Request Forgery"]
-        DATA["Data Tampering"]
+flowchart LR
+    subgraph Vectors["Attack Vectors"]
+        XSS["Cross-Site\nScripting"]
+        INJECT["Injection\nAttacks"]
+        CSRF["Cross-Site\nRequest Forgery"]
+        DATA["Data\nTampering"]
     end
 
-    subgraph Mitigations["Mitigations"]
+    subgraph Assets["Protected Assets"]
+        DOM["DOM Integrity"]
+        STORE["Browser Storage"]
+        APIDATA["API Data"]
+    end
+
+    subgraph Controls["Security Controls"]
         CSP["Content Security Policy"]
         ESCAPE["HTML Escaping"]
         SAMESITE["SameSite Cookies"]
         VALIDATE["Data Validation"]
     end
 
-    XSS --> CSP
-    XSS --> ESCAPE
-    INJECT --> ESCAPE
-    CSRF --> SAMESITE
-    DATA --> VALIDATE
+    XSS -.->|mitigated by| CSP
+    XSS -.->|mitigated by| ESCAPE
+    INJECT -.->|mitigated by| ESCAPE
+    CSRF -.->|mitigated by| SAMESITE
+    DATA -.->|mitigated by| VALIDATE
+
+    CSP -.-> DOM
+    ESCAPE -.-> DOM
+    SAMESITE -.-> STORE
+    VALIDATE -.-> APIDATA
 ```
 
 ---
 
-## Content Security Policy
+## Security Headers
 
-### CSP Headers
+The application implements security headers via HTML meta tags. Since GitHub Pages does not support custom HTTP headers, all security policies are set in `index.html`.
 
-The application implements strict Content Security Policy via meta tag:
+### Content Security Policy
 
 ```html
 <meta http-equiv="Content-Security-Policy" content="
@@ -77,13 +91,13 @@ The application implements strict Content Security Policy via meta tag:
 ">
 ```
 
-### Directive Breakdown
+`'unsafe-inline'` is required in both `script-src` and `style-src` because `app.js` constructs HTML via template literals and inserts it with `innerHTML`/`insertAdjacentHTML`, and `index.html` embeds all CSS inline within `<style>` tags.
 
 | Directive | Value | Purpose |
 |-----------|-------|---------|
 | `default-src` | `'none'` | Block all by default |
-| `script-src` | `'self' 'unsafe-inline'` | Local scripts only |
-| `style-src` | `'self' 'unsafe-inline' fonts.googleapis.com` | Local + Google Fonts |
+| `script-src` | `'self' 'unsafe-inline'` | Local scripts + template literal HTML |
+| `style-src` | `'self' 'unsafe-inline' fonts.googleapis.com` | Local + inline styles + Google Fonts |
 | `font-src` | `'self' fonts.gstatic.com` | Local + Google Fonts CDN |
 | `img-src` | `'self' data:` | Local images + data URIs |
 | `connect-src` | `'self' raw.githubusercontent.com` | API connections |
@@ -91,12 +105,13 @@ The application implements strict Content Security Policy via meta tag:
 | `form-action` | `'none'` | Disable form submissions |
 | `base-uri` | `'self'` | Prevent base tag hijacking |
 
-### Additional Security Headers
+### Additional Headers and Permissions Policy
 
 ```html
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
 ```
 
 | Header | Value | Purpose |
@@ -104,19 +119,7 @@ The application implements strict Content Security Policy via meta tag:
 | `X-Content-Type-Options` | `nosniff` | Prevent MIME sniffing |
 | `X-Frame-Options` | `DENY` | Prevent framing |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` | Control referrer info |
-
-### Permissions Policy
-
-```html
-<meta http-equiv="Permissions-Policy" content="
-    camera=(),
-    microphone=(),
-    geolocation=(),
-    payment=()
-">
-```
-
-Explicitly disables sensitive browser APIs.
+| `Permissions-Policy` | `camera=(), microphone=(), ...` | Disable sensitive browser APIs |
 
 ---
 
@@ -124,20 +127,15 @@ Explicitly disables sensitive browser APIs.
 
 ### HTML Escaping
 
-All user-controlled content is escaped before insertion into DOM:
+All user-controlled content is escaped before DOM insertion. See `escapeHTML()` in [`app.js`](../app.js):
 
 ```javascript
 function escapeHTML(str) {
     if (!str) return '';
-
     const escapeMap = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
+        '&': '&amp;', '<': '&lt;', '>': '&gt;',
+        '"': '&quot;', "'": '&#39;'
     };
-
     return String(str).replace(/[&<>"']/g, char => escapeMap[char]);
 }
 ```
@@ -150,7 +148,6 @@ const card = `
     <div class="bill-card">
         <h3>${escapeHTML(bill.title)}</h3>
         <p>${escapeHTML(bill.description)}</p>
-        <span>${escapeHTML(bill.sponsor)}</span>
     </div>
 `;
 
@@ -159,8 +156,6 @@ const unsafe = `<div>${bill.title}</div>`;  // XSS risk!
 ```
 
 ### Protected Fields
-
-All user-visible bill fields are escaped:
 
 | Field | Source | Risk | Mitigation |
 |-------|--------|------|------------|
@@ -172,7 +167,7 @@ All user-visible bill fields are escaped:
 
 ### URL Validation
 
-External URLs are validated before rendering:
+External URLs are validated before rendering as links:
 
 ```javascript
 function isValidUrl(url) {
@@ -183,11 +178,6 @@ function isValidUrl(url) {
         return false;
     }
 }
-
-// Only render link if URL is valid
-const link = isValidUrl(bill.legUrl)
-    ? `<a href="${escapeHTML(bill.legUrl)}" target="_blank" rel="noopener">`
-    : '';
 ```
 
 ---
@@ -216,21 +206,18 @@ flowchart LR
     end
 ```
 
-### What's Stored
+### Storage Summary
 
-| Data | Storage | Duration | Sensitivity |
-|------|---------|----------|-------------|
-| Tracked bills | Cookie + localStorage | 90 days | Low |
-| User notes | Cookie + localStorage | 90 days | Medium |
-| Filter preferences | Cookie + localStorage | 90 days | Low |
-| Bill data cache | localStorage | 1 hour | Public data |
-
-### What's NOT Stored
-
-- No personal information collected
-- No analytics or tracking
-- No server-side user data
-- No third-party cookies
+| Data | Stored | Storage | Duration | Sensitivity |
+|------|--------|---------|----------|-------------|
+| Tracked bills | Yes | Cookie + localStorage | 90 days | Low |
+| User notes | Yes | Cookie + localStorage | 90 days | Medium |
+| Filter preferences | Yes | Cookie + localStorage | 90 days | Low |
+| Bill data cache | Yes | localStorage | 1 hour | Public |
+| Personal information | No | -- | -- | -- |
+| Analytics / tracking | No | -- | -- | -- |
+| Server-side user data | No | -- | -- | -- |
+| Third-party cookies | No | -- | -- | -- |
 
 ### Cookie Security
 
@@ -238,10 +225,7 @@ flowchart LR
 function setCookie(name, value, days) {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
     document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))}; ` +
-        `expires=${expires}; ` +
-        `path=/; ` +
-        `SameSite=Lax; ` +
-        `Secure`;
+        `expires=${expires}; path=/; SameSite=Lax; Secure`;
 }
 ```
 
@@ -266,32 +250,9 @@ function setCookie(name, value, days) {
 
 ### API Data Validation
 
-Data from external APIs is validated before use:
+Data from external APIs is validated before use by [`scripts/validate_bills_json.py`](../scripts/validate_bills_json.py), which checks required fields, status enums, bill count consistency, and duplicate IDs.
 
-```python
-# In validate_bills_json.py
-def validate_bill(bill):
-    required_fields = ['id', 'number', 'title', 'status']
-
-    # Check required fields
-    for field in required_fields:
-        if field not in bill:
-            return False
-
-    # Validate status enum
-    valid_statuses = {'prefiled', 'introduced', 'committee', ...}
-    if bill['status'] not in valid_statuses:
-        return False
-
-    return True
-```
-
-### No Sensitive API Operations
-
-- Read-only API access
-- No authentication tokens
-- No write operations
-- No user data transmission
+The application is strictly read-only: no authentication tokens, no write operations, and no user data is ever transmitted to any API.
 
 ---
 
@@ -299,22 +260,11 @@ def validate_bill(bill):
 
 ### GitHub Pages Security
 
-GitHub Pages provides:
-
-- Automatic HTTPS
-- DDoS protection
-- Global CDN
-- Managed infrastructure
-
-### HTTPS Configuration
+GitHub Pages provides automatic HTTPS, DDoS protection, a global CDN, and managed infrastructure.
 
 ```mermaid
 flowchart LR
-    USER["User"]
-    CF["Cloudflare<br/>(DNS)"]
-    GH["GitHub Pages<br/>(HTTPS)"]
-
-    USER -->|HTTPS| CF -->|HTTPS| GH
+    USER["User"] -->|"HTTPS"| CF["Cloudflare\n(DNS)"] -->|"HTTPS"| GH["GitHub Pages"]
 ```
 
 - **Forced HTTPS**: Enabled in repository settings
@@ -374,51 +324,42 @@ flowchart LR
 3. Provide details of vulnerability
 4. Allow time for patch before disclosure
 
+### Severity Classification
+
+| Severity | Definition | Examples | Response Time |
+|----------|------------|----------|---------------|
+| **Critical** | Active exploitation or data integrity compromised | XSS in production, CSP bypass | Immediate (hours) |
+| **High** | Clear exploit path, not yet exploited | Missing escaping on new field, broken CSP directive | 24 hours |
+| **Medium** | Potential vulnerability, no known exploit | Permissive CSP, outdated dependency with CVE | 1 week |
+| **Low** | Hardening improvement, defense-in-depth | Additional headers, cookie attribute tuning | Next release |
+
 ### Response Process
 
 ```mermaid
 flowchart LR
-    REPORT["Report Received"]
-    ASSESS["Assess Severity"]
-    FIX["Develop Fix"]
-    TEST["Test Fix"]
-    DEPLOY["Deploy"]
-    DISCLOSE["Disclose"]
-
-    REPORT --> ASSESS --> FIX --> TEST --> DEPLOY --> DISCLOSE
+    REPORT["Report"] --> ASSESS["Assess\nSeverity"] --> FIX["Develop\nFix"] --> TEST["Test"] --> DEPLOY["Deploy"] --> DISCLOSE["Disclose"]
 ```
 
 ---
 
 ## Security Limitations
 
-### Known Limitations
-
 | Limitation | Risk | Mitigation |
 |------------|------|------------|
-| `'unsafe-inline'` in CSP | Medium | Required for inline styles |
+| `'unsafe-inline'` in `script-src` and `style-src` | Medium | Required for template-literal HTML in `app.js` and inline CSS in `index.html`; all dynamic content escaped via `escapeHTML()` |
 | Client-side only | Low | No sensitive operations |
 | No authentication | Low | Public data only |
 | Cookie storage | Low | SameSite + Secure flags |
 
 ### Not In Scope
 
-These security concerns don't apply to this application:
-
-- SQL injection (no database)
-- Authentication bypass (no auth)
-- Session hijacking (no sessions)
-- Server-side vulnerabilities (no server)
+These security concerns don't apply to this application: SQL injection (no database), authentication bypass (no auth), session hijacking (no sessions), and server-side vulnerabilities (no server).
 
 ---
 
 ## Related Documentation
 
-- [Architecture & Data Flow](ARCHITECTURE.md) - Security architecture context
-- [Deployment & Operations](DEPLOYMENT.md) - Secure deployment, infrastructure
-- [Developer Guide](DEVELOPER_GUIDE.md) - Secure coding practices
-- [Frontend](FRONTEND.md) - Client-side security (escapeHTML, CSP)
-
----
-
-*Last updated: February 2026*
+- [Architecture & Data Flow](ARCHITECTURE.md) -- Security architecture context
+- [Deployment & Operations](DEPLOYMENT.md) -- Secure deployment, infrastructure
+- [Developer Guide](DEVELOPER_GUIDE.md) -- Secure coding practices
+- [Frontend](FRONTEND.md) -- Client-side security (escapeHTML, CSP)

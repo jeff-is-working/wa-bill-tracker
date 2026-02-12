@@ -22,4 +22,8 @@
 
 ---
 
+> **Note:** Each doc file includes a YAML metadata block at the top with `title`, `scope`, and `last_updated` fields for tooling and consistency.
+
+---
+
 *Last updated: February 2026*

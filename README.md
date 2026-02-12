@@ -27,6 +27,17 @@ A free, open-source bill tracking app for the Washington State Legislature 2025-
 
 HB, SB, HJR, SJR, HJM, SJM, HCR, SCR, Initiatives, and Referendums.
 
+### Architecture at a Glance
+
+```mermaid
+flowchart LR
+    API["WA Legislature\nSOAP API"] -->|"Fetches bills"| GHA["GitHub\nActions"]
+    GHA -->|"Writes"| JSON["bills.json"]
+    JSON -->|"Deployed via"| GHP["GitHub\nPages"]
+    GHP -->|"Serves"| BROWSER["Browser"]
+    BROWSER -->|"Persists to"| STORAGE["localStorage\n+ Cookies"]
+```
+
 ---
 
 ## Getting Started

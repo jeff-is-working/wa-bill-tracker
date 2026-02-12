@@ -1,8 +1,10 @@
-# Architecture & Data Flow
-
-> System design, data pipeline, and SOAP API integration
-
 ---
+title: Architecture & Data Flow
+scope: System design, data pipeline, and SOAP API integration
+last_updated: 2026-02
+---
+
+# Architecture & Data Flow
 
 ## Table of Contents
 
@@ -42,14 +44,14 @@ The WA Bill Tracker is a **serverless, static web application** that tracks Wash
 ```mermaid
 flowchart TB
     subgraph External["External Services"]
-        API[("WA Legislature<br/>SOAP API")]
-        GH["GitHub<br/>Repository"]
-        CF["Cloudflare<br/>DNS"]
+        API[("WA Legislature\nSOAP API")]
+        GH["GitHub\nRepository"]
+        CF["Cloudflare\nDNS"]
     end
 
     subgraph CICD["GitHub Actions CI/CD"]
-        FETCH["fetch-data.yml<br/>(Scheduled)"]
-        DEPLOY["deploy.yml<br/>(On Push)"]
+        FETCH["fetch-data.yml\n(Scheduled)"]
+        DEPLOY["deploy.yml\n(On Push)"]
     end
 
     subgraph Scripts["Python Scripts"]
@@ -59,7 +61,7 @@ flowchart TB
     end
 
     subgraph Data["Data Layer"]
-        BILLS[("bills.json<br/>3,600+ bills")]
+        BILLS[("bills.json\n3,600+ bills")]
         STATS[("stats.json")]
         MANIFEST[("manifest.json")]
     end
@@ -67,15 +69,15 @@ flowchart TB
     subgraph Frontend["Client Application"]
         HTML["index.html"]
         JS["app.js"]
-        STORE[("localStorage<br/>cookies")]
+        STORE[("localStorage\ncookies")]
     end
 
     subgraph User["End User"]
         BROWSER["Web Browser"]
     end
 
-    API -->|SOAP/XML| FULL
-    API -->|SOAP/XML| INCR
+    API -->|"SOAP 1.1 / HTTPS:443"| FULL
+    API -->|"SOAP 1.1 / HTTPS:443"| INCR
 
     FETCH -->|Triggers| FULL
     FETCH -->|Triggers| INCR
@@ -86,13 +88,13 @@ flowchart TB
     VAL -->|Writes| STATS
     VAL -->|Writes| MANIFEST
 
-    BILLS -->|Commit| GH
+    BILLS -->|"git push"| GH
     GH -->|Triggers| DEPLOY
-    DEPLOY -->|Publishes| CF
+    DEPLOY -->|"HTTPS:443"| CF
 
-    CF -->|Serves| HTML
-    CF -->|Serves| JS
-    CF -->|Serves| BILLS
+    CF -->|"HTTPS:443"| HTML
+    CF -->|"HTTPS:443"| JS
+    CF -->|"HTTPS:443"| BILLS
 
     HTML --> BROWSER
     JS --> BROWSER
@@ -113,7 +115,7 @@ flowchart TB
 ```mermaid
 flowchart LR
     subgraph Triggers["Workflow Triggers"]
-        CRON["Cron Schedule<br/>6 AM, 6 PM, Sunday"]
+        CRON["Cron Schedule\n6 AM, 6 PM, Sunday"]
         PUSH["Push to main"]
         MANUAL["Manual Dispatch"]
     end
@@ -178,6 +180,8 @@ See [DEPLOYMENT.md](DEPLOYMENT.md) for full workflow configuration details.
 
 ### Browser APIs
 
+The frontend relies on standard browser APIs (no polyfills needed) for storage, networking, scroll observation, sharing, and hash-based routing:
+
 ```mermaid
 mindmap
     root((Browser APIs))
@@ -221,6 +225,16 @@ The primary data source is the Washington State Legislature's public SOAP API.
 | `GetLegislation` | Full details for one bill | Complete bill record |
 | `GetCommitteeMeetings` | Committee hearing schedule | Meeting dates, committees |
 | `GetCommitteeMeetingItems` | Bills on meeting agenda | Agenda bill list |
+
+### Fetch Mode Comparison
+
+| Aspect | Full Refresh | Incremental Update |
+|--------|-------------|-------------------|
+| **Script** | `fetch_all_bills.py` | `fetch_bills_incremental.py` |
+| **Schedule** | Weekly (Sundays 2 AM Pacific) | Every 12 hours (6 AM / 6 PM Pacific) |
+| **API calls** | ~3,600+ (all bills) | ~400 (active bills only) |
+| **Duration** | 30-60 minutes | 5-10 minutes |
+| **Use case** | Initial setup, weekly refresh, data recovery | Regular updates |
 
 ### Full Fetch Process
 
@@ -292,11 +306,10 @@ sequenceDiagram
     S->>API: GetLegislationByYear(2026)
     API-->>S: Current bill roster
 
-    S->>S: Identify new bills<br/>(not in manifest)
+    S->>S: Identify new bills (not in manifest)
+    S->>S: Select stale active bills (max 400, oldest first)
 
-    S->>S: Select stale active bills<br/>(max 400, oldest first)
-
-    Note over S: Skip terminal statuses:<br/>enacted, vetoed, failed
+    Note over S: Skip terminal statuses: enacted, vetoed, failed
 
     loop For each bill to refresh
         S->>API: GetLegislation("2025-26", billNumber)
@@ -327,10 +340,10 @@ sequenceDiagram
 ```mermaid
 flowchart TD
     START["Bill to check"]
-    HASH["Compute content hash<br/>MD5(status|history|date|sponsor)"]
-    COMPARE{"Hash matches<br/>manifest?"}
-    SKIP["Skip update<br/>(refresh timestamp only)"]
-    UPDATE["Full update<br/>(replace bill record)"]
+    HASH["Compute content hash\nMD5(status|history|date|sponsor)"]
+    COMPARE{"Hash matches\nmanifest?"}
+    SKIP["Skip update\n(refresh timestamp only)"]
+    UPDATE["Full update\n(replace bill record)"]
     END["Next bill"]
 
     START --> HASH
@@ -341,7 +354,7 @@ flowchart TD
     UPDATE --> END
 ```
 
-**Content Hash Formula:**
+**Content Hash Formula** (see [`scripts/fetch_all_bills.py`](../scripts/fetch_all_bills.py)):
 
 ```python
 content = f"{status}|{history_line}|{action_date}|{sponsor}"
@@ -402,51 +415,19 @@ flowchart LR
 
 #### Status Normalization
 
-```mermaid
-flowchart TD
-    INPUT["Raw Status + HistoryLine"]
+Status is determined by checking `status + historyLine` against these patterns, evaluated in priority order (first match wins):
 
-    subgraph Checks["Status Detection Priority"]
-        C1{"Contains 'effective date'<br/>or 'chapter law'?"}
-        C2{"Contains 'vetoed'?"}
-        C3{"Contains 'died' or<br/>'indefinitely postponed'?"}
-        C4{"Contains 'governor'?"}
-        C5{"Both chambers<br/>mentioned?"}
-        C6{"Third reading?"}
-        C7{"Committee reference?"}
-        C8{"First reading?"}
-    end
-
-    subgraph Outputs["Normalized Status"]
-        S1["enacted"]
-        S2["vetoed"]
-        S3["failed"]
-        S4["governor"]
-        S5["passed_legislature"]
-        S6["passed_origin / floor"]
-        S7["committee"]
-        S8["introduced"]
-        S9["prefiled"]
-    end
-
-    INPUT --> C1
-    C1 -->|Yes| S1
-    C1 -->|No| C2
-    C2 -->|Yes| S2
-    C2 -->|No| C3
-    C3 -->|Yes| S3
-    C3 -->|No| C4
-    C4 -->|Yes| S4
-    C4 -->|No| C5
-    C5 -->|Yes| S5
-    C5 -->|No| C6
-    C6 -->|Yes| S6
-    C6 -->|No| C7
-    C7 -->|Yes| S7
-    C7 -->|No| C8
-    C8 -->|Yes| S8
-    C8 -->|No| S9
-```
+| Priority | Pattern (in status + historyLine) | Normalized Status |
+|----------|----------------------------------|-------------------|
+| 1 | "effective date" or "chapter law" | `enacted` |
+| 2 | "vetoed" | `vetoed` |
+| 3 | "died" or "indefinitely postponed" | `failed` |
+| 4 | "governor" | `governor` |
+| 5 | Both chambers mentioned | `passed_legislature` |
+| 6 | "third reading" | `passed_origin` / `floor` |
+| 7 | Committee reference | `committee` |
+| 8 | "first reading" | `introduced` |
+| 9 | (default) | `prefiled` |
 
 ### Topic Classification
 
@@ -467,32 +448,15 @@ flowchart TD
 
 ### Priority Assignment
 
-```mermaid
-flowchart TD
-    INPUT["Bill Title + Metadata"]
+Priority is assigned by checking bill metadata against these rules in order (first match wins):
 
-    GOV{"Governor<br/>requested?"}
-    TYPE{"Bill type<br/>JM or CR?"}
-    HIGH{"High priority<br/>keywords?"}
-    LOW{"Low priority<br/>keywords?"}
-
-    P_HIGH["priority: high"]
-    P_LOW["priority: low"]
-    P_MED["priority: medium"]
-
-    INPUT --> GOV
-    GOV -->|Yes| P_HIGH
-    GOV -->|No| TYPE
-    TYPE -->|Yes| P_LOW
-    TYPE -->|No| HIGH
-    HIGH -->|Yes| P_HIGH
-    HIGH -->|No| LOW
-    LOW -->|Yes| P_LOW
-    LOW -->|No| P_MED
-```
-
-**High Priority Keywords:** emergency, budget, funding, crisis, fentanyl, urgent
-**Low Priority Keywords:** technical, housekeeping, commemorat, study, clarifying
+| Rule | Assigned Priority |
+|------|-------------------|
+| Governor requested (`RequestedByGovernor = true`) | **high** |
+| Bill type is Joint Memorial (JM) or Concurrent Resolution (CR) | **low** |
+| Title contains: emergency, budget, funding, crisis, fentanyl, urgent | **high** |
+| Title contains: technical, housekeeping, commemorat, study, clarifying | **low** |
+| Default | **medium** |
 
 ---
 
@@ -504,8 +468,8 @@ flowchart TD
 https://wslwebservices.leg.wa.gov
 ```
 
-| Service | URL | Purpose |
-|---------|-----|---------|
+| Service | Path | Purpose |
+|---------|------|---------|
 | **Legislation** | `/LegislationService.asmx` | Bill data and status |
 | **Sponsor** | `/SponsorService.asmx` | Legislator information |
 | **Committee** | `/CommitteeService.asmx` | Committee information |
@@ -513,67 +477,18 @@ https://wslwebservices.leg.wa.gov
 
 **Authentication**: None required. All endpoints are publicly accessible.
 
-### SOAP Protocol Details
+**Protocol**: SOAP 1.1 over HTTPS. Content-Type: `text/xml; charset=utf-8`. See [`scripts/fetch_all_bills.py`](../scripts/fetch_all_bills.py) for the Python implementation of envelope building, request execution, namespace handling, and retry logic.
 
-- **SOAP Version**: 1.1
-- **Content-Type**: `text/xml; charset=utf-8`
-- **HTTP Method**: POST
-
-#### XML Namespaces
-
-```xml
-xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-xmlns:leg="http://WSLWebServices.leg.wa.gov/"
-```
-
-#### Envelope Structure
-
-```mermaid
-flowchart TB
-    subgraph Envelope["SOAP Envelope"]
-        subgraph Body["SOAP Body"]
-            subgraph Method["Method Element"]
-                P1["Parameter 1"]
-                P2["Parameter 2"]
-            end
-        end
-    end
-```
-
-#### Standard Request Template
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <soap:Body>
-    <MethodName xmlns="http://WSLWebServices.leg.wa.gov/">
-      <parameter1>value1</parameter1>
-      <parameter2>value2</parameter2>
-    </MethodName>
-  </soap:Body>
-</soap:Envelope>
-```
-
-### Available Endpoints
-
-#### GetLegislationByYear
+### GetLegislationByYear
 
 Returns a list of all bills introduced in a specific year.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `year` | int | Yes | Legislative year (e.g., 2026) |
 
-**Response Fields:**
-
-| Field | Type | Description |
-|-------|------|-------------|
+| Response Field | Type | Description |
+|----------------|------|-------------|
 | `BillId` | string | Bill identifier (e.g., "HB 1001") |
 | `BillNumber` | string | Numeric portion (e.g., "1001") |
 | `Biennium` | string | Session period (e.g., "2025-26") |
@@ -581,11 +496,9 @@ Returns a list of all bills introduced in a specific year.
 | `OriginalAgency` | string | "House" or "Senate" |
 | `Active` | boolean | Whether bill is active |
 
-#### GetPreFiledLegislationInfo
+### GetPreFiledLegislationInfo
 
 Returns pre-filed legislation before session start.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -593,21 +506,17 @@ Returns pre-filed legislation before session start.
 
 **Response:** Same fields as GetLegislationByYear.
 
-#### GetLegislation
+### GetLegislation
 
 Returns full details for a specific bill.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `biennium` | string | Yes | Biennium (e.g., "2025-26") |
 | `billNumber` | string | Yes | Bill number without prefix |
 
-**Response Fields:**
-
-| Field | Type | Description |
-|-------|------|-------------|
+| Response Field | Type | Description |
+|----------------|------|-------------|
 | `BillId` | string | Full bill ID |
 | `ShortDescription` | string | Brief title |
 | `LongDescription` | string | Full description |
@@ -621,21 +530,17 @@ Returns full details for a specific bill.
 | `RequestedByGovernor` | boolean | Governor request flag |
 | `LegalTitle` | string | Legal title text |
 
-#### GetCommitteeMeetings
+### GetCommitteeMeetings
 
 Returns committee meeting schedule.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `beginDate` | datetime | Yes | Start date |
 | `endDate` | datetime | Yes | End date |
 
-**Response Fields:**
-
-| Field | Type | Description |
-|-------|------|-------------|
+| Response Field | Type | Description |
+|----------------|------|-------------|
 | `AgendaId` | int | Meeting identifier |
 | `Agency` | string | "House" or "Senate" |
 | `CommitteeName` | string | Committee name |
@@ -643,163 +548,23 @@ Returns committee meeting schedule.
 | `Room` | string | Room location |
 | `Cancelled` | boolean | Cancellation status |
 
-#### GetCommitteeMeetingItems
+### GetCommitteeMeetingItems
 
 Returns bills on a committee meeting agenda.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `agendaId` | int | Yes | Meeting agenda ID |
 
-**Response Fields:**
-
-| Field | Type | Description |
-|-------|------|-------------|
+| Response Field | Type | Description |
+|----------------|------|-------------|
 | `BillId` | string | Bill ID on agenda |
 | `HearingType` | string | Type of hearing |
 | `HearingTypeDescription` | string | Hearing description |
 
-### Request Format
+### Error Handling and Rate Limiting
 
-#### Building SOAP Envelopes in Python
-
-```python
-def build_soap_envelope(method: str, params: dict) -> str:
-    """
-    Build a SOAP 1.1 envelope for WA Legislature API.
-
-    Args:
-        method: API method name (e.g., "GetLegislationByYear")
-        params: Dictionary of parameter names and values
-
-    Returns:
-        Complete SOAP XML envelope as string
-    """
-    param_elements = ""
-    for name, value in params.items():
-        param_elements += f"      <{name}>{value}</{name}>\n"
-
-    envelope = f"""<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <soap:Body>
-    <{method} xmlns="http://WSLWebServices.leg.wa.gov/">
-{param_elements}    </{method}>
-  </soap:Body>
-</soap:Envelope>"""
-
-    return envelope
-```
-
-#### Making HTTP Requests
-
-```python
-import requests
-
-def make_soap_request(service_url: str, method: str, params: dict) -> str:
-    """
-    Execute a SOAP request to the WA Legislature API.
-    """
-    headers = {
-        "Content-Type": "text/xml; charset=utf-8",
-        "SOAPAction": f"http://WSLWebServices.leg.wa.gov/{method}"
-    }
-
-    envelope = build_soap_envelope(method, params)
-
-    response = requests.post(
-        service_url,
-        data=envelope.encode('utf-8'),
-        headers=headers,
-        timeout=60
-    )
-
-    response.raise_for_status()
-    return response.text
-```
-
-### Response Parsing
-
-#### Namespace Handling
-
-```mermaid
-flowchart LR
-    RAW["Raw XML Response"]
-    STRIP["Strip Namespaces"]
-    FIND["Find Elements"]
-    EXTRACT["Extract Text"]
-    DATA["Parsed Data"]
-
-    RAW --> STRIP --> FIND --> EXTRACT --> DATA
-```
-
-#### Safe Text Extraction
-
-```python
-import xml.etree.ElementTree as ET
-
-NAMESPACE = "http://WSLWebServices.leg.wa.gov/"
-NAMESPACES = {'leg': NAMESPACE}
-
-def strip_namespace(tag: str) -> str:
-    """Remove XML namespace prefix: '{http://example.com}Tag' -> 'Tag'"""
-    if tag.startswith('{'):
-        return tag.split('}', 1)[1]
-    return tag
-
-def find_element_text(element: ET.Element, path: str, default: str = '') -> str:
-    """
-    Safely extract text from an XML element.
-    Tries namespace-aware path first, falls back to local name matching.
-    """
-    # Try namespace-aware path
-    if ':' in path:
-        node = element.find(path, NAMESPACES)
-        if node is not None and node.text:
-            return node.text.strip()
-
-    # Try direct child with local name
-    local_name = path.split(':')[-1] if ':' in path else path
-
-    for child in element:
-        child_name = strip_namespace(child.tag)
-        if child_name == local_name:
-            if child.text:
-                return child.text.strip()
-
-    # Search recursively
-    for child in element.iter():
-        child_name = strip_namespace(child.tag)
-        if child_name == local_name and child.text:
-            return child.text.strip()
-
-    return default
-```
-
-### Error Handling
-
-#### SOAP Faults
-
-When an error occurs, the API returns a SOAP fault:
-
-```xml
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <soap:Fault>
-      <faultcode>soap:Server</faultcode>
-      <faultstring>Error message here</faultstring>
-      <detail>
-        <error>Detailed error information</error>
-      </detail>
-    </soap:Fault>
-  </soap:Body>
-</soap:Envelope>
-```
-
-#### Common Error Scenarios
+The fetch scripts implement exponential backoff retry (3 attempts with doubling delay) for transient failures. See [`scripts/fetch_all_bills.py`](../scripts/fetch_all_bills.py) for the implementation.
 
 | Error | Cause | Resolution |
 |-------|-------|------------|
@@ -809,47 +574,8 @@ When an error occurs, the API returns a SOAP fault:
 | **Invalid XML** | Malformed response | Log and skip |
 | **Empty response** | No data found | Handle gracefully |
 
-#### Retry Logic
-
-```python
-import time
-from typing import Optional
-
-def make_request_with_retry(
-    service_url: str,
-    method: str,
-    params: dict,
-    max_retries: int = 3,
-    base_delay: float = 1.0
-) -> Optional[str]:
-    """Make SOAP request with exponential backoff retry."""
-    for attempt in range(max_retries):
-        try:
-            response = make_soap_request(service_url, method, params)
-
-            is_fault, error = check_soap_fault(response)
-            if is_fault:
-                raise Exception(f"SOAP Fault: {error}")
-
-            return response
-
-        except Exception as e:
-            if attempt == max_retries - 1:
-                raise
-
-            delay = base_delay * (2 ** attempt)
-            logger.warning(f"Attempt {attempt + 1} failed: {e}. Retrying in {delay}s")
-            time.sleep(delay)
-
-    return None
-```
-
-### Rate Limiting
-
-The API does not enforce strict rate limits, but the project implements courtesy delays.
-
-| Setting | Value | Rationale |
-|---------|-------|-----------|
+| Rate Limit Setting | Value | Rationale |
+|-------------------|-------|-----------|
 | **Request delay** | 100ms | Prevent overwhelming server |
 | **Batch checkpoint** | Every 50 bills | Progress tracking |
 | **Request timeout** | 60 seconds | Prevent hung connections |
@@ -1131,19 +857,19 @@ erDiagram
 ```mermaid
 flowchart TB
     subgraph Current["Current Architecture"]
-        A["Single JSON file<br/>All bills in memory"]
+        A["Single JSON file\nAll bills in memory"]
     end
 
     subgraph Option1["Option 1: Pagination"]
-        B["Split JSON by type<br/>Load on demand"]
+        B["Split JSON by type\nLoad on demand"]
     end
 
     subgraph Option2["Option 2: Compression"]
-        C["Gzip compression<br/>~80% reduction"]
+        C["Gzip compression\n~80% reduction"]
     end
 
     subgraph Option3["Option 3: Backend"]
-        D["Add API server<br/>Query on demand"]
+        D["Add API server\nQuery on demand"]
     end
 
     Current -->|More bills| Option1
@@ -1158,7 +884,3 @@ flowchart TB
 3. **Event Delegation** -- Single listener for bill card actions
 4. **Skeleton Loading** -- Perceived performance during data fetch
 5. **Content Hash** -- Avoids unnecessary data writes
-
----
-
-*Last updated: February 2026*
