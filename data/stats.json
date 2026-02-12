@@ -1,25 +1,46 @@
 {
-  "generated": "2026-02-11T15:08:54.516845",
-  "totalBills": 3649,
+  "generated": "2026-02-12T04:34:44.313904",
+  "totalBills": 3651,
   "byStatus": {
-    "prefiled": 1893,
-    "floor": 308,
+    "prefiled": 1908,
+    "floor": 313,
     "enacted": 285,
-    "committee": 1121,
-    "passed_origin": 36,
-    "introduced": 6
+    "committee": 1083,
+    "passed_origin": 55,
+    "introduced": 7
   },
   "byCommittee": {
-    "Unassigned": 3648,
-    "House Consumer Protection & Business": 1
+    "Unassigned": 3573,
+    "Senate Labor & Commerce": 7,
+    "Senate Business, Trade & Economic Development": 1,
+    "Senate Housing": 3,
+    "Senate State Government, Tribal Affairs & Elections": 9,
+    "House Consumer Protection & Business": 2,
+    "Senate Law & Justice": 2,
+    "House Finance": 3,
+    "House Community Safety": 8,
+    "House Transportation": 4,
+    "House Appropriations": 3,
+    "House Civil Rights & Judiciary": 7,
+    "House Education": 1,
+    "House Technology, Economic Development, & Veterans": 2,
+    "House Local Government": 1,
+    "House State Government & Tribal Relations": 4,
+    "House Labor & Workplace Standards": 7,
+    "House Health Care & Wellness": 5,
+    "House Agriculture & Natural Resources": 1,
+    "House Housing": 2,
+    "House Early Learning & Human Services": 1,
+    "House Environment & Energy": 1,
+    "Senate Higher Education & Workforce Development": 4
   },
   "byPriority": {
-    "medium": 3292,
+    "medium": 3294,
     "high": 267,
     "low": 90
   },
   "byTopic": {
-    "General Government": 2187,
+    "General Government": 2189,
     "Public Safety": 129,
     "Housing": 111,
     "Tax & Revenue": 277,
@@ -565,7 +586,7 @@
     "HSG(Trudeau)": 2,
     "SGTE(MacEwen)": 1,
     "HLTC(Nobles)": 1,
-    "(Riccelli)": 34,
+    "(Riccelli)": 35,
     "LAW(Wagoner)": 3,
     "HS(Hansen)": 1,
     "ENET(Slatter)": 2,
@@ -734,7 +755,7 @@
     "(People of the State of Washington)": 2,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
-    "(Jinkins)": 11,
+    "(Jinkins)": 12,
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
@@ -747,21 +768,21 @@
     "JM": 33,
     "JR": 25,
     "CR": 17,
-    "HR": 81,
-    "SR": 76,
+    "HR": 82,
+    "SR": 77,
     "GA": 329
   },
   "byAgency": {
     "House": 1771,
     "Senate": 1390,
     "SI IL26-": 2,
-    "HR": 80,
+    "HR": 81,
     "EHR": 1,
-    "SR": 76,
+    "SR": 77,
     "SGA": 329
   },
-  "recentlyUpdated": 3649,
-  "updatedToday": 1058,
+  "recentlyUpdated": 3651,
+  "updatedToday": 1061,
   "topSponsors": [
     [
       "()",
@@ -788,11 +809,11 @@
       36
     ],
     [
-      "(Rule)",
-      34
+      "(Riccelli)",
+      35
     ],
     [
-      "(Riccelli)",
+      "(Rule)",
       34
     ],
     [
