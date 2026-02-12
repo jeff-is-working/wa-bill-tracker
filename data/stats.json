@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-12T04:34:44.313904",
-  "totalBills": 3651,
+  "generated": "2026-02-12T15:01:42.927074",
+  "totalBills": 3654,
   "byStatus": {
     "prefiled": 1908,
     "floor": 313,
     "enacted": 285,
-    "committee": 1083,
-    "passed_origin": 55,
+    "committee": 1109,
+    "passed_origin": 32,
     "introduced": 7
   },
   "byCommittee": {
-    "Unassigned": 3573,
+    "Unassigned": 3576,
     "Senate Labor & Commerce": 7,
     "Senate Business, Trade & Economic Development": 1,
     "Senate Housing": 3,
@@ -35,19 +35,19 @@
     "Senate Higher Education & Workforce Development": 4
   },
   "byPriority": {
-    "medium": 3294,
+    "medium": 3297,
     "high": 267,
     "low": 90
   },
   "byTopic": {
-    "General Government": 2189,
+    "General Government": 2190,
     "Public Safety": 129,
     "Housing": 111,
-    "Tax & Revenue": 277,
+    "Tax & Revenue": 278,
     "Transportation": 122,
     "Healthcare": 190,
     "Education": 257,
-    "Social Services": 104,
+    "Social Services": 105,
     "Environment": 92,
     "Business": 96,
     "Technology": 51,
@@ -310,7 +310,7 @@
     "CRJ(Taylor)": 2,
     "CRJ(Macri)": 1,
     "APP(Parshley)": 2,
-    "(Springer)": 11,
+    "(Springer)": 12,
     "TEDV(Stuebe)": 1,
     "(Zahn)": 19,
     "LAWS(Fosse)": 2,
@@ -339,7 +339,7 @@
     "CRJ(Thomas)": 1,
     "AGNR(Parshley)": 2,
     "CS(Lekanoff)": 2,
-    "(Chase)": 14,
+    "(Chase)": 15,
     "(Keaton)": 10,
     "HOUS(Lekanoff)": 1,
     "LAWS(Cortes)": 3,
@@ -483,7 +483,7 @@
     "(Lovick)": 30,
     "SGTE(Nobles)": 2,
     "HLTC(Chapman)": 2,
-    "(Wagoner)": 30,
+    "(Wagoner)": 31,
     "LC(Salda\u00f1a)": 10,
     "(Warnick)": 13,
     "EDU(Lovick)": 1,
@@ -762,27 +762,27 @@
     "()": 329
   },
   "byType": {
-    "HB": 1734,
+    "HB": 1736,
     "SB": 1352,
     "6-": 2,
     "JM": 33,
-    "JR": 25,
+    "JR": 26,
     "CR": 17,
     "HR": 82,
     "SR": 77,
     "GA": 329
   },
   "byAgency": {
-    "House": 1771,
-    "Senate": 1390,
+    "House": 1773,
+    "Senate": 1391,
     "SI IL26-": 2,
     "HR": 81,
     "EHR": 1,
     "SR": 77,
     "SGA": 329
   },
-  "recentlyUpdated": 3651,
-  "updatedToday": 1061,
+  "recentlyUpdated": 3654,
+  "updatedToday": 1064,
   "topSponsors": [
     [
       "()",
@@ -825,6 +825,10 @@
       31
     ],
     [
+      "(Wagoner)",
+      31
+    ],
+    [
       "(Liias)",
       31
     ],
@@ -834,10 +838,6 @@
     ],
     [
       "(Lovick)",
-      30
-    ],
-    [
-      "(Wagoner)",
       30
     ],
     [
