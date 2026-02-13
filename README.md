@@ -1,3 +1,9 @@
+---
+title: WA Legislative Tracker 2026
+scope: Project overview, features, getting started, and usage
+last_updated: 2026-02-11
+---
+
 # WA Legislative Tracker 2026
 
 A free, open-source bill tracking app for the Washington State Legislature 2025-26 biennium. Track 3,600+ bills, add notes, share with others — no account required.

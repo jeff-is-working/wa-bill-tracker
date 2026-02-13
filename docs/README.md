@@ -1,3 +1,9 @@
+---
+title: Documentation Index
+scope: Navigation hub for all WA Bill Tracker technical documentation
+last_updated: 2026-02-11
+---
+
 # Documentation
 
 > WA Bill Tracker — Technical Documentation Index

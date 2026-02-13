@@ -367,19 +367,19 @@ When a new legislative session starts:
 ### PR Template
 
 ```markdown
-## Description
+**Description**
 Brief description of changes
 
-## Type of Change
+**Type of Change**
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Documentation update
 - [ ] Refactoring
 
-## Testing
+**Testing**
 Describe how you tested the changes
 
-## Checklist
+**Checklist**
 - [ ] Tests pass
 - [ ] Documentation updated
 - [ ] No breaking changes
