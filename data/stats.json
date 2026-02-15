@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-15T04:31:06.624522",
-  "totalBills": 3659,
+  "generated": "2026-02-15T10:49:35.700059",
+  "totalBills": 3656,
   "byStatus": {
-    "prefiled": 1950,
-    "floor": 288,
+    "prefiled": 1957,
+    "committee": 1087,
     "enacted": 285,
-    "committee": 1074,
-    "passed_origin": 55,
-    "introduced": 7
+    "floor": 245,
+    "passed_origin": 76,
+    "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3447,
+    "Unassigned": 3445,
     "Senate Labor & Commerce": 9,
     "Senate Business, Trade & Economic Development": 5,
     "Senate Health & Long-Term Care": 8,
@@ -20,7 +20,6 @@
     "Senate State Government, Tribal Affairs & Elections": 15,
     "Senate Ways & Means": 15,
     "Senate Early Learning & K-12 Education": 6,
-    "House Consumer Protection & Business": 5,
     "Senate Law & Justice": 7,
     "Senate Agriculture & Natural Resources": 2,
     "Senate Higher Education & Workforce Development": 10,
@@ -34,6 +33,7 @@
     "House Civil Rights & Judiciary": 9,
     "House Health Care & Wellness": 12,
     "House Education": 9,
+    "House Consumer Protection & Business": 4,
     "House Technology, Economic Development, & Veterans": 4,
     "House Local Government": 5,
     "House State Government & Tribal Relations": 4,
@@ -42,18 +42,18 @@
     "House Environment & Energy": 5
   },
   "byPriority": {
-    "medium": 3301,
+    "medium": 3298,
     "high": 267,
     "low": 91
   },
   "byTopic": {
-    "General Government": 2196,
+    "General Government": 2195,
     "Public Safety": 129,
     "Housing": 111,
-    "Tax & Revenue": 278,
+    "Tax & Revenue": 277,
     "Transportation": 122,
     "Healthcare": 189,
-    "Education": 257,
+    "Education": 256,
     "Social Services": 105,
     "Environment": 92,
     "Business": 96,
@@ -168,7 +168,7 @@
     "CS(Ryu)": 1,
     "APP(Thai)": 5,
     "CPB(Mena)": 1,
-    "FIN(Barnard)": 4,
+    "FIN(Barnard)": 3,
     "LG(Alvarado)": 1,
     "(Thai)": 29,
     "APP(Farivar)": 1,
@@ -577,7 +577,7 @@
     "EDU(Wellman)": 6,
     "LC(Conway)": 4,
     "WM(Nobles)": 3,
-    "EDU(Cortes)": 7,
+    "EDU(Cortes)": 6,
     "WM(Trudeau)": 4,
     "HLTC(Wagoner)": 1,
     "(Salomon)": 17,
@@ -597,7 +597,7 @@
     "LAW(Wagoner)": 3,
     "HS(Hansen)": 1,
     "ENET(Slatter)": 2,
-    "LAW(Muzzall)": 2,
+    "LAW(Muzzall)": 1,
     "HLTC(Slatter)": 6,
     "ENET(Liias)": 5,
     "(Orwall)": 13,
@@ -769,8 +769,8 @@
     "()": 329
   },
   "byType": {
-    "HB": 1738,
-    "SB": 1353,
+    "HB": 1737,
+    "SB": 1351,
     "6-": 2,
     "JM": 34,
     "JR": 26,
@@ -780,16 +780,16 @@
     "GA": 329
   },
   "byAgency": {
-    "House": 1776,
-    "Senate": 1392,
+    "House": 1775,
+    "Senate": 1390,
     "SI IL26-": 2,
     "HR": 81,
     "EHR": 1,
     "SR": 78,
     "SGA": 329
   },
-  "recentlyUpdated": 3659,
-  "updatedToday": 1067,
+  "recentlyUpdated": 3656,
+  "updatedToday": 3656,
   "topSponsors": [
     [
       "()",
