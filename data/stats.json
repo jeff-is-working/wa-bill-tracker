@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-15T10:49:35.700059",
-  "totalBills": 3656,
+  "generated": "2026-02-15T14:38:45.910188",
+  "totalBills": 3657,
   "byStatus": {
     "prefiled": 1957,
     "committee": 1087,
     "enacted": 285,
-    "floor": 245,
+    "floor": 246,
     "passed_origin": 76,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3445,
+    "Unassigned": 3446,
     "Senate Labor & Commerce": 9,
     "Senate Business, Trade & Economic Development": 5,
     "Senate Health & Long-Term Care": 8,
@@ -42,7 +42,7 @@
     "House Environment & Energy": 5
   },
   "byPriority": {
-    "medium": 3298,
+    "medium": 3299,
     "high": 267,
     "low": 91
   },
@@ -53,7 +53,7 @@
     "Tax & Revenue": 277,
     "Transportation": 122,
     "Healthcare": 189,
-    "Education": 256,
+    "Education": 257,
     "Social Services": 105,
     "Environment": 92,
     "Business": 96,
@@ -577,7 +577,7 @@
     "EDU(Wellman)": 6,
     "LC(Conway)": 4,
     "WM(Nobles)": 3,
-    "EDU(Cortes)": 6,
+    "EDU(Cortes)": 7,
     "WM(Trudeau)": 4,
     "HLTC(Wagoner)": 1,
     "(Salomon)": 17,
@@ -770,7 +770,7 @@
   },
   "byType": {
     "HB": 1737,
-    "SB": 1351,
+    "SB": 1352,
     "6-": 2,
     "JM": 34,
     "JR": 26,
@@ -781,15 +781,15 @@
   },
   "byAgency": {
     "House": 1775,
-    "Senate": 1390,
+    "Senate": 1391,
     "SI IL26-": 2,
     "HR": 81,
     "EHR": 1,
     "SR": 78,
     "SGA": 329
   },
-  "recentlyUpdated": 3656,
-  "updatedToday": 3656,
+  "recentlyUpdated": 3657,
+  "updatedToday": 3657,
   "topSponsors": [
     [
       "()",
