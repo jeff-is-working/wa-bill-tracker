@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-15T14:38:45.910188",
+  "generated": "2026-02-16T04:34:59.570483",
   "totalBills": 3657,
   "byStatus": {
     "prefiled": 1957,
@@ -10,11 +10,11 @@
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3446,
+    "Unassigned": 3445,
     "Senate Labor & Commerce": 9,
     "Senate Business, Trade & Economic Development": 5,
     "Senate Health & Long-Term Care": 8,
-    "Senate Environment, Energy & Technology": 8,
+    "Senate Environment, Energy & Technology": 9,
     "Senate Housing": 11,
     "Senate Human Services": 5,
     "Senate State Government, Tribal Affairs & Elections": 15,
@@ -789,7 +789,7 @@
     "SGA": 329
   },
   "recentlyUpdated": 3657,
-  "updatedToday": 3657,
+  "updatedToday": 1067,
   "topSponsors": [
     [
       "()",
