@@ -1,23 +1,10 @@
 ---
 title: Architecture & Data Flow
 scope: System design, data pipeline, and SOAP API integration
-last_updated: 2026-02
+last_updated: 2026-02-19
 ---
 
 # Architecture & Data Flow
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [High-Level Architecture](#high-level-architecture)
-3. [Technology Stack](#technology-stack)
-4. [Data Pipeline](#data-pipeline)
-5. [SOAP API Reference](#soap-api-reference)
-6. [Data Storage](#data-storage)
-7. [Design Decisions](#design-decisions)
-8. [Scalability](#scalability)
-
----
 
 ## Overview
 

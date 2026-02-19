@@ -1,23 +1,10 @@
 ---
 title: Deployment & Operations
 scope: Infrastructure, CI/CD, operational procedures, and troubleshooting
-last_updated: 2026-02
+last_updated: 2026-02-19
 ---
 
 # Deployment & Operations
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [GitHub Pages Setup](#github-pages-setup)
-3. [Custom Domain Setup](#custom-domain-setup)
-4. [CI/CD Workflows](#cicd-workflows)
-5. [Operations](#operations)
-6. [Incident Response & Rollback](#incident-response--rollback)
-7. [Troubleshooting](#troubleshooting)
-8. [Checklists](#checklists)
-
----
 
 ## Overview
 
@@ -665,11 +652,4 @@ If issues persist:
 - [ ] Monitor data file sizes
 - [ ] Verify cutoff dates are correct
 
----
-
-## Related Documentation
-
-- [Architecture & Data Flow](ARCHITECTURE.md) — System design, data pipeline, SOAP API integration
-- [Frontend](FRONTEND.md) — Client-side app architecture, state management, rendering
-- [Developer Guide](DEVELOPER_GUIDE.md) — Development setup, coding standards, contributing
-- [Security](SECURITY.md) — Threat model, CSP headers, data privacy
+**See also:** [Architecture](ARCHITECTURE.md) · [Frontend](FRONTEND.md) · [Developer Guide](DEVELOPER_GUIDE.md) · [Security](SECURITY.md)

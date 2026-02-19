@@ -1,23 +1,10 @@
 ---
 title: Developer Guide
 scope: Development setup, coding standards, testing, and contributing
-last_updated: 2026-02
+last_updated: 2026-02-19
 ---
 
 # Developer Guide
-
-## Table of Contents
-
-1. [Quick Start](#quick-start)
-2. [Development Environment](#development-environment)
-3. [Local Development](#local-development)
-4. [Coding Standards](#coding-standards)
-5. [Testing](#testing)
-6. [Adding Features](#adding-features)
-7. [Common Development Tasks](#common-development-tasks)
-8. [Pull Request Process](#pull-request-process)
-
----
 
 ## Quick Start
 
@@ -406,11 +393,4 @@ flowchart LR
 5. Merge when approved
 6. Deployment triggers automatically via GitHub Pages
 
----
-
-## See Also
-
-- [Architecture](ARCHITECTURE.md) -- System design, data flow, API integration
-- [Frontend](FRONTEND.md) -- App state, rendering, UI components
-- [Deployment](DEPLOYMENT.md) -- CI/CD pipelines, GitHub Pages, sync schedule
-- [Security](SECURITY.md) -- CSP headers, data handling, threat model
+**See also:** [Architecture](ARCHITECTURE.md) · [Frontend](FRONTEND.md) · [Deployment](DEPLOYMENT.md) · [Security](SECURITY.md)

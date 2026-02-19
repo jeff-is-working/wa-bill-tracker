@@ -1,7 +1,7 @@
 ---
 title: WA Legislative Tracker 2026
 scope: Project overview, features, getting started, and usage
-last_updated: 2026-02-11
+last_updated: 2026-02-19
 ---
 
 # WA Legislative Tracker 2026

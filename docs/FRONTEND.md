@@ -1,24 +1,10 @@
 ---
 title: Frontend Architecture
 scope: Client-side application architecture and components
-last_updated: 2026-02
+last_updated: 2026-02-19
 ---
 
 # Frontend Architecture
-
-**Contents:**
-[Overview](#overview) ·
-[Application Structure](#application-structure) ·
-[Configuration](#configuration-app_config) ·
-[State Management](#state-management-app_state) ·
-[UI Components](#ui-components) ·
-[Navigation & Routing](#navigation--routing) ·
-[Data Loading](#data-loading) ·
-[Filtering System](#filtering-system) ·
-[User Features](#user-features) ·
-[Rendering & Persistence](#rendering-pipeline)
-
----
 
 ## Overview
 
@@ -105,11 +91,11 @@ The layout uses CSS Grid with responsive breakpoints: single column on mobile (`
 
 ---
 
-## Configuration (APP_CONFIG)
+## Configuration & State
 
-The `APP_CONFIG` object in [`app.js`](../app.js) contains all application constants.
+### APP_CONFIG
 
-### Core Settings
+The `APP_CONFIG` object in [`app.js`](../app.js) contains all application constants:
 
 ```javascript
 const APP_CONFIG = {
@@ -173,9 +159,7 @@ APP_CONFIG.billTypes = {
 };
 ```
 
----
-
-## State Management (APP_STATE)
+### APP_STATE
 
 The `APP_STATE` object holds all runtime application state. For the full structure, see [`app.js`](../app.js).
 

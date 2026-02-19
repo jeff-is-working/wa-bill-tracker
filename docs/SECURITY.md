@@ -1,7 +1,7 @@
 ---
 title: Security Documentation
 scope: Security model, practices, and considerations
-last_updated: 2026-02
+last_updated: 2026-02-19
 ---
 
 # Security Documentation
@@ -340,9 +340,7 @@ flowchart LR
     REPORT["Report"] --> ASSESS["Assess\nSeverity"] --> FIX["Develop\nFix"] --> TEST["Test"] --> DEPLOY["Deploy"] --> DISCLOSE["Disclose"]
 ```
 
----
-
-## Security Limitations
+### Known Limitations
 
 | Limitation | Risk | Mitigation |
 |------------|------|------------|
@@ -351,15 +349,6 @@ flowchart LR
 | No authentication | Low | Public data only |
 | Cookie storage | Low | SameSite + Secure flags |
 
-### Not In Scope
-
 These security concerns don't apply to this application: SQL injection (no database), authentication bypass (no auth), session hijacking (no sessions), and server-side vulnerabilities (no server).
 
----
-
-## Related Documentation
-
-- [Architecture & Data Flow](ARCHITECTURE.md) -- Security architecture context
-- [Deployment & Operations](DEPLOYMENT.md) -- Secure deployment, infrastructure
-- [Developer Guide](DEVELOPER_GUIDE.md) -- Secure coding practices
-- [Frontend](FRONTEND.md) -- Client-side security (escapeHTML, CSP)
+**See also:** [Architecture](ARCHITECTURE.md) · [Deployment](DEPLOYMENT.md) · [Developer Guide](DEVELOPER_GUIDE.md) · [Frontend](FRONTEND.md)
