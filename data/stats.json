@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-19T04:30:20.697635",
-  "totalBills": 3667,
+  "generated": "2026-02-19T15:03:46.703472",
+  "totalBills": 3670,
   "byStatus": {
     "prefiled": 2006,
-    "committee": 1135,
+    "committee": 1149,
     "enacted": 285,
     "floor": 193,
-    "passed_origin": 42,
+    "passed_origin": 31,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3312,
+    "Unassigned": 3314,
     "Senate Labor & Commerce": 25,
     "Senate Environment, Energy & Technology": 14,
     "Senate Health & Long-Term Care": 16,
@@ -21,7 +21,7 @@
     "Senate Law & Justice": 16,
     "Senate Housing": 10,
     "Senate State Government, Tribal Affairs & Elections": 19,
-    "Senate Transportation": 11,
+    "Senate Transportation": 12,
     "House Postsecondary Education & Workforce": 6,
     "Senate Agriculture & Natural Resources": 8,
     "Senate Local Government": 4,
@@ -45,7 +45,7 @@
     "House Environment & Energy": 5
   },
   "byPriority": {
-    "medium": 3308,
+    "medium": 3311,
     "high": 268,
     "low": 91
   },
@@ -53,8 +53,8 @@
     "General Government": 2200,
     "Public Safety": 129,
     "Housing": 111,
-    "Tax & Revenue": 277,
-    "Transportation": 123,
+    "Tax & Revenue": 279,
+    "Transportation": 124,
     "Healthcare": 191,
     "Education": 257,
     "Social Services": 106,
@@ -100,7 +100,7 @@
     "(Fosse)": 9,
     "LAWS(Davis)": 1,
     "ENVI(Fey)": 2,
-    "(Walen)": 20,
+    "(Walen)": 22,
     "HCW(Walen)": 1,
     "CPB(Walen)": 3,
     "ED(Ortiz-Self)": 3,
@@ -516,7 +516,7 @@
     "HS(Salomon)": 1,
     "LGV(Warnick)": 2,
     "LC(Warnick)": 1,
-    "(Liias)": 33,
+    "(Liias)": 34,
     "WM(Holy)": 2,
     "TRAN(Conway)": 1,
     "(Stanford)": 14,
@@ -772,27 +772,27 @@
     "()": 329
   },
   "byType": {
-    "HB": 1737,
-    "SB": 1355,
+    "HB": 1738,
+    "SB": 1356,
     "6-": 2,
     "JM": 34,
-    "JR": 26,
+    "JR": 27,
     "CR": 17,
     "HR": 86,
     "SR": 81,
     "GA": 329
   },
   "byAgency": {
-    "House": 1775,
-    "Senate": 1394,
+    "House": 1777,
+    "Senate": 1395,
     "SI IL26-": 2,
     "HR": 85,
     "EHR": 1,
     "SR": 81,
     "SGA": 329
   },
-  "recentlyUpdated": 3667,
-  "updatedToday": 1077,
+  "recentlyUpdated": 3670,
+  "updatedToday": 1080,
   "topSponsors": [
     [
       "()",
@@ -828,7 +828,7 @@
     ],
     [
       "(Liias)",
-      33
+      34
     ],
     [
       "(Wellman)",
