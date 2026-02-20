@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-20T04:29:10.108320",
-  "totalBills": 3673,
+  "generated": "2026-02-20T14:51:50.285780",
+  "totalBills": 3678,
   "byStatus": {
     "prefiled": 2054,
-    "committee": 1146,
+    "committee": 1151,
     "enacted": 285,
     "floor": 151,
     "passed_origin": 31,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3305,
+    "Unassigned": 3310,
     "Senate Labor & Commerce": 25,
     "Senate Environment, Energy & Technology": 17,
     "Senate Health & Long-Term Care": 13,
@@ -45,13 +45,13 @@
     "House Early Learning & Human Services": 5
   },
   "byPriority": {
-    "medium": 3313,
+    "medium": 3318,
     "high": 269,
     "low": 91
   },
   "byTopic": {
-    "General Government": 2202,
-    "Public Safety": 130,
+    "General Government": 2206,
+    "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 279,
     "Transportation": 124,
@@ -79,7 +79,7 @@
     "CB(Kloba)": 1,
     "(Goodman)": 6,
     "(Reeves)": 36,
-    "(Stonier)": 19,
+    "(Stonier)": 20,
     "(Couture)": 36,
     "(Ortiz-Self)": 5,
     "PEW(Ortiz-Self)": 1,
@@ -769,10 +769,10 @@
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
-    "()": 329
+    "()": 333
   },
   "byType": {
-    "HB": 1738,
+    "HB": 1739,
     "SB": 1356,
     "6-": 2,
     "JM": 34,
@@ -780,23 +780,23 @@
     "CR": 17,
     "HR": 87,
     "SR": 83,
-    "GA": 329
+    "GA": 333
   },
   "byAgency": {
-    "House": 1777,
+    "House": 1778,
     "Senate": 1395,
     "SI IL26-": 2,
     "HR": 86,
     "EHR": 1,
     "SR": 83,
-    "SGA": 329
+    "SGA": 333
   },
-  "recentlyUpdated": 3673,
-  "updatedToday": 1075,
+  "recentlyUpdated": 3678,
+  "updatedToday": 1080,
   "topSponsors": [
     [
       "()",
-      329
+      333
     ],
     [
       "(Fortunato)",
