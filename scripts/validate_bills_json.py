@@ -23,7 +23,8 @@ REQUIRED_FIELDS = {"id", "number", "title", "status", "priority", "topic", "sess
 
 VALID_STATUSES = {
     "prefiled", "introduced", "committee", "floor",
-    "passed_origin", "opposite_chamber", "passed_both",
+    "passed_origin", "opposite_committee", "opposite_floor",
+    "passed_legislature", "passed_both",
     "governor", "enacted", "partial_veto", "vetoed", "failed"
 }
 

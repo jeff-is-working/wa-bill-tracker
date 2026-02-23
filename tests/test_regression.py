@@ -114,7 +114,7 @@ class TestBillsJSONStructure(unittest.TestCase):
             self.skipTest("No bills.json available")
         
         valid_statuses = ['prefiled', 'introduced', 'committee', 'floor',
-                          'passed_origin', 'opposite_chamber', 'passed_both',
+                          'passed_origin', 'opposite_committee', 'opposite_floor',
                           'passed_legislature', 'governor', 'enacted',
                           'partial_veto', 'vetoed', 'failed']
         

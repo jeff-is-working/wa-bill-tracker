@@ -451,17 +451,25 @@ def normalize_status(status: str, history_line: str = "", original_agency: str =
       passed_legislature, governor, enacted,
       vetoed, failed
     """
-    status_lower = (status or "").lower()
+    status_lower = (status or "").lower().strip()
     history_lower = (history_line or "").lower()
     agency_lower = (original_agency or "").lower()
 
-    # Determine the opposite chamber name for cross-chamber detection
+    # Determine the opposite chamber name for cross-chamber detection.
+    # The WA API status field uses a chamber prefix: "H " for House, "S " for Senate
+    # (e.g., "S Ways & Means" = Senate committee, "H Approps" = House committee).
     if "house" in agency_lower:
         opposite = "senate"
+        origin_prefix = "h "
+        opposite_prefix = "s "
     elif "senate" in agency_lower:
         opposite = "house"
+        origin_prefix = "s "
+        opposite_prefix = "h "
     else:
         opposite = ""
+        origin_prefix = ""
+        opposite_prefix = ""
 
     # --- Post-legislature stages (check first, most specific) ---
     if history_lower:
@@ -479,7 +487,19 @@ def normalize_status(status: str, history_line: str = "", original_agency: str =
         if "died" in history_lower or "failed" in history_lower:
             return "failed"
 
-    # --- Cross-chamber / passed stages ---
+    # --- Cross-chamber detection via API status prefix ---
+    # The API status field reliably indicates which chamber the bill is in.
+    # A House bill with status "S ..." is in the Senate (opposite chamber).
+    if opposite_prefix and status_lower.startswith(opposite_prefix):
+        # Bill is in the opposite chamber — determine committee vs floor stage
+        if any(kw in status_lower for kw in ["rules", "2nd reading", "3rd reading"]):
+            return "opposite_floor"
+        # "Third reading, passed" in opposite chamber = passed legislature
+        if "third reading" in history_lower and "passed" in history_lower:
+            return "passed_legislature"
+        return "opposite_committee"
+
+    # --- Cross-chamber / passed stages (history-based fallback) ---
     if history_lower:
         # Both chambers mentioned in "passed" context = passed legislature
         if "passed" in history_lower and "house" in history_lower and "senate" in history_lower:
@@ -495,11 +515,6 @@ def normalize_status(status: str, history_line: str = "", original_agency: str =
         # Detect cross-chamber referral: origin=House but "referred to Senate ..."
         if opposite and f"referred to {opposite}" in history_lower:
             return "opposite_committee"
-        if opposite and f"first reading" in history_lower:
-            # "First reading" with no "referred to" in origin context = introduced
-            # But if it references the opposite chamber it crossed over
-            # This is ambiguous; use the simpler "first reading" = introduced in origin
-            pass
 
     # --- Origin chamber stages ---
     if status_lower:

@@ -429,7 +429,11 @@ class TestDataOutputFormat(unittest.TestCase):
     
     def test_status_values(self):
         """Test that status values match app.js expected values"""
-        valid_statuses = ["prefiled", "introduced", "committee", "passed", "failed", "enacted", "vetoed"]
+        valid_statuses = ["prefiled", "introduced", "committee", "floor",
+                          "passed_origin", "opposite_committee", "opposite_floor",
+                          "passed_legislature", "governor", "enacted",
+                          "partial_veto", "vetoed", "failed",
+                          "passed"]  # legacy alias
         
         # Test normalization produces valid values
         test_cases = [

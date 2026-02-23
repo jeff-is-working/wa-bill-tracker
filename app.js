@@ -25,9 +25,9 @@ const APP_CONFIG = {
         { date: '2026-02-09', label: 'Fiscal Committee (Origin)', failsBefore: ['prefiled', 'introduced', 'committee'] },
         { date: '2026-02-17', label: 'House of Origin', failsBefore: ['prefiled', 'introduced', 'committee', 'floor'] },
         { date: '2026-02-25', label: 'Policy Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin'] },
-        { date: '2026-03-04', label: 'Fiscal Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber'] },
-        { date: '2026-03-06', label: 'Opposite House', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber'] },
-        { date: '2026-03-12', label: 'Sine Die', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_chamber', 'passed_both', 'passed_legislature'] },
+        { date: '2026-03-04', label: 'Fiscal Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_committee'] },
+        { date: '2026-03-06', label: 'Opposite House', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_committee', 'opposite_floor'] },
+        { date: '2026-03-12', label: 'Sine Die', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_committee', 'opposite_floor', 'passed_legislature'] },
     ],
     billTypes: {
         'all': { name: 'All Bills', description: 'Showing all Washington State legislative bills for the 2026 session' },
