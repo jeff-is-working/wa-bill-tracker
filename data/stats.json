@@ -1,16 +1,16 @@
 {
-  "generated": "2026-02-23T04:34:47.699266",
-  "totalBills": 3684,
+  "generated": "2026-02-23T15:01:14.427193",
+  "totalBills": 3685,
   "byStatus": {
     "prefiled": 2105,
-    "committee": 1148,
+    "committee": 1149,
     "enacted": 285,
     "floor": 121,
     "passed_origin": 19,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3362,
+    "Unassigned": 3363,
     "Senate Labor & Commerce": 18,
     "Senate Environment, Energy & Technology": 8,
     "Senate Health & Long-Term Care": 11,
@@ -47,10 +47,10 @@
   "byPriority": {
     "medium": 3324,
     "high": 269,
-    "low": 91
+    "low": 92
   },
   "byTopic": {
-    "General Government": 2212,
+    "General Government": 2213,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 279,
@@ -90,7 +90,7 @@
     "(Bronoske)": 13,
     "(Dent)": 22,
     "AGNR(Dent)": 2,
-    "(Farivar)": 20,
+    "(Farivar)": 21,
     "TEDV(Barnard)": 2,
     "(Barkis)": 16,
     "(Alvarado)": 15,
@@ -774,7 +774,7 @@
     "HB": 1739,
     "SB": 1355,
     "6-": 2,
-    "JM": 34,
+    "JM": 35,
     "JR": 27,
     "CR": 17,
     "HR": 91,
@@ -782,7 +782,7 @@
     "GA": 333
   },
   "byAgency": {
-    "House": 1778,
+    "House": 1779,
     "Senate": 1394,
     "SI IL26-": 2,
     "HR": 90,
@@ -790,8 +790,8 @@
     "SR": 86,
     "SGA": 333
   },
-  "recentlyUpdated": 3684,
-  "updatedToday": 1075,
+  "recentlyUpdated": 3685,
+  "updatedToday": 1076,
   "topSponsors": [
     [
       "()",
