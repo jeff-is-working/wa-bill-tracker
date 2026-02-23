@@ -1,6 +1,13 @@
 {
   "logs": [
     {
+      "timestamp": "2026-02-23T17:21:37.388605",
+      "status": "success",
+      "billsCount": 3685,
+      "biennium": "2025-26",
+      "year": 2026
+    },
+    {
       "timestamp": "2026-02-23T15:01:14.460976",
       "status": "success_incremental",
       "billsCount": 3685,
@@ -692,18 +699,6 @@
       "billsCount": 2945,
       "newBillsAdded": 2945,
       "nextSync": "2026-01-17T09:38:55.190043"
-    },
-    {
-      "timestamp": "2026-01-17T02:33:42.673477",
-      "status": "no_data",
-      "billsCount": 0,
-      "methodsUsed": [
-        "GetPreFiledLegislationInfo",
-        "GetLegislationByYear",
-        "GetLegislativeStatusChanges"
-      ],
-      "apiUrl": "https://wslwebservices.leg.wa.gov",
-      "nextSync": "2026-01-17T08:33:42.673483"
     }
   ]
 }
