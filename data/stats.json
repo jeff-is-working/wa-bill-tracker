@@ -1,5 +1,5 @@
 {
-  "generated": "2026-02-22T14:40:11.092355",
+  "generated": "2026-02-23T04:34:47.699266",
   "totalBills": 3684,
   "byStatus": {
     "prefiled": 2105,
@@ -14,13 +14,13 @@
     "Senate Labor & Commerce": 18,
     "Senate Environment, Energy & Technology": 8,
     "Senate Health & Long-Term Care": 11,
-    "Senate Ways & Means": 20,
+    "Senate Ways & Means": 19,
     "Senate Business, Trade & Economic Development": 5,
     "Senate Early Learning & K-12 Education": 12,
     "Senate Human Services": 13,
     "Senate Law & Justice": 17,
     "Senate State Government, Tribal Affairs & Elections": 19,
-    "Senate Transportation": 13,
+    "Senate Transportation": 14,
     "Senate Housing": 6,
     "House Early Learning & Human Services": 5,
     "House Postsecondary Education & Workforce": 6,
@@ -791,7 +791,7 @@
     "SGA": 333
   },
   "recentlyUpdated": 3684,
-  "updatedToday": 3684,
+  "updatedToday": 1075,
   "topSponsors": [
     [
       "()",
