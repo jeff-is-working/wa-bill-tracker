@@ -1,23 +1,23 @@
 {
-  "generated": "2026-02-24T04:28:00.080817",
-  "totalBills": 3688,
+  "generated": "2026-02-24T15:02:07.611437",
+  "totalBills": 3690,
   "byStatus": {
     "prefiled": 2077,
     "opposite_committee": 243,
     "enacted": 285,
-    "committee": 924,
+    "committee": 926,
     "floor": 120,
     "opposite_floor": 14,
     "passed_origin": 19,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3389,
+    "Unassigned": 3390,
     "Senate Labor & Commerce": 13,
     "Senate Business, Trade & Economic Development": 7,
     "Senate Environment, Energy & Technology": 8,
     "Senate Health & Long-Term Care": 11,
-    "Senate Ways & Means": 26,
+    "Senate Ways & Means": 27,
     "Senate Early Learning & K-12 Education": 12,
     "Senate Human Services": 13,
     "Senate Law & Justice": 10,
@@ -47,12 +47,12 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3327,
+    "medium": 3329,
     "high": 269,
     "low": 92
   },
   "byTopic": {
-    "General Government": 2215,
+    "General Government": 2217,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 280,
@@ -80,7 +80,7 @@
     "APP(Ryu)": 2,
     "CB(Kloba)": 1,
     "(Goodman)": 6,
-    "(Reeves)": 36,
+    "(Reeves)": 37,
     "(Stonier)": 20,
     "(Couture)": 36,
     "(Ortiz-Self)": 5,
@@ -226,7 +226,7 @@
     "SGOV(Mena)": 4,
     "AGNR(Goodman)": 1,
     "(Schmick)": 7,
-    "(Hunt)": 10,
+    "(Hunt)": 11,
     "(Lekanoff)": 16,
     "LAWS(Obras)": 2,
     "(Richards)": 22,
@@ -773,8 +773,8 @@
     "()": 333
   },
   "byType": {
-    "HB": 1740,
-    "SB": 1355,
+    "HB": 1741,
+    "SB": 1356,
     "6-": 2,
     "JM": 35,
     "JR": 27,
@@ -784,16 +784,16 @@
     "GA": 333
   },
   "byAgency": {
-    "House": 1780,
-    "Senate": 1394,
+    "House": 1781,
+    "Senate": 1395,
     "SI IL26-": 2,
     "HR": 90,
     "EHR": 1,
     "SR": 88,
     "SGA": 333
   },
-  "recentlyUpdated": 3688,
-  "updatedToday": 1077,
+  "recentlyUpdated": 3690,
+  "updatedToday": 1079,
   "topSponsors": [
     [
       "()",
@@ -808,12 +808,12 @@
       46
     ],
     [
-      "(Braun)",
+      "(Reeves)",
       37
     ],
     [
-      "(Reeves)",
-      36
+      "(Braun)",
+      37
     ],
     [
       "(Couture)",
