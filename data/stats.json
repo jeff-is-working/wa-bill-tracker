@@ -1,18 +1,18 @@
 {
-  "generated": "2026-02-25T04:33:20.004873",
-  "totalBills": 3695,
+  "generated": "2026-02-25T15:03:02.618718",
+  "totalBills": 3696,
   "byStatus": {
     "prefiled": 2082,
     "opposite_committee": 235,
     "enacted": 285,
-    "committee": 926,
+    "committee": 927,
     "opposite_floor": 22,
     "floor": 120,
     "passed_origin": 19,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3470,
+    "Unassigned": 3471,
     "Senate Labor & Commerce": 6,
     "Senate Business, Trade & Economic Development": 6,
     "Senate Ways & Means": 29,
@@ -44,12 +44,12 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3334,
+    "medium": 3335,
     "high": 269,
     "low": 92
   },
   "byTopic": {
-    "General Government": 2222,
+    "General Government": 2223,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 280,
@@ -234,7 +234,7 @@
     "ELHS(Barnard)": 1,
     "(Griffey)": 12,
     "ELHS(Bernbaum)": 3,
-    "(Bernbaum)": 15,
+    "(Bernbaum)": 16,
     "LG(Ramel)": 1,
     "FIN(Bergquist)": 2,
     "APP(Stonier)": 3,
@@ -770,7 +770,7 @@
     "()": 333
   },
   "byType": {
-    "HB": 1741,
+    "HB": 1742,
     "SB": 1356,
     "6-": 2,
     "JM": 35,
@@ -781,7 +781,7 @@
     "GA": 333
   },
   "byAgency": {
-    "House": 1781,
+    "House": 1782,
     "Senate": 1395,
     "SI IL26-": 2,
     "HR": 93,
@@ -789,8 +789,8 @@
     "SR": 90,
     "SGA": 333
   },
-  "recentlyUpdated": 3695,
-  "updatedToday": 1079,
+  "recentlyUpdated": 3696,
+  "updatedToday": 1080,
   "topSponsors": [
     [
       "()",
