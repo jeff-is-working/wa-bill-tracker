@@ -1,18 +1,18 @@
 {
-  "generated": "2026-02-26T04:30:01.805623",
-  "totalBills": 3698,
+  "generated": "2026-02-26T14:59:51.238674",
+  "totalBills": 3700,
   "byStatus": {
     "prefiled": 2084,
-    "opposite_committee": 207,
+    "opposite_committee": 183,
     "enacted": 285,
-    "committee": 927,
-    "opposite_floor": 50,
+    "committee": 929,
+    "opposite_floor": 74,
     "floor": 120,
     "passed_origin": 19,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3492,
+    "Unassigned": 3494,
     "Senate Labor & Commerce": 6,
     "Senate Ways & Means": 46,
     "Senate Business, Trade & Economic Development": 3,
@@ -44,15 +44,15 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3337,
+    "medium": 3339,
     "high": 269,
     "low": 92
   },
   "byTopic": {
-    "General Government": 2225,
+    "General Government": 2226,
     "Public Safety": 131,
     "Housing": 111,
-    "Tax & Revenue": 280,
+    "Tax & Revenue": 281,
     "Transportation": 124,
     "Healthcare": 190,
     "Education": 257,
@@ -79,7 +79,7 @@
     "(Goodman)": 6,
     "(Reeves)": 37,
     "(Stonier)": 20,
-    "(Couture)": 36,
+    "(Couture)": 37,
     "(Ortiz-Self)": 5,
     "PEW(Ortiz-Self)": 1,
     "FIN(Dent)": 2,
@@ -534,7 +534,7 @@
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
     "LC(Valdez)": 2,
-    "(Hasegawa)": 29,
+    "(Hasegawa)": 30,
     "LC(Hasegawa)": 1,
     "LAW(Orwall)": 7,
     "SGTE(Trudeau)": 1,
@@ -770,8 +770,8 @@
     "()": 333
   },
   "byType": {
-    "HB": 1742,
-    "SB": 1356,
+    "HB": 1743,
+    "SB": 1357,
     "6-": 2,
     "JM": 35,
     "JR": 27,
@@ -781,16 +781,16 @@
     "GA": 333
   },
   "byAgency": {
-    "House": 1782,
-    "Senate": 1395,
+    "House": 1783,
+    "Senate": 1396,
     "SI IL26-": 2,
     "HR": 94,
     "EHR": 1,
     "SR": 91,
     "SGA": 333
   },
-  "recentlyUpdated": 3698,
-  "updatedToday": 1076,
+  "recentlyUpdated": 3700,
+  "updatedToday": 1078,
   "topSponsors": [
     [
       "()",
@@ -809,12 +809,12 @@
       37
     ],
     [
-      "(Braun)",
+      "(Couture)",
       37
     ],
     [
-      "(Couture)",
-      36
+      "(Braun)",
+      37
     ],
     [
       "(Riccelli)",
@@ -857,11 +857,11 @@
       30
     ],
     [
-      "(Thai)",
-      29
+      "(Hasegawa)",
+      30
     ],
     [
-      "(Hasegawa)",
+      "(Thai)",
       29
     ],
     [
