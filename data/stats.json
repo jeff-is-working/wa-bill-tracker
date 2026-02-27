@@ -1,20 +1,21 @@
 {
-  "generated": "2026-02-26T14:59:51.238674",
-  "totalBills": 3700,
+  "generated": "2026-02-27T04:26:24.588437",
+  "totalBills": 3701,
   "byStatus": {
-    "prefiled": 2084,
+    "prefiled": 2139,
     "opposite_committee": 183,
     "enacted": 285,
     "committee": 929,
-    "opposite_floor": 74,
-    "floor": 120,
+    "opposite_floor": 70,
+    "floor": 66,
+    "passed_legislature": 4,
     "passed_origin": 19,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3494,
+    "Unassigned": 3506,
     "Senate Labor & Commerce": 6,
-    "Senate Ways & Means": 46,
+    "Senate Ways & Means": 28,
     "Senate Business, Trade & Economic Development": 3,
     "Senate Human Services": 4,
     "Senate State Government, Tribal Affairs & Elections": 11,
@@ -25,9 +26,9 @@
     "Senate Agriculture & Natural Resources": 5,
     "Senate Health & Long-Term Care": 3,
     "Senate Local Government": 1,
-    "House Appropriations": 28,
+    "House Appropriations": 38,
     "House Capital Budget": 3,
-    "House Transportation": 8,
+    "House Transportation": 4,
     "Senate Law & Justice": 1,
     "House Consumer Protection & Business": 4,
     "Senate Housing": 1,
@@ -35,7 +36,7 @@
     "House Environment & Energy": 2,
     "House State Government & Tribal Relations": 6,
     "House Education": 2,
-    "House Finance": 10,
+    "House Finance": 11,
     "House Technology, Economic Development, & Veterans": 2,
     "House Agriculture & Natural Resources": 2,
     "House Health Care & Wellness": 4,
@@ -44,12 +45,12 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3339,
+    "medium": 3340,
     "high": 269,
     "low": 92
   },
   "byTopic": {
-    "General Government": 2226,
+    "General Government": 2227,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 281,
@@ -544,7 +545,7 @@
     "HLTC(Valdez)": 1,
     "(Nobles)": 31,
     "HLTC(Frame)": 1,
-    "(Trudeau)": 11,
+    "(Trudeau)": 12,
     "EDU(Nobles)": 4,
     "TRAN(Lovick)": 1,
     "HSG(Pedersen)": 2,
@@ -777,7 +778,7 @@
     "JR": 27,
     "CR": 17,
     "HR": 95,
-    "SR": 91,
+    "SR": 92,
     "GA": 333
   },
   "byAgency": {
@@ -786,11 +787,11 @@
     "SI IL26-": 2,
     "HR": 94,
     "EHR": 1,
-    "SR": 91,
+    "SR": 92,
     "SGA": 333
   },
-  "recentlyUpdated": 3700,
-  "updatedToday": 1078,
+  "recentlyUpdated": 3701,
+  "updatedToday": 1075,
   "topSponsors": [
     [
       "()",
