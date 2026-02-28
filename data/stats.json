@@ -1,11 +1,11 @@
 {
-  "generated": "2026-02-28T04:08:28.994551",
-  "totalBills": 3708,
+  "generated": "2026-02-28T14:35:36.033394",
+  "totalBills": 3711,
   "byStatus": {
     "prefiled": 2145,
     "opposite_committee": 192,
     "enacted": 285,
-    "committee": 930,
+    "committee": 933,
     "opposite_floor": 61,
     "floor": 66,
     "passed_legislature": 4,
@@ -13,7 +13,7 @@
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3544,
+    "Unassigned": 3546,
     "Senate Labor & Commerce": 6,
     "Senate Business, Trade & Economic Development": 3,
     "Senate Human Services": 4,
@@ -34,9 +34,9 @@
     "Senate Housing": 1,
     "House Civil Rights & Judiciary": 6,
     "House Environment & Energy": 2,
+    "House Finance": 11,
     "House State Government & Tribal Relations": 6,
     "House Education": 2,
-    "House Finance": 10,
     "House Technology, Economic Development, & Veterans": 2,
     "House Agriculture & Natural Resources": 2,
     "House Health Care & Wellness": 4,
@@ -45,16 +45,16 @@
     "Senate Higher Education & Workforce Development": 11
   },
   "byPriority": {
-    "medium": 3346,
+    "medium": 3348,
     "high": 269,
-    "low": 93
+    "low": 94
   },
   "byTopic": {
     "General Government": 2232,
     "Public Safety": 131,
     "Housing": 111,
-    "Tax & Revenue": 282,
-    "Transportation": 124,
+    "Tax & Revenue": 284,
+    "Transportation": 125,
     "Healthcare": 190,
     "Education": 258,
     "Social Services": 107,
@@ -80,7 +80,7 @@
     "(Goodman)": 6,
     "(Reeves)": 37,
     "(Stonier)": 20,
-    "(Couture)": 38,
+    "(Couture)": 39,
     "(Ortiz-Self)": 5,
     "PEW(Ortiz-Self)": 1,
     "FIN(Dent)": 2,
@@ -131,7 +131,7 @@
     "HCW(Stonier)": 4,
     "CRJ(Farivar)": 2,
     "CS(Leavitt)": 2,
-    "(Bergquist)": 9,
+    "(Bergquist)": 10,
     "PEW(Leavitt)": 3,
     "CS(Peterson)": 1,
     "(Peterson)": 18,
@@ -266,7 +266,7 @@
     "TEDV(Walen)": 1,
     "TR(Bernbaum)": 3,
     "TR(Goodman)": 1,
-    "(Parshley)": 26,
+    "(Parshley)": 27,
     "CPB(Kloba)": 2,
     "ED(Santos)": 2,
     "CB(Duerr)": 1,
@@ -771,7 +771,7 @@
     "()": 333
   },
   "byType": {
-    "HB": 1744,
+    "HB": 1747,
     "SB": 1357,
     "6-": 2,
     "JM": 35,
@@ -782,7 +782,7 @@
     "GA": 333
   },
   "byAgency": {
-    "House": 1784,
+    "House": 1787,
     "Senate": 1396,
     "SI IL26-": 2,
     "HR": 99,
@@ -790,8 +790,8 @@
     "SR": 93,
     "SGA": 333
   },
-  "recentlyUpdated": 3708,
-  "updatedToday": 1080,
+  "recentlyUpdated": 3711,
+  "updatedToday": 1083,
   "topSponsors": [
     [
       "()",
@@ -807,7 +807,7 @@
     ],
     [
       "(Couture)",
-      38
+      39
     ],
     [
       "(Reeves)",
@@ -866,11 +866,11 @@
       29
     ],
     [
-      "(Cortes)",
+      "(Parshley)",
       27
     ],
     [
-      "(Wilson, J.)",
+      "(Cortes)",
       27
     ]
   ]
