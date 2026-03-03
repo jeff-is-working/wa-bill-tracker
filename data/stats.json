@@ -1,42 +1,41 @@
 {
-  "generated": "2026-03-02T14:54:50.583883",
-  "totalBills": 3710,
+  "generated": "2026-03-03T04:24:29.532893",
+  "totalBills": 3721,
   "byStatus": {
-    "prefiled": 2183,
-    "opposite_committee": 134,
+    "prefiled": 2193,
+    "opposite_committee": 93,
     "enacted": 285,
     "committee": 908,
-    "opposite_floor": 100,
-    "floor": 43,
+    "opposite_floor": 141,
+    "floor": 44,
     "passed_legislature": 15,
     "passed_origin": 36,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3591,
-    "Senate Ways & Means": 58,
-    "Senate Transportation": 11,
+    "Unassigned": 3682,
+    "Senate Ways & Means": 22,
+    "Senate Transportation": 2,
     "House Consumer Protection & Business": 2,
-    "House Appropriations": 25,
+    "House Appropriations": 4,
     "House Environment & Energy": 1,
-    "House Finance": 10,
-    "House Capital Budget": 4,
-    "House Transportation": 8
+    "House Finance": 6,
+    "House Capital Budget": 2
   },
   "byPriority": {
-    "medium": 3348,
+    "medium": 3359,
     "high": 269,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2232,
+    "General Government": 2242,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 283,
     "Transportation": 125,
     "Healthcare": 190,
     "Education": 258,
-    "Social Services": 107,
+    "Social Services": 108,
     "Environment": 92,
     "Business": 96,
     "Technology": 51,
@@ -46,7 +45,7 @@
     "(Walsh)": 21,
     "(Abbarno)": 16,
     "(Leavitt)": 23,
-    "(Ryu)": 13,
+    "(Ryu)": 14,
     "(Low)": 23,
     "(Jacobsen)": 10,
     "(Taylor)": 15,
@@ -57,7 +56,7 @@
     "APP(Ryu)": 2,
     "CB(Kloba)": 1,
     "(Goodman)": 6,
-    "(Reeves)": 37,
+    "(Reeves)": 40,
     "(Stonier)": 20,
     "(Couture)": 39,
     "(Ortiz-Self)": 5,
@@ -73,7 +72,7 @@
     "TEDV(Barnard)": 2,
     "(Barkis)": 16,
     "(Alvarado)": 15,
-    "(Santos)": 13,
+    "(Santos)": 14,
     "TR(Low)": 6,
     "CPB(Reeves)": 4,
     "(Fosse)": 9,
@@ -146,7 +145,7 @@
     "ELHS(Taylor)": 2,
     "TEDV(Leavitt)": 1,
     "CB(Tharinger)": 3,
-    "(Eslick)": 7,
+    "(Eslick)": 8,
     "CS(Ryu)": 1,
     "APP(Thai)": 5,
     "CPB(Mena)": 1,
@@ -204,7 +203,7 @@
     "AGNR(Goodman)": 1,
     "(Schmick)": 7,
     "(Hunt)": 11,
-    "(Lekanoff)": 17,
+    "(Lekanoff)": 18,
     "LAWS(Obras)": 2,
     "(Richards)": 22,
     "PEW(Pollet)": 4,
@@ -241,7 +240,7 @@
     "APP(Davis)": 3,
     "HCW(Simmons)": 4,
     "SGOV(Salahuddin)": 2,
-    "(Abell)": 17,
+    "(Abell)": 18,
     "TEDV(Walen)": 1,
     "TR(Bernbaum)": 3,
     "TR(Goodman)": 1,
@@ -253,7 +252,7 @@
     "(Cortes)": 27,
     "(Ramel)": 9,
     "TEDV(Gregerson)": 1,
-    "(Salahuddin)": 19,
+    "(Salahuddin)": 20,
     "PEW(Salahuddin)": 1,
     "FIN(Berg)": 4,
     "ELHS(Obras)": 1,
@@ -288,7 +287,7 @@
     "(Penner)": 8,
     "PEW(Paul)": 1,
     "APP(Timmons)": 1,
-    "(Dufault)": 30,
+    "(Dufault)": 31,
     "(Nance)": 4,
     "APP(Bergquist)": 4,
     "TR(Leavitt)": 1,
@@ -339,7 +338,7 @@
     "APP(Richards)": 2,
     "FIN(Paul)": 1,
     "CPB(Griffey)": 1,
-    "(Burnett)": 8,
+    "(Burnett)": 9,
     "FIN(Tharinger)": 1,
     "HOUS(Zahn)": 3,
     "HCW(Salahuddin)": 1,
@@ -756,7 +755,7 @@
     "JM": 35,
     "JR": 27,
     "CR": 17,
-    "HR": 100,
+    "HR": 111,
     "SR": 93,
     "GA": 333
   },
@@ -764,13 +763,13 @@
     "House": 1786,
     "Senate": 1396,
     "SI IL26-": 2,
-    "HR": 99,
+    "HR": 110,
     "EHR": 1,
     "SR": 93,
     "SGA": 333
   },
-  "recentlyUpdated": 3710,
-  "updatedToday": 1085,
+  "recentlyUpdated": 3721,
+  "updatedToday": 1096,
   "topSponsors": [
     [
       "()",
@@ -785,12 +784,12 @@
       46
     ],
     [
-      "(Couture)",
-      39
+      "(Reeves)",
+      40
     ],
     [
-      "(Reeves)",
-      37
+      "(Couture)",
+      39
     ],
     [
       "(Braun)",
@@ -807,6 +806,10 @@
     [
       "(Wellman)",
       32
+    ],
+    [
+      "(Dufault)",
+      31
     ],
     [
       "(Torres)",
@@ -831,10 +834,6 @@
     [
       "(Gildon)",
       31
-    ],
-    [
-      "(Dufault)",
-      30
     ],
     [
       "(Hasegawa)",
