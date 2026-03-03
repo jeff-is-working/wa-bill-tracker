@@ -1,19 +1,19 @@
 {
-  "generated": "2026-03-03T04:24:29.532893",
-  "totalBills": 3721,
+  "generated": "2026-03-03T14:58:23.511373",
+  "totalBills": 3723,
   "byStatus": {
     "prefiled": 2193,
-    "opposite_committee": 93,
+    "opposite_committee": 96,
     "enacted": 285,
-    "committee": 908,
+    "committee": 910,
     "opposite_floor": 141,
     "floor": 44,
     "passed_legislature": 15,
-    "passed_origin": 36,
+    "passed_origin": 33,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3682,
+    "Unassigned": 3684,
     "Senate Ways & Means": 22,
     "Senate Transportation": 2,
     "House Consumer Protection & Business": 2,
@@ -24,14 +24,14 @@
   },
   "byPriority": {
     "medium": 3359,
-    "high": 269,
+    "high": 271,
     "low": 93
   },
   "byTopic": {
     "General Government": 2242,
     "Public Safety": 131,
     "Housing": 111,
-    "Tax & Revenue": 283,
+    "Tax & Revenue": 285,
     "Transportation": 125,
     "Healthcare": 190,
     "Education": 258,
@@ -140,7 +140,7 @@
     "(Dye)": 9,
     "(Marshall)": 16,
     "CS(Simmons)": 1,
-    "(Ormsby)": 11,
+    "(Ormsby)": 12,
     "APP(Ormsby)": 6,
     "ELHS(Taylor)": 2,
     "TEDV(Leavitt)": 1,
@@ -508,7 +508,7 @@
     "ANR(Muzzall)": 2,
     "(Muzzall)": 18,
     "WM(Robinson)": 14,
-    "(Robinson)": 16,
+    "(Robinson)": 17,
     "LAW(Dhingra)": 5,
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
@@ -749,8 +749,8 @@
     "()": 333
   },
   "byType": {
-    "HB": 1746,
-    "SB": 1357,
+    "HB": 1747,
+    "SB": 1358,
     "6-": 2,
     "JM": 35,
     "JR": 27,
@@ -760,16 +760,16 @@
     "GA": 333
   },
   "byAgency": {
-    "House": 1786,
-    "Senate": 1396,
+    "House": 1787,
+    "Senate": 1397,
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
     "SR": 93,
     "SGA": 333
   },
-  "recentlyUpdated": 3721,
-  "updatedToday": 1096,
+  "recentlyUpdated": 3723,
+  "updatedToday": 1098,
   "topSponsors": [
     [
       "()",
