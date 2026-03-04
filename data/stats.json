@@ -1,34 +1,36 @@
 {
-  "generated": "2026-03-03T14:58:23.511373",
-  "totalBills": 3723,
+  "generated": "2026-03-04T04:17:08.232674",
+  "totalBills": 3724,
   "byStatus": {
-    "prefiled": 2193,
-    "opposite_committee": 96,
+    "prefiled": 2190,
+    "opposite_committee": 95,
     "enacted": 285,
     "committee": 910,
-    "opposite_floor": 141,
-    "floor": 44,
-    "passed_legislature": 15,
+    "opposite_floor": 120,
+    "governor": 7,
+    "passed_legislature": 35,
+    "floor": 43,
     "passed_origin": 33,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3684,
+    "Unassigned": 3680,
     "Senate Ways & Means": 22,
     "Senate Transportation": 2,
     "House Consumer Protection & Business": 2,
-    "House Appropriations": 4,
+    "House Appropriations": 6,
     "House Environment & Energy": 1,
     "House Finance": 6,
-    "House Capital Budget": 2
+    "House Capital Budget": 2,
+    "House Transportation": 3
   },
   "byPriority": {
-    "medium": 3359,
+    "medium": 3360,
     "high": 271,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2242,
+    "General Government": 2243,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -501,7 +503,7 @@
     "HLTC(Liias)": 2,
     "LAW(Hansen)": 3,
     "LAW(Lovick)": 3,
-    "(Salda\u00f1a)": 22,
+    "(Salda\u00f1a)": 23,
     "LAW(Braun)": 2,
     "ANR(Boehnke)": 2,
     "HLTC(Muzzall)": 3,
@@ -756,7 +758,7 @@
     "JR": 27,
     "CR": 17,
     "HR": 111,
-    "SR": 93,
+    "SR": 94,
     "GA": 333
   },
   "byAgency": {
@@ -765,11 +767,11 @@
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
-    "SR": 93,
+    "SR": 94,
     "SGA": 333
   },
-  "recentlyUpdated": 3723,
-  "updatedToday": 1098,
+  "recentlyUpdated": 3724,
+  "updatedToday": 1084,
   "topSponsors": [
     [
       "()",
