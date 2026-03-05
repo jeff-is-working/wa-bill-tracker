@@ -1,20 +1,20 @@
 {
-  "generated": "2026-03-05T04:22:42.073971",
-  "totalBills": 3725,
+  "generated": "2026-03-05T14:57:44.020809",
+  "totalBills": 3729,
   "byStatus": {
     "prefiled": 2197,
     "opposite_committee": 106,
     "enacted": 285,
-    "committee": 910,
-    "passed_legislature": 29,
-    "opposite_floor": 109,
+    "committee": 914,
+    "passed_legislature": 36,
+    "opposite_floor": 102,
     "governor": 7,
     "floor": 43,
     "passed_origin": 33,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3679,
+    "Unassigned": 3683,
     "Senate Ways & Means": 24,
     "House Transportation": 4,
     "Senate Transportation": 1,
@@ -25,12 +25,12 @@
     "House Capital Budget": 2
   },
   "byPriority": {
-    "medium": 3361,
+    "medium": 3365,
     "high": 271,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2244,
+    "General Government": 2248,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -289,7 +289,7 @@
     "(Penner)": 8,
     "PEW(Paul)": 1,
     "APP(Timmons)": 1,
-    "(Dufault)": 31,
+    "(Dufault)": 32,
     "(Nance)": 4,
     "APP(Bergquist)": 4,
     "TR(Leavitt)": 1,
@@ -748,10 +748,10 @@
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
-    "()": 333
+    "()": 336
   },
   "byType": {
-    "HB": 1747,
+    "HB": 1748,
     "SB": 1358,
     "6-": 2,
     "JM": 35,
@@ -759,23 +759,23 @@
     "CR": 17,
     "HR": 111,
     "SR": 95,
-    "GA": 333
+    "GA": 336
   },
   "byAgency": {
-    "House": 1787,
+    "House": 1788,
     "Senate": 1397,
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
     "SR": 95,
-    "SGA": 333
+    "SGA": 336
   },
-  "recentlyUpdated": 3725,
-  "updatedToday": 1084,
+  "recentlyUpdated": 3729,
+  "updatedToday": 1088,
   "topSponsors": [
     [
       "()",
-      333
+      336
     ],
     [
       "(Fortunato)",
@@ -806,12 +806,12 @@
       34
     ],
     [
-      "(Wellman)",
+      "(Dufault)",
       32
     ],
     [
-      "(Dufault)",
-      31
+      "(Wellman)",
+      32
     ],
     [
       "(Torres)",
