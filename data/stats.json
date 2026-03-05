@@ -1,36 +1,36 @@
 {
-  "generated": "2026-03-04T14:48:10.557726",
-  "totalBills": 3724,
+  "generated": "2026-03-05T04:22:42.073971",
+  "totalBills": 3725,
   "byStatus": {
-    "prefiled": 2190,
-    "opposite_committee": 95,
+    "prefiled": 2197,
+    "opposite_committee": 106,
     "enacted": 285,
     "committee": 910,
-    "opposite_floor": 119,
+    "passed_legislature": 29,
+    "opposite_floor": 109,
     "governor": 7,
-    "passed_legislature": 36,
     "floor": 43,
     "passed_origin": 33,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3680,
-    "Senate Ways & Means": 22,
-    "Senate Transportation": 2,
+    "Unassigned": 3679,
+    "Senate Ways & Means": 24,
+    "House Transportation": 4,
+    "Senate Transportation": 1,
     "House Consumer Protection & Business": 2,
     "House Appropriations": 6,
     "House Environment & Energy": 1,
     "House Finance": 6,
-    "House Capital Budget": 2,
-    "House Transportation": 3
+    "House Capital Budget": 2
   },
   "byPriority": {
-    "medium": 3360,
+    "medium": 3361,
     "high": 271,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2243,
+    "General Government": 2244,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -461,7 +461,7 @@
     "SGOV(Rude)": 1,
     "AGNR(Orcutt)": 1,
     "(Wilson, J.)": 27,
-    "(Fortunato)": 47,
+    "(Fortunato)": 48,
     "(Torres)": 31,
     "EDU(Torres)": 1,
     "HS(Salda\u00f1a)": 1,
@@ -758,7 +758,7 @@
     "JR": 27,
     "CR": 17,
     "HR": 111,
-    "SR": 94,
+    "SR": 95,
     "GA": 333
   },
   "byAgency": {
@@ -767,10 +767,10 @@
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
-    "SR": 94,
+    "SR": 95,
     "SGA": 333
   },
-  "recentlyUpdated": 3724,
+  "recentlyUpdated": 3725,
   "updatedToday": 1084,
   "topSponsors": [
     [
@@ -779,7 +779,7 @@
     ],
     [
       "(Fortunato)",
-      47
+      48
     ],
     [
       "(Boehnke)",
