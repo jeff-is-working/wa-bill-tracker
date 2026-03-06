@@ -1,22 +1,22 @@
 {
-  "generated": "2026-03-05T14:57:44.020809",
-  "totalBills": 3729,
+  "generated": "2026-03-06T04:17:38.251798",
+  "totalBills": 3730,
   "byStatus": {
-    "prefiled": 2197,
-    "opposite_committee": 106,
+    "prefiled": 2193,
+    "opposite_committee": 108,
     "enacted": 285,
     "committee": 914,
-    "passed_legislature": 36,
-    "opposite_floor": 102,
-    "governor": 7,
+    "passed_legislature": 40,
+    "opposite_floor": 92,
+    "governor": 16,
     "floor": 43,
     "passed_origin": 33,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3683,
+    "Unassigned": 3687,
     "Senate Ways & Means": 24,
-    "House Transportation": 4,
+    "House Transportation": 1,
     "Senate Transportation": 1,
     "House Consumer Protection & Business": 2,
     "House Appropriations": 6,
@@ -25,12 +25,12 @@
     "House Capital Budget": 2
   },
   "byPriority": {
-    "medium": 3365,
+    "medium": 3366,
     "high": 271,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2248,
+    "General Government": 2249,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -73,7 +73,7 @@
     "(Farivar)": 21,
     "TEDV(Barnard)": 2,
     "(Barkis)": 16,
-    "(Alvarado)": 15,
+    "(Alvarado)": 16,
     "(Santos)": 14,
     "TR(Low)": 6,
     "CPB(Reeves)": 4,
@@ -758,7 +758,7 @@
     "JR": 27,
     "CR": 17,
     "HR": 111,
-    "SR": 95,
+    "SR": 96,
     "GA": 336
   },
   "byAgency": {
@@ -767,11 +767,11 @@
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
-    "SR": 95,
+    "SR": 96,
     "SGA": 336
   },
-  "recentlyUpdated": 3729,
-  "updatedToday": 1088,
+  "recentlyUpdated": 3730,
+  "updatedToday": 1084,
   "topSponsors": [
     [
       "()",
