@@ -1,22 +1,22 @@
 {
-  "generated": "2026-03-06T14:47:18.297933",
+  "generated": "2026-03-07T04:09:47.998541",
   "totalBills": 3730,
   "byStatus": {
-    "prefiled": 2193,
+    "prefiled": 2202,
     "opposite_committee": 108,
     "enacted": 285,
     "committee": 914,
-    "passed_legislature": 41,
-    "opposite_floor": 91,
-    "governor": 16,
+    "passed_legislature": 45,
+    "opposite_floor": 75,
+    "governor": 19,
     "floor": 43,
     "passed_origin": 33,
     "introduced": 6
   },
   "byCommittee": {
-    "Unassigned": 3687,
+    "Unassigned": 3686,
     "Senate Ways & Means": 24,
-    "House Transportation": 1,
+    "House Transportation": 2,
     "Senate Transportation": 1,
     "House Consumer Protection & Business": 2,
     "House Appropriations": 6,
@@ -771,7 +771,7 @@
     "SGA": 336
   },
   "recentlyUpdated": 3730,
-  "updatedToday": 1084,
+  "updatedToday": 1083,
   "topSponsors": [
     [
       "()",
