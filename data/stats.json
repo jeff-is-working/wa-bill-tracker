@@ -1,28 +1,23 @@
 {
-  "generated": "2026-03-07T14:34:54.239162",
+  "generated": "2026-03-08T10:51:01.595893",
   "totalBills": 3730,
   "byStatus": {
-    "prefiled": 2202,
-    "opposite_committee": 108,
+    "prefiled": 2221,
+    "opposite_committee": 97,
     "enacted": 285,
-    "committee": 914,
-    "passed_legislature": 45,
-    "opposite_floor": 75,
-    "governor": 19,
-    "floor": 43,
-    "passed_origin": 33,
-    "introduced": 6
+    "committee": 906,
+    "passed_legislature": 65,
+    "opposite_floor": 50,
+    "governor": 35,
+    "floor": 47,
+    "passed_origin": 22,
+    "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3686,
-    "Senate Ways & Means": 24,
-    "House Transportation": 2,
-    "Senate Transportation": 1,
-    "House Consumer Protection & Business": 2,
-    "House Appropriations": 6,
-    "House Environment & Energy": 1,
-    "House Finance": 6,
-    "House Capital Budget": 2
+    "Unassigned": 3719,
+    "House Transportation": 4,
+    "Senate Ways & Means": 4,
+    "House Appropriations": 3
   },
   "byPriority": {
     "medium": 3366,
@@ -142,8 +137,8 @@
     "(Dye)": 9,
     "(Marshall)": 16,
     "CS(Simmons)": 1,
-    "(Ormsby)": 12,
-    "APP(Ormsby)": 6,
+    "(Ormsby)": 11,
+    "APP(Ormsby)": 7,
     "ELHS(Taylor)": 2,
     "TEDV(Leavitt)": 1,
     "CB(Tharinger)": 3,
@@ -204,13 +199,13 @@
     "SGOV(Mena)": 4,
     "AGNR(Goodman)": 1,
     "(Schmick)": 7,
-    "(Hunt)": 11,
+    "(Hunt)": 10,
     "(Lekanoff)": 18,
     "LAWS(Obras)": 2,
     "(Richards)": 22,
     "PEW(Pollet)": 4,
     "APP(Berg)": 3,
-    "APP(Gregerson)": 11,
+    "APP(Gregerson)": 12,
     "(Manjarrez)": 9,
     "ELHS(Barnard)": 1,
     "(Griffey)": 12,
@@ -219,7 +214,7 @@
     "LG(Ramel)": 1,
     "FIN(Bergquist)": 2,
     "APP(Stonier)": 3,
-    "(Gregerson)": 13,
+    "(Gregerson)": 12,
     "TEDV(Ryu)": 3,
     "(Orcutt)": 18,
     "TR(Orcutt)": 2,
@@ -251,7 +246,7 @@
     "ED(Santos)": 2,
     "CB(Duerr)": 1,
     "APP(Griffey)": 1,
-    "(Cortes)": 27,
+    "(Cortes)": 26,
     "(Ramel)": 9,
     "TEDV(Gregerson)": 1,
     "(Salahuddin)": 20,
@@ -509,8 +504,8 @@
     "HLTC(Muzzall)": 3,
     "ANR(Muzzall)": 2,
     "(Muzzall)": 18,
-    "WM(Robinson)": 14,
-    "(Robinson)": 17,
+    "WM(Robinson)": 16,
+    "(Robinson)": 15,
     "LAW(Dhingra)": 5,
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
@@ -556,7 +551,7 @@
     "HSG(Bateman)": 4,
     "HLTC(Salda\u00f1a)": 1,
     "WM(Krishnadasan)": 3,
-    "(Wellman)": 32,
+    "(Wellman)": 31,
     "EDU(Wellman)": 6,
     "LC(Conway)": 4,
     "WM(Nobles)": 3,
@@ -679,7 +674,7 @@
     "LAW(Pedersen)": 2,
     "HSG(Slatter)": 3,
     "HSG(Gildon)": 1,
-    "WM(Wellman)": 1,
+    "WM(Wellman)": 2,
     "TRAN(Wilson, J.)": 1,
     "SGTE(Lovick)": 1,
     "WM(Salda\u00f1a)": 4,
@@ -706,7 +701,7 @@
     "ENET(Short)": 1,
     "HS(Hasegawa)": 1,
     "SGTE(Cortes)": 1,
-    "WM(Cortes)": 2,
+    "WM(Cortes)": 3,
     "WM(Lovick)": 1,
     "WM(Cleveland)": 1,
     "ENET(Hunt)": 1,
@@ -741,6 +736,7 @@
     "BTE(Liias)": 1,
     "EDU(Harris)": 1,
     "LC(Salomon)": 1,
+    "WM(Hunt)": 1,
     "(People of the State of Washington)": 2,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
@@ -771,7 +767,7 @@
     "SGA": 336
   },
   "recentlyUpdated": 3730,
-  "updatedToday": 1083,
+  "updatedToday": 3730,
   "topSponsors": [
     [
       "()",
@@ -810,10 +806,6 @@
       32
     ],
     [
-      "(Wellman)",
-      32
-    ],
-    [
       "(Torres)",
       31
     ],
@@ -838,6 +830,10 @@
       31
     ],
     [
+      "(Wellman)",
+      31
+    ],
+    [
       "(Hasegawa)",
       30
     ],
@@ -850,7 +846,7 @@
       27
     ],
     [
-      "(Cortes)",
+      "(Wilson, J.)",
       27
     ]
   ]
