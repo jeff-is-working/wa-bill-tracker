@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-08T14:37:05.741285",
+  "generated": "2026-03-09T04:28:02.414019",
   "totalBills": 3730,
   "byStatus": {
     "prefiled": 2221,
@@ -14,9 +14,9 @@
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3719,
+    "Unassigned": 3720,
     "House Transportation": 4,
-    "Senate Ways & Means": 4,
+    "Senate Ways & Means": 3,
     "House Appropriations": 3
   },
   "byPriority": {
@@ -767,7 +767,7 @@
     "SGA": 336
   },
   "recentlyUpdated": 3730,
-  "updatedToday": 3730,
+  "updatedToday": 1091,
   "topSponsors": [
     [
       "()",
