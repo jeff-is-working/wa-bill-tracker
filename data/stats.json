@@ -1,11 +1,11 @@
 {
-  "generated": "2026-03-09T04:28:02.414019",
-  "totalBills": 3730,
+  "generated": "2026-03-09T15:03:00.933770",
+  "totalBills": 3731,
   "byStatus": {
     "prefiled": 2221,
     "opposite_committee": 97,
     "enacted": 285,
-    "committee": 906,
+    "committee": 907,
     "passed_legislature": 65,
     "opposite_floor": 50,
     "governor": 35,
@@ -14,18 +14,18 @@
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3720,
+    "Unassigned": 3721,
     "House Transportation": 4,
     "Senate Ways & Means": 3,
     "House Appropriations": 3
   },
   "byPriority": {
-    "medium": 3366,
+    "medium": 3367,
     "high": 271,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2249,
+    "General Government": 2250,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -510,7 +510,7 @@
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
     "LC(Valdez)": 2,
-    "(Hasegawa)": 30,
+    "(Hasegawa)": 31,
     "LC(Hasegawa)": 1,
     "LAW(Orwall)": 7,
     "SGTE(Trudeau)": 1,
@@ -748,7 +748,7 @@
   },
   "byType": {
     "HB": 1748,
-    "SB": 1358,
+    "SB": 1359,
     "6-": 2,
     "JM": 35,
     "JR": 27,
@@ -759,15 +759,15 @@
   },
   "byAgency": {
     "House": 1788,
-    "Senate": 1397,
+    "Senate": 1398,
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
     "SR": 96,
     "SGA": 336
   },
-  "recentlyUpdated": 3730,
-  "updatedToday": 1091,
+  "recentlyUpdated": 3731,
+  "updatedToday": 1092,
   "topSponsors": [
     [
       "()",
@@ -822,6 +822,10 @@
       31
     ],
     [
+      "(Hasegawa)",
+      31
+    ],
+    [
       "(Nobles)",
       31
     ],
@@ -832,10 +836,6 @@
     [
       "(Wellman)",
       31
-    ],
-    [
-      "(Hasegawa)",
-      30
     ],
     [
       "(Thai)",
