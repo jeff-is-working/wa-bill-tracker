@@ -1,31 +1,30 @@
 {
-  "generated": "2026-03-09T15:03:00.933770",
-  "totalBills": 3731,
+  "generated": "2026-03-10T04:20:03.227793",
+  "totalBills": 3732,
   "byStatus": {
-    "prefiled": 2221,
-    "opposite_committee": 97,
+    "prefiled": 2214,
+    "opposite_committee": 102,
     "enacted": 285,
     "committee": 907,
-    "passed_legislature": 65,
+    "passed_legislature": 45,
+    "passed_origin": 38,
     "opposite_floor": 50,
-    "governor": 35,
+    "governor": 42,
     "floor": 47,
-    "passed_origin": 22,
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3721,
-    "House Transportation": 4,
-    "Senate Ways & Means": 3,
-    "House Appropriations": 3
+    "Unassigned": 3728,
+    "House Transportation": 1,
+    "Senate Ways & Means": 3
   },
   "byPriority": {
-    "medium": 3367,
+    "medium": 3368,
     "high": 271,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2250,
+    "General Government": 2251,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -455,7 +454,7 @@
     "CS(Fosse)": 1,
     "SGOV(Rude)": 1,
     "AGNR(Orcutt)": 1,
-    "(Wilson, J.)": 27,
+    "(Wilson, J.)": 28,
     "(Fortunato)": 48,
     "(Torres)": 31,
     "EDU(Torres)": 1,
@@ -754,7 +753,7 @@
     "JR": 27,
     "CR": 17,
     "HR": 111,
-    "SR": 96,
+    "SR": 97,
     "GA": 336
   },
   "byAgency": {
@@ -763,11 +762,11 @@
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
-    "SR": 96,
+    "SR": 97,
     "SGA": 336
   },
-  "recentlyUpdated": 3731,
-  "updatedToday": 1092,
+  "recentlyUpdated": 3732,
+  "updatedToday": 1091,
   "topSponsors": [
     [
       "()",
@@ -842,11 +841,11 @@
       29
     ],
     [
-      "(Parshley)",
-      27
+      "(Wilson, J.)",
+      28
     ],
     [
-      "(Wilson, J.)",
+      "(Parshley)",
       27
     ]
   ]
