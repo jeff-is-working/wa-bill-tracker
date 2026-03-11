@@ -1,11 +1,11 @@
 {
-  "generated": "2026-03-11T04:20:56.717880",
-  "totalBills": 3733,
+  "generated": "2026-03-11T14:59:37.711948",
+  "totalBills": 3739,
   "byStatus": {
     "prefiled": 2231,
     "opposite_committee": 76,
     "enacted": 292,
-    "committee": 907,
+    "committee": 913,
     "passed_legislature": 37,
     "passed_origin": 37,
     "opposite_floor": 54,
@@ -14,24 +14,24 @@
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3731,
+    "Unassigned": 3737,
     "House Transportation": 1,
     "Senate Ways & Means": 1
   },
   "byPriority": {
-    "medium": 3369,
+    "medium": 3375,
     "high": 271,
     "low": 93
   },
   "byTopic": {
-    "General Government": 2251,
+    "General Government": 2255,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
-    "Transportation": 125,
+    "Transportation": 126,
     "Healthcare": 191,
     "Education": 258,
-    "Social Services": 108,
+    "Social Services": 109,
     "Environment": 92,
     "Business": 96,
     "Technology": 51,
@@ -493,7 +493,7 @@
     "(Liias)": 31,
     "WM(Holy)": 2,
     "TRAN(Conway)": 1,
-    "(Stanford)": 14,
+    "(Stanford)": 15,
     "HLTC(Liias)": 2,
     "LAW(Hansen)": 3,
     "LAW(Lovick)": 3,
@@ -509,7 +509,7 @@
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
     "LC(Valdez)": 2,
-    "(Hasegawa)": 31,
+    "(Hasegawa)": 33,
     "LC(Hasegawa)": 1,
     "LAW(Orwall)": 7,
     "SGTE(Trudeau)": 1,
@@ -743,34 +743,34 @@
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
-    "()": 336
+    "()": 339
   },
   "byType": {
     "HB": 1748,
-    "SB": 1359,
+    "SB": 1362,
     "6-": 2,
     "JM": 35,
     "JR": 27,
     "CR": 17,
     "HR": 111,
     "SR": 98,
-    "GA": 336
+    "GA": 339
   },
   "byAgency": {
     "House": 1788,
-    "Senate": 1398,
+    "Senate": 1401,
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
     "SR": 98,
-    "SGA": 336
+    "SGA": 339
   },
-  "recentlyUpdated": 3733,
-  "updatedToday": 1091,
+  "recentlyUpdated": 3739,
+  "updatedToday": 1097,
   "topSponsors": [
     [
       "()",
-      336
+      339
     ],
     [
       "(Fortunato)",
@@ -801,6 +801,10 @@
       34
     ],
     [
+      "(Hasegawa)",
+      33
+    ],
+    [
       "(Dufault)",
       32
     ],
@@ -818,10 +822,6 @@
     ],
     [
       "(Liias)",
-      31
-    ],
-    [
-      "(Hasegawa)",
       31
     ],
     [
