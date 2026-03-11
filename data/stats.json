@@ -1,25 +1,25 @@
 {
-  "generated": "2026-03-10T15:02:16.968565",
-  "totalBills": 3732,
+  "generated": "2026-03-11T04:20:56.717880",
+  "totalBills": 3733,
   "byStatus": {
-    "prefiled": 2214,
-    "opposite_committee": 102,
-    "enacted": 285,
+    "prefiled": 2231,
+    "opposite_committee": 76,
+    "enacted": 292,
     "committee": 907,
-    "passed_legislature": 45,
-    "passed_origin": 38,
-    "opposite_floor": 50,
-    "governor": 42,
-    "floor": 47,
+    "passed_legislature": 37,
+    "passed_origin": 37,
+    "opposite_floor": 54,
+    "governor": 57,
+    "floor": 40,
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3728,
+    "Unassigned": 3731,
     "House Transportation": 1,
-    "Senate Ways & Means": 3
+    "Senate Ways & Means": 1
   },
   "byPriority": {
-    "medium": 3368,
+    "medium": 3369,
     "high": 271,
     "low": 93
   },
@@ -29,7 +29,7 @@
     "Housing": 111,
     "Tax & Revenue": 285,
     "Transportation": 125,
-    "Healthcare": 190,
+    "Healthcare": 191,
     "Education": 258,
     "Social Services": 108,
     "Environment": 92,
@@ -513,7 +513,7 @@
     "LC(Hasegawa)": 1,
     "LAW(Orwall)": 7,
     "SGTE(Trudeau)": 1,
-    "(Kauffman)": 11,
+    "(Kauffman)": 12,
     "HLTC(Bateman)": 2,
     "(Christian)": 23,
     "HLTC(Valdez)": 1,
@@ -753,7 +753,7 @@
     "JR": 27,
     "CR": 17,
     "HR": 111,
-    "SR": 97,
+    "SR": 98,
     "GA": 336
   },
   "byAgency": {
@@ -762,10 +762,10 @@
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
-    "SR": 97,
+    "SR": 98,
     "SGA": 336
   },
-  "recentlyUpdated": 3732,
+  "recentlyUpdated": 3733,
   "updatedToday": 1091,
   "topSponsors": [
     [
