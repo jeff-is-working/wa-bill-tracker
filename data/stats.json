@@ -1,30 +1,30 @@
 {
-  "generated": "2026-03-12T04:23:17.952689",
-  "totalBills": 3744,
+  "generated": "2026-03-12T15:02:47.969225",
+  "totalBills": 3751,
   "byStatus": {
-    "prefiled": 2229,
+    "prefiled": 2230,
     "opposite_committee": 102,
     "enacted": 292,
-    "committee": 913,
-    "passed_legislature": 31,
-    "opposite_floor": 52,
+    "committee": 919,
+    "passed_legislature": 30,
+    "opposite_floor": 50,
     "governor": 57,
-    "floor": 41,
-    "passed_origin": 25,
+    "passed_origin": 27,
+    "floor": 42,
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3742,
+    "Unassigned": 3749,
     "House Transportation": 1,
     "Senate Ways & Means": 1
   },
   "byPriority": {
-    "medium": 3378,
+    "medium": 3384,
     "high": 271,
-    "low": 95
+    "low": 96
   },
   "byTopic": {
-    "General Government": 2260,
+    "General Government": 2267,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -156,7 +156,7 @@
     "(McEntire)": 5,
     "APP(Ortiz-Self)": 3,
     "(Klicker)": 7,
-    "(Fitzgibbon)": 25,
+    "(Fitzgibbon)": 26,
     "HCW(Low)": 1,
     "CS(Doglio)": 1,
     "(Pollet)": 21,
@@ -509,7 +509,7 @@
     "WM(Dhingra)": 5,
     "TRAN(Valdez)": 2,
     "LC(Valdez)": 2,
-    "(Hasegawa)": 33,
+    "(Hasegawa)": 34,
     "LC(Hasegawa)": 1,
     "LAW(Orwall)": 7,
     "SGTE(Trudeau)": 1,
@@ -743,34 +743,34 @@
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
-    "()": 339
+    "()": 344
   },
   "byType": {
     "HB": 1748,
-    "SB": 1362,
+    "SB": 1363,
     "6-": 2,
     "JM": 35,
     "JR": 27,
-    "CR": 19,
+    "CR": 20,
     "HR": 111,
     "SR": 101,
-    "GA": 339
+    "GA": 344
   },
   "byAgency": {
-    "House": 1788,
-    "Senate": 1403,
+    "House": 1789,
+    "Senate": 1404,
     "SI IL26-": 2,
     "HR": 110,
     "EHR": 1,
     "SR": 101,
-    "SGA": 339
+    "SGA": 344
   },
-  "recentlyUpdated": 3744,
-  "updatedToday": 1091,
+  "recentlyUpdated": 3751,
+  "updatedToday": 1102,
   "topSponsors": [
     [
       "()",
-      339
+      344
     ],
     [
       "(Fortunato)",
@@ -802,7 +802,7 @@
     ],
     [
       "(Hasegawa)",
-      33
+      34
     ],
     [
       "(Dufault)",
