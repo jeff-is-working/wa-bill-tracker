@@ -1,30 +1,30 @@
 {
-  "generated": "2026-03-12T15:02:47.969225",
-  "totalBills": 3751,
+  "generated": "2026-03-13T04:21:54.945530",
+  "totalBills": 3756,
   "byStatus": {
-    "prefiled": 2230,
-    "opposite_committee": 102,
-    "enacted": 292,
+    "prefiled": 2228,
+    "opposite_committee": 81,
+    "enacted": 300,
     "committee": 919,
-    "passed_legislature": 30,
-    "opposite_floor": 50,
-    "governor": 57,
-    "passed_origin": 27,
+    "passed_legislature": 24,
+    "governor": 90,
+    "opposite_floor": 48,
     "floor": 42,
+    "passed_origin": 22,
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3749,
+    "Unassigned": 3754,
     "House Transportation": 1,
     "Senate Ways & Means": 1
   },
   "byPriority": {
-    "medium": 3384,
+    "medium": 3389,
     "high": 271,
     "low": 96
   },
   "byTopic": {
-    "General Government": 2267,
+    "General Government": 2272,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -156,7 +156,7 @@
     "(McEntire)": 5,
     "APP(Ortiz-Self)": 3,
     "(Klicker)": 7,
-    "(Fitzgibbon)": 26,
+    "(Fitzgibbon)": 27,
     "HCW(Low)": 1,
     "CS(Doglio)": 1,
     "(Pollet)": 21,
@@ -570,7 +570,7 @@
     "HSG(Trudeau)": 2,
     "SGTE(MacEwen)": 1,
     "HLTC(Nobles)": 1,
-    "(Riccelli)": 37,
+    "(Riccelli)": 38,
     "LAW(Wagoner)": 3,
     "HS(Hansen)": 1,
     "ENET(Slatter)": 2,
@@ -739,7 +739,7 @@
     "(People of the State of Washington)": 2,
     "TR(Gregerson)": 1,
     "SGOV(Tharinger)": 1,
-    "(Jinkins)": 15,
+    "(Jinkins)": 18,
     "(Corry)": 1,
     "LAW(Salda\u00f1a)": 1,
     "TRAN(Fortunato)": 1,
@@ -752,21 +752,21 @@
     "JM": 35,
     "JR": 27,
     "CR": 20,
-    "HR": 111,
-    "SR": 101,
+    "HR": 115,
+    "SR": 102,
     "GA": 344
   },
   "byAgency": {
     "House": 1789,
     "Senate": 1404,
     "SI IL26-": 2,
-    "HR": 110,
+    "HR": 114,
     "EHR": 1,
-    "SR": 101,
+    "SR": 102,
     "SGA": 344
   },
-  "recentlyUpdated": 3751,
-  "updatedToday": 1102,
+  "recentlyUpdated": 3756,
+  "updatedToday": 1095,
   "topSponsors": [
     [
       "()",
@@ -794,7 +794,7 @@
     ],
     [
       "(Riccelli)",
-      37
+      38
     ],
     [
       "(Rule)",
@@ -845,7 +845,7 @@
       28
     ],
     [
-      "(Parshley)",
+      "(Fitzgibbon)",
       27
     ]
   ]
