@@ -1,30 +1,30 @@
 {
-  "generated": "2026-03-13T14:55:14.260893",
-  "totalBills": 3756,
+  "generated": "2026-03-14T04:21:07.878437",
+  "totalBills": 3757,
   "byStatus": {
-    "prefiled": 2228,
-    "opposite_committee": 81,
+    "prefiled": 2229,
+    "opposite_committee": 69,
     "enacted": 300,
     "committee": 919,
     "passed_legislature": 24,
-    "governor": 90,
-    "opposite_floor": 48,
-    "floor": 42,
+    "floor": 57,
+    "governor": 95,
+    "opposite_floor": 40,
     "passed_origin": 22,
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3754,
+    "Unassigned": 3755,
     "House Transportation": 1,
     "Senate Ways & Means": 1
   },
   "byPriority": {
-    "medium": 3389,
+    "medium": 3390,
     "high": 271,
     "low": 96
   },
   "byTopic": {
-    "General Government": 2272,
+    "General Government": 2273,
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
@@ -460,7 +460,7 @@
     "EDU(Torres)": 1,
     "HS(Salda\u00f1a)": 1,
     "(Pedersen)": 9,
-    "(Braun)": 38,
+    "(Braun)": 39,
     "EDU(Braun)": 1,
     "SGTE(Boehnke)": 1,
     "(Boehnke)": 46,
@@ -753,7 +753,7 @@
     "JR": 27,
     "CR": 20,
     "HR": 115,
-    "SR": 102,
+    "SR": 103,
     "GA": 344
   },
   "byAgency": {
@@ -762,11 +762,11 @@
     "SI IL26-": 2,
     "HR": 114,
     "EHR": 1,
-    "SR": 102,
+    "SR": 103,
     "SGA": 344
   },
-  "recentlyUpdated": 3756,
-  "updatedToday": 1095,
+  "recentlyUpdated": 3757,
+  "updatedToday": 1091,
   "topSponsors": [
     [
       "()",
@@ -790,7 +790,7 @@
     ],
     [
       "(Braun)",
-      38
+      39
     ],
     [
       "(Riccelli)",
