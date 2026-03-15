@@ -1,22 +1,20 @@
 {
-  "generated": "2026-03-15T04:42:57.726758",
+  "generated": "2026-03-15T10:51:23.015645",
   "totalBills": 3757,
   "byStatus": {
-    "prefiled": 2229,
-    "opposite_committee": 69,
-    "enacted": 300,
-    "committee": 919,
-    "passed_legislature": 24,
-    "floor": 57,
-    "governor": 95,
-    "opposite_floor": 40,
+    "prefiled": 2260,
+    "floor": 36,
+    "enacted": 312,
+    "committee": 918,
+    "governor": 136,
+    "opposite_committee": 38,
+    "passed_legislature": 2,
+    "opposite_floor": 31,
     "passed_origin": 22,
     "introduced": 2
   },
   "byCommittee": {
-    "Unassigned": 3755,
-    "House Transportation": 1,
-    "Senate Ways & Means": 1
+    "Unassigned": 3757
   },
   "byPriority": {
     "medium": 3390,
@@ -28,13 +26,13 @@
     "Public Safety": 131,
     "Housing": 111,
     "Tax & Revenue": 285,
-    "Transportation": 126,
+    "Transportation": 125,
     "Healthcare": 191,
     "Education": 258,
     "Social Services": 109,
     "Environment": 92,
     "Business": 96,
-    "Technology": 51,
+    "Technology": 52,
     "Agriculture": 34
   },
   "bySponsor": {
@@ -766,7 +764,7 @@
     "SGA": 344
   },
   "recentlyUpdated": 3757,
-  "updatedToday": 1090,
+  "updatedToday": 3757,
   "topSponsors": [
     [
       "()",
