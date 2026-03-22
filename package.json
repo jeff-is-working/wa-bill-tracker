@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "serve": "^14.0.0",
+    "@axe-core/playwright": "^4.8.0"
+  },
+  "scripts": {
+    "test": "npx playwright test",
+    "test:chromium": "npx playwright test --project=chromium",
+    "serve": "npx serve . -l 3000"
+  }
+}
