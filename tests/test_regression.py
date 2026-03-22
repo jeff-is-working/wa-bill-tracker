@@ -146,55 +146,10 @@ class TestBillsJSONStructure(unittest.TestCase):
                 f"Bill {bill.get('id')} has invalid legUrl: {url}")
 
 
-class TestMeetingsJSONStructure(unittest.TestCase):
-    """Regression tests for meetings.json structure"""
-    
-    @classmethod
-    def setUpClass(cls):
-        """Load meetings data if available"""
-        cls.meetings_file = Path("data/meetings.json")
-        cls.meetings_data = None
-        
-        if cls.meetings_file.exists():
-            with open(cls.meetings_file, 'r') as f:
-                cls.meetings_data = json.load(f)
-    
-    def test_meetings_json_has_required_fields(self):
-        """Test meetings.json has all required fields"""
-        if self.meetings_data is None:
-            self.skipTest("No meetings.json available")
-        
-        required_fields = ['lastSync', 'totalMeetings', 'meetings']
-        
-        for field in required_fields:
-            self.assertIn(field, self.meetings_data,
-                f"meetings.json missing required field: {field}")
-    
-    def test_each_meeting_has_required_fields(self):
-        """Test each meeting has required fields"""
-        if self.meetings_data is None:
-            self.skipTest("No meetings.json available")
-        
-        required_meeting_fields = ['agendaId', 'date', 'cancelled', 'agendaUrl']
-        
-        for meeting in self.meetings_data.get('meetings', []):
-            for field in required_meeting_fields:
-                self.assertIn(field, meeting,
-                    f"Meeting {meeting.get('agendaId', 'unknown')} missing field: {field}")
-    
-    def test_meeting_dates_format(self):
-        """Test meeting dates follow YYYY-MM-DD format"""
-        if self.meetings_data is None:
-            self.skipTest("No meetings.json available")
-        
-        import re
-        date_pattern = r'^\d{4}-\d{2}-\d{2}$'
-        
-        for meeting in self.meetings_data.get('meetings', []):
-            date = meeting.get('date', '')
-            if date:  # Date might be empty
-                self.assertRegex(date, date_pattern,
-                    f"Meeting {meeting.get('agendaId')} has invalid date format: {date}")
+
+# TestMeetingsJSONStructure removed (issue #69): meetings.json was never part of
+# the data architecture. Meeting/hearing data is embedded in bills.json and
+# validated by TestAppJSCompatibility::test_hearings_array_format.
 
 
 class TestStatsJSONStructure(unittest.TestCase):
