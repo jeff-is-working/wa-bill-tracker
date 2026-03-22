@@ -1,14 +1,14 @@
 {
-  "generated": "2026-03-22T04:31:25.569922",
+  "generated": "2026-03-22T10:58:14.017481",
   "totalBills": 3757,
   "byStatus": {
     "prefiled": 2260,
     "floor": 36,
-    "enacted": 342,
+    "enacted": 372,
     "committee": 918,
-    "governor": 106,
+    "governor": 77,
     "opposite_committee": 38,
-    "passed_legislature": 2,
+    "passed_legislature": 1,
     "opposite_floor": 31,
     "passed_origin": 22,
     "introduced": 2
@@ -764,7 +764,7 @@
     "SGA": 344
   },
   "recentlyUpdated": 3757,
-  "updatedToday": 1091,
+  "updatedToday": 3757,
   "topSponsors": [
     [
       "()",
