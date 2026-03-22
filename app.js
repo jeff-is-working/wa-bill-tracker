@@ -27,7 +27,7 @@ const APP_CONFIG = {
         { date: '2026-02-25', label: 'Policy Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin'] },
         { date: '2026-03-04', label: 'Fiscal Committee (Opposite)', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_committee'] },
         { date: '2026-03-06', label: 'Opposite House', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_committee', 'opposite_floor'] },
-        { date: '2026-03-12', label: 'Sine Die', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_committee', 'opposite_floor', 'passed_legislature'] },
+        { date: '2026-03-12', label: 'Sine Die', failsBefore: ['prefiled', 'introduced', 'committee', 'floor', 'passed_origin', 'opposite_committee', 'opposite_floor'] },
     ],
     billTypes: {
         'all': { name: 'All Bills', description: 'Showing all Washington State legislative bills for the 2026 session' },
@@ -1055,7 +1055,7 @@ function getBillCutoffStatus(bill) {
     // Only applies to 2026 session bills
     if (bill.session === '2025') return null;
     // Already terminal — not a cutoff failure
-    if (['enacted', 'vetoed', 'failed', 'partial_veto'].includes(bill.status)) return null;
+    if (['enacted', 'vetoed', 'failed', 'partial_veto', 'governor', 'passed_legislature'].includes(bill.status)) return null;
 
     const now = new Date();
     let cutoffLabel = null;
@@ -1130,8 +1130,9 @@ function filterBills() {
             'introduced':    ['introduced'],
             'committee':     ['committee', 'opposite_committee'],
             'floor':         ['floor', 'opposite_floor'],
-            'passed_origin': ['passed_origin', 'passed', 'passed_legislature'],
-            'passed':        ['passed', 'passed_origin', 'passed_legislature'],
+            'passed_origin': ['passed_origin', 'passed'],
+            'passed':        ['passed', 'passed_origin'],
+            'passed_legislature': ['passed_legislature'],
             'governor':      ['governor'],
             'enacted':       ['enacted'],
             'vetoed':        ['vetoed'],
@@ -1586,15 +1587,53 @@ function renderHearingsStats() {
 }
 
 function renderSessionStats() {
-    const daysLeft = Math.ceil((APP_CONFIG.sessionEnd - new Date()) / (1000 * 60 * 60 * 24));
+    const now = new Date();
+    const daysLeft = Math.ceil((APP_CONFIG.sessionEnd - now) / (1000 * 60 * 60 * 24));
     const totalDays = Math.ceil((APP_CONFIG.sessionEnd - APP_CONFIG.sessionStart) / (1000 * 60 * 60 * 24));
+    const sessionEnded = daysLeft <= 0;
+
+    const bills2026 = APP_STATE.bills.filter(b => b.session !== '2025');
+    const enactedCount = bills2026.filter(b => b.status === 'enacted').length;
+    const governorCount = bills2026.filter(b => b.status === 'governor').length;
+    const passedLegCount = bills2026.filter(b => b.status === 'passed_legislature').length;
+    const awaitingGovernor = governorCount + passedLegCount;
+    const vetoedCount = bills2026.filter(b => b.status === 'vetoed' || b.status === 'partial_veto').length;
+
+    if (sessionEnded) {
+        return `
+            <h2>Post-Session: Governor Action</h2>
+            <div class="stats-list">
+                <div class="stats-item">
+                    <span class="stats-item-label">Session Status</span>
+                    <span class="stats-item-value">Ended March 12</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-item-label">Signed Into Law</span>
+                    <span class="stats-item-value">${enactedCount}</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-item-label">Awaiting Governor</span>
+                    <span class="stats-item-value">${awaitingGovernor}</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-item-label">At Governor's Desk</span>
+                    <span class="stats-item-value">${governorCount}</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-item-label">Passed Legislature</span>
+                    <span class="stats-item-value">${passedLegCount}</span>
+                </div>
+                ${vetoedCount > 0 ? `<div class="stats-item">
+                    <span class="stats-item-label">Vetoed</span>
+                    <span class="stats-item-value">${vetoedCount}</span>
+                </div>` : ''}
+            </div>
+        `;
+    }
+
     const daysPassed = totalDays - daysLeft;
     const percentComplete = Math.round((daysPassed / totalDays) * 100);
-
-    const totalBills = APP_STATE.bills.length;
-    const session2026 = APP_STATE.bills.filter(b => b.session !== '2025').length;
-    const session2025 = totalBills - session2026;
-    const activeBills = APP_STATE.bills.filter(b => b.session !== '2025' && !getBillCutoffStatus(b)).length;
+    const activeBills = bills2026.filter(b => !getBillCutoffStatus(b)).length;
 
     const next = getNextCutoff();
     const nextCutoffHtml = next
@@ -1621,8 +1660,12 @@ function renderSessionStats() {
                 <span class="stats-item-value">${activeBills}</span>
             </div>
             <div class="stats-item">
-                <span class="stats-item-label">2025 Session (enacted)</span>
-                <span class="stats-item-value">${session2025}</span>
+                <span class="stats-item-label">Signed Into Law</span>
+                <span class="stats-item-value">${enactedCount}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-item-label">Awaiting Governor</span>
+                <span class="stats-item-value">${awaitingGovernor}</span>
             </div>
             <div class="stats-item">
                 <span class="stats-item-label">Session Ends</span>
@@ -1676,19 +1719,34 @@ function updateStats(filteredBills) {
     ).length;
     document.getElementById('newToday').textContent = newToday;
     
-    const weekFromNow = new Date();
-    weekFromNow.setDate(weekFromNow.getDate() + 7);
-    const hearingsThisWeek = filteredBills.reduce((count, bill) => {
-        if (!bill.hearings) return count;
-        return count + bill.hearings.filter(h => {
-            const hearingDate = new Date(h.date);
-            return hearingDate >= new Date() && hearingDate <= weekFromNow;
-        }).length;
-    }, 0);
-    document.getElementById('hearingsWeek').textContent = hearingsThisWeek;
-    
-    const daysLeft = Math.ceil((APP_CONFIG.sessionEnd - new Date()) / (1000 * 60 * 60 * 24));
-    document.getElementById('daysLeft').textContent = Math.max(0, daysLeft);
+    const now = new Date();
+    const daysLeft = Math.ceil((APP_CONFIG.sessionEnd - now) / (1000 * 60 * 60 * 24));
+    const sessionEnded = daysLeft <= 0;
+
+    if (sessionEnded) {
+        // Post-session: show governor action stats instead of hearings/days
+        const allBills2026 = APP_STATE.bills.filter(b => b.session !== '2025');
+        const atGovernor = allBills2026.filter(b => b.status === 'governor' || b.status === 'passed_legislature').length;
+        const enacted = allBills2026.filter(b => b.status === 'enacted').length;
+        document.getElementById('hearingsWeek').textContent = atGovernor;
+        document.getElementById('hearingsLabel').textContent = 'Awaiting Governor';
+        document.getElementById('daysLeft').textContent = enacted;
+        document.getElementById('daysLeftLabel').textContent = 'Signed Into Law';
+    } else {
+        const weekFromNow = new Date();
+        weekFromNow.setDate(weekFromNow.getDate() + 7);
+        const hearingsThisWeek = filteredBills.reduce((count, bill) => {
+            if (!bill.hearings) return count;
+            return count + bill.hearings.filter(h => {
+                const hearingDate = new Date(h.date);
+                return hearingDate >= now && hearingDate <= weekFromNow;
+            }).length;
+        }, 0);
+        document.getElementById('hearingsWeek').textContent = hearingsThisWeek;
+        document.getElementById('hearingsLabel').textContent = 'Hearings This Week';
+        document.getElementById('daysLeft').textContent = Math.max(0, daysLeft);
+        document.getElementById('daysLeftLabel').textContent = 'Days Remaining';
+    }
 }
 
 function updateUserPanel() {
