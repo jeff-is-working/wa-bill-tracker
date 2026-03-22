@@ -100,16 +100,24 @@ class TestSessionJsonPipelineContract(unittest.TestCase):
         )
 
     def test_session_json_biennium_matches_year(self):
-        """The biennium must start with the same value as the year field.
-        For example, if year is 2027, biennium should start with '2027'."""
+        """The year must fall within the biennium range. WA bienniums use the
+        first year: biennium '2025-26' covers years 2025 and 2026, while
+        '2027-28' covers 2027 and 2028."""
         year = self.data.get("year")
         biennium = self.data.get("biennium", "")
         if year is None:
             self.skipTest("year key missing -- cannot validate biennium alignment")
-        self.assertTrue(
-            biennium.startswith(str(year)),
-            f"biennium '{biennium}' does not start with year {year} -- "
-            "these values are out of sync",
+        # Parse biennium "YYYY-YY" into two full years
+        parts = biennium.split("-")
+        if len(parts) != 2:
+            self.fail(f"biennium '{biennium}' does not match YYYY-YY format")
+        first_year = int(parts[0])
+        second_year = int(parts[0][:2] + parts[1])
+        self.assertIn(
+            year,
+            (first_year, second_year),
+            f"year {year} does not fall within biennium '{biennium}' "
+            f"(covers {first_year}-{second_year})",
         )
 
 

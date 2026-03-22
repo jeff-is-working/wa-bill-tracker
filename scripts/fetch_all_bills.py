@@ -36,10 +36,20 @@ SPONSOR_SERVICE = f"{API_BASE_URL}/SponsorService.asmx"
 COMMITTEE_SERVICE = f"{API_BASE_URL}/CommitteeService.asmx"
 COMMITTEE_MEETING_SERVICE = f"{API_BASE_URL}/CommitteeMeetingService.asmx"
 
-BIENNIUM = "2025-26"
-YEAR = 2026
 DATA_DIR = Path("data")
 DEBUG_DIR = Path("debug")
+
+
+def load_session_config():
+    """Load session configuration from data/session.json."""
+    config_path = DATA_DIR / "session.json"
+    with open(config_path, "r") as f:
+        return json.load(f)
+
+
+SESSION = load_session_config()
+BIENNIUM = SESSION["biennium"]
+YEAR = SESSION["year"]
 
 # XML Namespace
 NS = "http://WSLWebServices.leg.wa.gov/"
@@ -608,12 +618,13 @@ def build_bill_dict(details: Dict, original_agency: str) -> Dict:
     # Determine which session this bill belongs to.
     # Bills enacted/vetoed/failed in the 2025 long session are not active in 2026.
     # Bills with "reintroduced and retained" carried over to 2026.
+    prior_year = str(SESSION.get("priorSession", {}).get("year", YEAR - 1))
     terminal = status in ("enacted", "vetoed", "failed", "partial_veto")
     reintroduced = "reintroduced" in history_line.lower()
     if terminal and not reintroduced:
-        session = "2025"
+        session = prior_year
     else:
-        session = "2026"
+        session = str(YEAR)
 
     return {
         "id": bill_id.replace(" ", ""),
@@ -922,8 +933,8 @@ def save_bills_data(bills: List[Dict]) -> Dict:
     data = {
         "lastSync": datetime.now().isoformat(),
         "sessionYear": YEAR,
-        "sessionStart": "2026-01-12",
-        "sessionEnd": "2026-03-12",
+        "sessionStart": SESSION.get("sessionStart", ""),
+        "sessionEnd": SESSION.get("sessionEnd", ""),
         "biennium": BIENNIUM,
         "totalBills": len(bills),
         "bills": bills,

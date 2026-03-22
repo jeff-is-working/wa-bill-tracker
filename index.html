@@ -25,7 +25,7 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <h1>WA Legislative Tracker 2026</h1>
+            <h1 id="siteTitle">WA Legislative Tracker 2026</h1>
             <div class="sync-info">
                 <div class="sync-status" id="syncStatus">
                     <span class="sync-dot"></span>
@@ -305,7 +305,7 @@
     <!-- Footer -->
     <footer>
         <p>
-            <strong>WA Legislative Tracker 2026</strong><br>
+            <strong id="footerYear">WA Legislative Tracker 2026</strong><br>
             Open source bill tracking for Washington State<br>
             <a href="https://github.com/jeff-is-working/wa-bill-tracker" target="_blank" rel="noopener noreferrer">GitHub Repository</a> |
             <a href="https://app.leg.wa.gov/" target="_blank" rel="noopener noreferrer">Official WA Legislature Site</a> |
@@ -319,6 +319,6 @@
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
-    <script src="app.js" defer></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
