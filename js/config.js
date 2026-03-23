@@ -60,7 +60,9 @@ export async function loadConfig() {
         cookieDuration: 90,
         autoSaveInterval: 30000,
         dataRefreshInterval: 3600000,
-        githubDataUrl: 'https://raw.githubusercontent.com/wa-bill-tracker/wa-bill-tracker/main/data/bills.json',
+        githubDataUrl: (window.location.hostname === 'wa-bill-tracker.org')
+            ? 'https://raw.githubusercontent.com/wa-bill-tracker/wa-bill-tracker/main/data/bills.json'
+            : 'data/bills.json',
         sessionStart: new Date(session.sessionStart),
         sessionEnd: new Date(session.sessionEnd),
         cutoffDates: (session.cutoffDates || []).map(c => ({
