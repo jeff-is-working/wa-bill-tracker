@@ -189,6 +189,20 @@ export function updateCutoffBanner() {
     const banner = document.getElementById('cutoffBanner');
     if (!banner) return;
 
+    const now = new Date();
+    const sessionEnded = now > APP_CONFIG.sessionEnd;
+
+    if (sessionEnded) {
+        // Post-session: show session-ended banner instead of cutoff info
+        banner.style.display = 'flex';
+        banner.innerHTML =
+            '<span>session</span>' +
+            '<span class="cutoff-label">The ' + APP_CONFIG.year + ' Session Has Ended -- Showing Bills Awaiting Governor Action</span>' +
+            '<span class="cutoff-days">Ended ' + APP_CONFIG.sessionEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '</span>';
+        updateCutoffExplainerVisibility();
+        return;
+    }
+
     const next = getNextCutoff();
     if (!next) {
         banner.style.display = 'none';
@@ -212,6 +226,55 @@ export function updateCutoffExplainerVisibility() {
     if (!explainerBanner) return;
 
     const now = new Date();
+    const sessionEnded = now > APP_CONFIG.sessionEnd;
+
+    if (sessionEnded) {
+        // Post-session: replace explainer content entirely
+        const headline = explainerBanner.querySelector('.cutoff-explainer-headline');
+        const flyout = document.getElementById('cutoffExplainerFlyout');
+
+        if (headline) {
+            headline.textContent = APP_CONFIG.year + ' Session Has Ended -- Bills Below Have Passed the Legislature';
+        }
+
+        if (flyout) {
+            const bills2026 = APP_STATE.bills.filter(b => b.session !== '2025');
+            const governorCount = bills2026.filter(b => b.status === 'governor').length;
+            const passedLegCount = bills2026.filter(b => b.status === 'passed_legislature').length;
+            const enactedCount = bills2026.filter(b => b.status === 'enacted').length;
+
+            flyout.innerHTML =
+                '<h4>Session Status</h4>' +
+                '<p>The ' + APP_CONFIG.year + ' regular session ended on ' +
+                APP_CONFIG.sessionEnd.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) +
+                '. The bills shown below successfully passed both chambers of the Washington State Legislature.</p>' +
+
+                '<h4>Governor Action</h4>' +
+                '<p>These bills are now with the governor, who has <strong>20 days</strong> after delivery to take action:</p>' +
+                '<ul>' +
+                '<li><strong>Sign</strong> -- the bill becomes law</li>' +
+                '<li><strong>Veto</strong> -- the bill is rejected (legislature can override with 2/3 vote)</li>' +
+                '<li><strong>No action</strong> -- the bill becomes law without signature after 20 days</li>' +
+                '</ul>' +
+
+                '<h4>Current Counts</h4>' +
+                '<ul>' +
+                (governorCount > 0 ? '<li><strong>' + governorCount + '</strong> bills at the governor\'s desk awaiting signature</li>' : '') +
+                (passedLegCount > 0 ? '<li><strong>' + passedLegCount + '</strong> bills passed legislature, awaiting delivery to governor</li>' : '') +
+                (enactedCount > 0 ? '<li><strong>' + enactedCount + '</strong> bills signed into law</li>' : '') +
+                '</ul>' +
+
+                '<h4>Inactive Bills</h4>' +
+                '<p>Bills that did not pass both chambers before the session ended are no longer active. ' +
+                'Toggle "Show inactive bills" above to see which bills missed their cutoff deadlines.</p>';
+        }
+
+        if (!explainerBanner.classList.contains('dismissed')) {
+            explainerBanner.style.display = 'block';
+        }
+        return;
+    }
+
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     const isCutoffDayOrAfter = APP_CONFIG.cutoffDates.some(cutoff => {

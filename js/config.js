@@ -52,20 +52,23 @@ export async function loadConfig() {
     typesWithYear['all'].description = `Showing all Washington State legislative bills for the ${session.year} session`;
 
     APP_CONFIG = {
+        siteName: session.siteTitle || 'WA Bill Tracker',
+        siteUrl: 'https://wa-bill-tracker.org',
         year: session.year,
-        siteName: session.siteName,
-        siteUrl: session.siteUrl,
-        cookieDuration: session.cookieDuration,
-        autoSaveInterval: session.autoSaveInterval,
-        dataRefreshInterval: session.dataRefreshInterval,
+        biennium: session.biennium,
+        sessionType: session.sessionType,
+        cookieDuration: 90,
+        autoSaveInterval: 30000,
+        dataRefreshInterval: 3600000,
         githubDataUrl: 'https://raw.githubusercontent.com/wa-bill-tracker/wa-bill-tracker/main/data/bills.json',
         sessionStart: new Date(session.sessionStart),
         sessionEnd: new Date(session.sessionEnd),
-        cutoffDates: session.cutoffDates.map(c => ({
+        cutoffDates: (session.cutoffDates || []).map(c => ({
             date: c.date,
             label: c.label,
             failsBefore: c.failsBefore
         })),
+        priorSession: session.priorSession || {},
         billTypes: typesWithYear
     };
 
