@@ -35,14 +35,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeUser();
 
     // Update dynamic page text with session year
-    document.title = config.siteName + ' ' + config.year;
+    document.title = config.siteName;
     const siteTitle = document.getElementById('siteTitle');
     if (siteTitle) {
-        siteTitle.textContent = config.siteName + ' ' + config.year;
+        siteTitle.textContent = config.siteName;
     }
     const footerYear = document.getElementById('footerYear');
     if (footerYear) {
-        footerYear.textContent = config.siteName + ' ' + config.year;
+        footerYear.textContent = config.siteName;
     }
 
     // Load bill data
