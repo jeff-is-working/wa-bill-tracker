@@ -433,7 +433,7 @@ export function createBillCard(bill) {
 
     const stampHtml = bill.status === 'enacted'
         ? '<div class="bill-stamp bill-stamp-signed">Signed</div>'
-        : bill.status === 'passed_legislature'
+        : (bill.status === 'passed_legislature' || bill.status === 'governor')
         ? '<div class="bill-stamp">Passed</div>'
         : '';
 
