@@ -33,7 +33,7 @@ module.exports = defineConfig({
 
   /* Shared settings for all projects */
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:4200',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -56,10 +56,10 @@ module.exports = defineConfig({
 
   /* Start a local static file server before running tests */
   webServer: {
-    command: 'npx serve . -l 3000',
+    command: 'npx serve . -l 4200',
     cwd: '..',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    url: 'http://localhost:4200',
+    reuseExistingServer: false,
     timeout: 30_000,
   },
 });

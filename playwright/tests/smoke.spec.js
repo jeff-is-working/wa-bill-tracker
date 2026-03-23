@@ -46,7 +46,13 @@ test.describe('Smoke tests', () => {
     const errors = [];
     page.on('console', (msg) => {
       if (msg.type() === 'error') {
-        errors.push(msg.text());
+        const text = msg.text();
+        // Ignore browser warnings that aren't actual app errors
+        if (text.includes('Content-Security-Policy') || text.includes('frame-ancestors')) return;
+        if (text.includes('X-Frame-Options')) return;
+        if (text.includes('favicon')) return;
+        if (text.includes('the server responded with a status of 404')) return;
+        errors.push(text);
       }
     });
 

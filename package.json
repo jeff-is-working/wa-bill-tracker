@@ -8,6 +8,6 @@
   "scripts": {
     "test": "npx playwright test",
     "test:chromium": "npx playwright test --project=chromium",
-    "serve": "npx serve . -l 3000"
+    "serve": "npx serve . -l 4200"
   }
 }
