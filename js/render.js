@@ -368,8 +368,15 @@ export function createBillCard(bill) {
         }
     }
 
+    const stampHtml = bill.status === 'enacted'
+        ? '<div class="bill-stamp bill-stamp-signed">Signed</div>'
+        : bill.status === 'passed_legislature'
+        ? '<div class="bill-stamp">Passed</div>'
+        : '';
+
     return `
         <div class="bill-card ${isTracked ? 'tracked' : ''} ${isInactive ? 'inactive-bill' : ''}" data-bill-id="${escapeHTML(bill.id)}">
+            ${stampHtml}
             <div class="bill-header">
                 <a href="https://app.leg.wa.gov/billsummary?BillNumber=${encodeURIComponent(bill.number.split(' ').pop())}&Year=${APP_CONFIG.year}"
                    target="_blank" rel="noopener noreferrer" class="bill-number">${escapeHTML(bill.number)}</a>
