@@ -336,6 +336,85 @@ def get_legislation_details(biennium: str, bill_number: int) -> Optional[Dict]:
     return best_leg
 
 
+def get_roll_calls(biennium: str, bill_number: int) -> List[Dict]:
+    """Fetch roll call votes for a bill from the LegislationService."""
+    root = make_soap_request(
+        LEGISLATION_SERVICE,
+        "GetRollCalls",
+        {"biennium": biennium, "billNumber": str(bill_number)}
+    )
+
+    time.sleep(REQUEST_DELAY)
+
+    if root is None:
+        return []
+
+    roll_calls = []
+    try:
+        rc_elements = find_all_elements(root, "RollCall")
+
+        for rc in rc_elements:
+            agency_text = find_element_text(rc, "Agency")
+            motion_text = find_element_text(rc, "Motion")
+            vote_date = find_element_text(rc, "VoteDate")
+            yea_count = find_element_text(rc, "YeaVotes/Count", "0")
+            nay_count = find_element_text(rc, "NayVotes/Count", "0")
+            absent_count = find_element_text(rc, "AbsentVotes/Count", "0")
+            excused_count = find_element_text(rc, "ExcusedVotes/Count", "0")
+
+            roll_calls.append({
+                "chamber": agency_text,
+                "date": vote_date[:10] if vote_date else "",
+                "motion": motion_text,
+                "yeas": int(yea_count),
+                "nays": int(nay_count),
+                "absent": int(absent_count),
+                "excused": int(excused_count),
+                "passed": int(yea_count) > int(nay_count)
+            })
+    except Exception as e:
+        logger.warning(f"Failed to parse roll calls for bill {bill_number}: {e}")
+        return []
+
+    return roll_calls
+
+
+def parse_governor_action(history_line: str) -> Optional[dict]:
+    """Parse governor action details from bill history line."""
+    if not history_line:
+        return None
+
+    history_lower = history_line.lower()
+
+    if "partial veto" in history_lower:
+        status = "partial_veto"
+    elif "veto" in history_lower:
+        status = "vetoed"
+    elif "governor signed" in history_lower or "signed by governor" in history_lower:
+        status = "signed"
+    elif "delivered to governor" in history_lower:
+        status = "awaiting"
+    else:
+        return None
+
+    # Try to extract a date from the history line (common format: MM/DD/YYYY or YYYY-MM-DD)
+    delivered_date = ""
+    signed_date = ""
+    date_match = re.search(r'(\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2})', history_line)
+    date_str = date_match.group(1) if date_match else ""
+
+    if status == "awaiting" and date_str:
+        delivered_date = date_str
+    elif status in ("signed", "partial_veto") and date_str:
+        signed_date = date_str
+
+    return {
+        "status": status,
+        "deliveredDate": delivered_date,
+        "signedDate": signed_date,
+    }
+
+
 def extract_bill_number_from_id(bill_id: str) -> Tuple[str, int]:
     """
     Extract the bill type prefix and numeric bill number from a bill ID.
@@ -626,7 +705,7 @@ def build_bill_dict(details: Dict, original_agency: str) -> Dict:
     else:
         session = str(YEAR)
 
-    return {
+    bill_dict = {
         "id": bill_id.replace(" ", ""),
         "number": format_bill_number(bill_id),
         "title": title,
@@ -644,8 +723,26 @@ def build_bill_dict(details: Dict, original_agency: str) -> Dict:
         "biennium": BIENNIUM,
         "session": session,
         "originalAgency": original_agency,
-        "historyLine": history_line
+        "historyLine": history_line,
+        "votes": [],
     }
+
+    # Fetch votes for bills that have passed at least one chamber
+    vote_statuses = ("passed_origin", "opposite_committee", "opposite_floor",
+                     "passed_legislature", "governor", "enacted")
+    if status in vote_statuses:
+        bill_num = int(num)
+        votes = get_roll_calls(BIENNIUM, bill_num)
+        bill_dict["votes"] = votes
+    else:
+        bill_dict["votes"] = []
+
+    # Parse governor action
+    governor_action = parse_governor_action(history_line)
+    if governor_action:
+        bill_dict["governorAction"] = governor_action
+
+    return bill_dict
 
 
 def get_committee_meetings(begin_date: str, end_date: str) -> List[Dict]:

@@ -244,10 +244,15 @@ class TestVoteDataForPassedBills(unittest.TestCase):
             )
 
     def test_enacted_bill_has_votes(self):
-        """Bills with enacted status should have vote records."""
-        enacted_bills = self._find_bills_by_status("enacted")
+        """Bills with enacted status in the current session should have vote
+        records. Bills enacted in the prior session (e.g., 2025) may not have
+        votes since they were fetched before vote data collection was added."""
+        enacted_bills = [
+            b for b in self._find_bills_by_status("enacted")
+            if b.get("session") != "2025"
+        ]
         if not enacted_bills:
-            self.skipTest("No bills with status 'enacted' found in current session")
+            self.skipTest("No enacted bills in current session (all are prior session)")
 
         for bill in enacted_bills:
             votes = bill.get("votes", [])

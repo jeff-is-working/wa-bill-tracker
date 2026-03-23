@@ -1148,6 +1148,109 @@ h1 {
     background: var(--accent);
 }
 
+/* Vote Results Tracker -- replaces progress tracker for passed bills */
+.vote-tracker {
+    padding: 1rem;
+    margin: 0.5rem 0;
+}
+
+.vote-results {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .vote-results {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+
+.vote-chamber {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.vote-chamber-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.vote-counts {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.vote-yeas {
+    color: var(--status-enacted);
+}
+
+.vote-nays {
+    color: var(--status-failed);
+}
+
+.vote-separator {
+    color: var(--text-muted);
+    margin: 0 0.3rem;
+}
+
+.vote-motion {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 0.3rem;
+}
+
+.vote-passed {
+    border-left: 3px solid var(--status-enacted);
+}
+
+.vote-failed {
+    border-left: 3px solid var(--status-failed);
+}
+
+/* Governor Status Row */
+.governor-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 0.8rem;
+}
+
+.governor-status-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.governor-status-value {
+    font-weight: 700;
+}
+
+.governor-status-awaiting {
+    color: var(--status-governor);
+}
+
+.governor-status-signed {
+    color: var(--status-enacted);
+}
+
+.governor-status-vetoed {
+    color: var(--status-failed);
+}
+
 /* Notes Display in Bill Card */
 .bill-notes-preview {
     padding: 0 1.5rem 1rem;

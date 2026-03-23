@@ -413,6 +413,76 @@ export function buildProgressTracker(bill) {
     return html;
 }
 
+// --- Vote Results Tracker -- replaces progress tracker for passed bills ---
+function buildVoteTracker(bill) {
+    // Only show vote tracker for bills that have vote data
+    if (!bill.votes || bill.votes.length === 0) {
+        return buildProgressTracker(bill);  // fallback to old tracker
+    }
+
+    // Find the final passage votes for each chamber
+    // Filter to "Final Passage" motions (the definitive votes)
+    const houseVotes = bill.votes.filter(v => v.chamber === 'House');
+    const senateVotes = bill.votes.filter(v => v.chamber === 'Senate');
+
+    // Take the last (most recent) vote for each chamber
+    const houseVote = houseVotes.length > 0 ? houseVotes[houseVotes.length - 1] : null;
+    const senateVote = senateVotes.length > 0 ? senateVotes[senateVotes.length - 1] : null;
+
+    // Build governor status
+    let governorHtml = '';
+    if (bill.governorAction) {
+        const ga = bill.governorAction;
+        let statusClass = 'governor-status-awaiting';
+        let statusText = 'Awaiting Signature';
+        if (ga.status === 'signed') {
+            statusClass = 'governor-status-signed';
+            statusText = 'Signed Into Law' + (ga.signedDate ? ' (' + ga.signedDate + ')' : '');
+        } else if (ga.status === 'vetoed') {
+            statusClass = 'governor-status-vetoed';
+            statusText = 'Vetoed' + (ga.vetoDate ? ' (' + ga.vetoDate + ')' : '');
+        } else if (ga.status === 'partial_veto') {
+            statusClass = 'governor-status-vetoed';
+            statusText = 'Partial Veto';
+        }
+        governorHtml = `
+            <div class="governor-status">
+                <span class="governor-status-label">Governor:</span>
+                <span class="governor-status-value ${statusClass}">${statusText}</span>
+            </div>`;
+    } else if (['governor', 'passed_legislature'].includes(bill.status)) {
+        governorHtml = `
+            <div class="governor-status">
+                <span class="governor-status-label">Governor:</span>
+                <span class="governor-status-value governor-status-awaiting">Awaiting Signature</span>
+            </div>`;
+    }
+
+    return `
+        <div class="vote-tracker">
+            <div class="vote-results">
+                ${houseVote ? buildVoteChamber('House', houseVote) : '<div class="vote-chamber"><div class="vote-chamber-label">House</div><div class="vote-counts">--</div></div>'}
+                ${senateVote ? buildVoteChamber('Senate', senateVote) : '<div class="vote-chamber"><div class="vote-chamber-label">Senate</div><div class="vote-counts">--</div></div>'}
+            </div>
+            ${governorHtml}
+        </div>`;
+}
+
+function buildVoteChamber(label, vote) {
+    const passedClass = vote.passed ? 'vote-passed' : 'vote-failed';
+    const motionShort = vote.motion ? vote.motion.replace('3rd Reading & ', '') : '';
+    return `
+        <div class="vote-chamber ${passedClass}">
+            <div class="vote-chamber-label">${escapeHTML(label)}</div>
+            <div class="vote-counts">
+                <span class="vote-yeas">${vote.yeas}</span>
+                <span class="vote-separator">-</span>
+                <span class="vote-nays">${vote.nays}</span>
+            </div>
+            <div class="vote-motion">${escapeHTML(motionShort)}</div>
+        </div>`;
+}
+
 // --- Bill card ---
 export function createBillCard(bill) {
     const isTracked = APP_STATE.trackedBills.has(bill.id);
@@ -446,7 +516,9 @@ export function createBillCard(bill) {
                 <div class="bill-title">${escapeHTML(bill.title)}</div>
             </div>
 
-            ${buildProgressTracker(bill)}
+            ${(bill.status === 'governor' || bill.status === 'passed_legislature' || bill.status === 'enacted')
+                ? buildVoteTracker(bill)
+                : buildProgressTracker(bill)}
 
             <div class="bill-body">
                 <div class="bill-meta">
