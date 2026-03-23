@@ -10,3 +10,4 @@ test-results/
 CLAUDE.md
 claude.md
 .claude/
+package-lock.json
