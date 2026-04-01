@@ -1,12 +1,12 @@
 {
-  "generated": "2026-03-31T15:12:44.980919",
+  "generated": "2026-04-01T15:16:49.208006",
   "totalBills": 3757,
   "byStatus": {
     "prefiled": 2257,
     "floor": 104,
-    "enacted": 426,
+    "enacted": 439,
     "committee": 921,
-    "governor": 23,
+    "governor": 10,
     "opposite_committee": 1,
     "passed_legislature": 1,
     "passed_origin": 22,
