@@ -1,6 +1,13 @@
 {
   "logs": [
     {
+      "timestamp": "2026-04-30T15:56:27.810563",
+      "status": "success_incremental",
+      "billsCount": 3757,
+      "biennium": "2025-26",
+      "year": 2026
+    },
+    {
       "timestamp": "2026-04-29T16:03:02.289926",
       "status": "success_incremental",
       "billsCount": 3757,
@@ -690,13 +697,6 @@
       "timestamp": "2026-02-18T04:30:28.976212",
       "status": "success_incremental",
       "billsCount": 3661,
-      "biennium": "2025-26",
-      "year": 2026
-    },
-    {
-      "timestamp": "2026-02-17T14:58:12.036528",
-      "status": "success_incremental",
-      "billsCount": 3660,
       "biennium": "2025-26",
       "year": 2026
     }
